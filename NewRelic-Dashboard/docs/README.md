@@ -14,7 +14,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Properties" : {
         "<a href="#title" title="Title">Title</a>" : <i>String</i>,
         "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
-        "<a href="#widgets" title="Widgets">Widgets</a>" : <i>[ <a href="widget.md">Widget</a>, ... ]</i>
+        "<a href="#pages" title="Pages">Pages</a>" : <i>[ <a href="page.md">Page</a>, ... ]</i>
     }
 }
 </pre>
@@ -26,8 +26,8 @@ Type: Cloudsoft::NewRelic::Dashboard
 Properties:
     <a href="#title" title="Title">Title</a>: <i>String</i>
     <a href="#accountid" title="AccountId">AccountId</a>: <i>Integer</i>
-    <a href="#widgets" title="Widgets">Widgets</a>: <i>
-      - <a href="widget.md">Widget</a></i>
+    <a href="#pages" title="Pages">Pages</a>: <i>
+      - <a href="page.md">Page</a></i>
 </pre>
 
 ## Properties
@@ -52,13 +52,13 @@ _Type_: Integer
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
-#### Widgets
+#### Pages
 
-An array of widget objects to attach to this resource.
+An array of dashboard pages to attach to this resource.
 
 _Required_: Yes
 
-_Type_: List of <a href="widget.md">Widget</a>
+_Type_: List of <a href="page.md">Page</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 

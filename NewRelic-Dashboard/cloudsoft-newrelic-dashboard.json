@@ -55,6 +55,46 @@
     "Metric": {
       "type": "object"
     },
+    "Page": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "Name of the dashboard page"
+        },
+        "Widgets": {
+          "type": "array",
+          "description": "An array of widget objects to attach to this resource.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Widget"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Layout": {
+      "type": "object",
+      "description": "The widget's position and size in the dashboard. The maximum amount of columns is 12.",
+      "properties": {
+        "Row": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "Column": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "Width": {
+          "type": "integer"
+        },
+        "Height": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
     "Widget": {
       "description": "A widget object definition.",
       "type": "object",
@@ -88,10 +128,7 @@
           ]
         },
         "Layout": {
-          "type": "integer",
-          "description": "The widget's position and size in the dashboard. The maximum amount of columns is 12.",
-          "minimum": 1,
-          "maximum": 12
+          "$ref": "#/definitions/Layout"
         },
         "Title": {
           "type": "string",
@@ -389,12 +426,12 @@
       "type": "integer",
       "description": "Account ID the dashboard should belong to."
     },
-    "Widgets": {
+    "Pages": {
       "type": "array",
-      "description": "An array of widget objects to attach to this resource.",
+      "description": "An array of dashboard pages to attach to this resource.",
       "insertionOrder": true,
       "items": {
-        "$ref": "#/definitions/Widget"
+        "$ref": "#/definitions/Page"
       }
     }
   },
@@ -402,7 +439,7 @@
   "required": [
     "Title",
     "AccountId",
-    "Widgets"
+    "Pages"
   ],
   "createOnlyProperties": [
     "/properties/AccountId"

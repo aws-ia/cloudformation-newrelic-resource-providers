@@ -12,7 +12,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 {
     "<a href="#id" title="Id">Id</a>" : <i>String</i>,
     "<a href="#visualization" title="Visualization">Visualization</a>" : <i>String</i>,
-    "<a href="#layout" title="Layout">Layout</a>" : <i>Integer</i>,
+    "<a href="#layout" title="Layout">Layout</a>" : <i><a href="layout.md">Layout</a></i>,
     "<a href="#title" title="Title">Title</a>" : <i>String</i>,
     "<a href="#configuration" title="Configuration">Configuration</a>" : <i><a href="typedconfiguration.md">TypedConfiguration</a>, <a href="billboardconfiguration.md">BillboardConfiguration</a>, <a href="markdownconfiguration.md">MarkdownConfiguration</a></i>,
     "<a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>" : <i><a href="typedconfiguration.md">TypedConfiguration</a>, <a href="areametricconfiguration.md">AreaMetricConfiguration</a>, <a href="bulletconfiguration.md">BulletConfiguration</a>, <a href="linemetricconfiguration.md">LineMetricConfiguration</a>, <a href="servicemapconfiguration.md">ServiceMapConfiguration</a></i>
@@ -24,7 +24,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 <pre>
 <a href="#id" title="Id">Id</a>: <i>String</i>
 <a href="#visualization" title="Visualization">Visualization</a>: <i>String</i>
-<a href="#layout" title="Layout">Layout</a>: <i>Integer</i>
+<a href="#layout" title="Layout">Layout</a>: <i><a href="layout.md">Layout</a></i>
 <a href="#title" title="Title">Title</a>: <i>String</i>
 <a href="#configuration" title="Configuration">Configuration</a>: <i><a href="typedconfiguration.md">TypedConfiguration</a>, <a href="billboardconfiguration.md">BillboardConfiguration</a>, <a href="markdownconfiguration.md">MarkdownConfiguration</a></i>
 <a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>: <i><a href="typedconfiguration.md">TypedConfiguration</a>, <a href="areametricconfiguration.md">AreaMetricConfiguration</a>, <a href="bulletconfiguration.md">BulletConfiguration</a>, <a href="linemetricconfiguration.md">LineMetricConfiguration</a>, <a href="servicemapconfiguration.md">ServiceMapConfiguration</a></i>
@@ -62,7 +62,7 @@ The widget's position and size in the dashboard. The maximum amount of columns i
 
 _Required_: No
 
-_Type_: Integer
+_Type_: <a href="layout.md">Layout</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
