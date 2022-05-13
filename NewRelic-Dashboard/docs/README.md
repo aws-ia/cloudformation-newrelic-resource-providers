@@ -1,6 +1,6 @@
 # Cloudsoft::NewRelic::Dashboard
 
-An example resource schema demonstrating some basic constructs and validation rules.
+Manage New Relic Dashboard, including widgets
 
 ## Syntax
 
@@ -13,14 +13,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Type" : "Cloudsoft::NewRelic::Dashboard",
     "Properties" : {
         "<a href="#title" title="Title">Title</a>" : <i>String</i>,
-        "<a href="#coversheetincluded" title="CoverSheetIncluded">CoverSheetIncluded</a>" : <i>Boolean</i>,
-        "<a href="#duedate" title="DueDate">DueDate</a>" : <i>String</i>,
-        "<a href="#approvaldate" title="ApprovalDate">ApprovalDate</a>" : <i>String</i>,
-        "<a href="#memo" title="Memo">Memo</a>" : <i><a href="memo.md">Memo</a></i>,
-        "<a href="#secondcopyofmemo" title="SecondCopyOfMemo">SecondCopyOfMemo</a>" : <i><a href="memo.md">Memo</a></i>,
-        "<a href="#testcode" title="TestCode">TestCode</a>" : <i>String</i>,
-        "<a href="#authors" title="Authors">Authors</a>" : <i>[ String, ... ]</i>,
-        "<a href="#tags" title="Tags">Tags</a>" : <i>[ <a href="tag.md">Tag</a>, ... ]</i>
+        "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
+        "<a href="#widgets" title="Widgets">Widgets</a>" : <i>[ <a href="widget.md">Widget</a>, ... ]</i>
     }
 }
 </pre>
@@ -31,101 +25,40 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 Type: Cloudsoft::NewRelic::Dashboard
 Properties:
     <a href="#title" title="Title">Title</a>: <i>String</i>
-    <a href="#coversheetincluded" title="CoverSheetIncluded">CoverSheetIncluded</a>: <i>Boolean</i>
-    <a href="#duedate" title="DueDate">DueDate</a>: <i>String</i>
-    <a href="#approvaldate" title="ApprovalDate">ApprovalDate</a>: <i>String</i>
-    <a href="#memo" title="Memo">Memo</a>: <i><a href="memo.md">Memo</a></i>
-    <a href="#secondcopyofmemo" title="SecondCopyOfMemo">SecondCopyOfMemo</a>: <i><a href="memo.md">Memo</a></i>
-    <a href="#testcode" title="TestCode">TestCode</a>: <i>String</i>
-    <a href="#authors" title="Authors">Authors</a>: <i>
-      - String</i>
-    <a href="#tags" title="Tags">Tags</a>: <i>
-      - <a href="tag.md">Tag</a></i>
+    <a href="#accountid" title="AccountId">AccountId</a>: <i>Integer</i>
+    <a href="#widgets" title="Widgets">Widgets</a>: <i>
+      - <a href="widget.md">Widget</a></i>
 </pre>
 
 ## Properties
 
 #### Title
 
-The title of the TPS report is a mandatory element.
+Title of the dashboard.
 
 _Required_: Yes
 
 _Type_: String
 
-_Minimum_: <code>20</code>
-
-_Maximum_: <code>250</code>
-
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
-#### CoverSheetIncluded
+#### AccountId
 
-Required for all TPS Reports submitted after 2/19/1999
-
-_Required_: No
-
-_Type_: Boolean
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### DueDate
-
-_Required_: No
-
-_Type_: String
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### ApprovalDate
-
-_Required_: No
-
-_Type_: String
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### Memo
-
-_Required_: No
-
-_Type_: <a href="memo.md">Memo</a>
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### SecondCopyOfMemo
-
-_Required_: No
-
-_Type_: <a href="memo.md">Memo</a>
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### TestCode
+Account ID the dashboard should belong to.
 
 _Required_: Yes
 
-_Type_: String
+_Type_: Integer
 
-_Allowed Values_: <code>NOT_STARTED</code> | <code>CANCELLED</code>
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+#### Widgets
 
-#### Authors
+An array of widget objects to attach to this resource.
 
-_Required_: No
+_Required_: Yes
 
-_Type_: List of String
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### Tags
-
-An array of key-value pairs to apply to this resource.
-
-_Required_: No
-
-_Type_: List of <a href="tag.md">Tag</a>
+_Type_: List of <a href="widget.md">Widget</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
@@ -133,7 +66,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 ### Ref
 
-When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the TPSCode.
+When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the DashboardId.
 
 ### Fn::GetAtt
 
@@ -141,7 +74,7 @@ The `Fn::GetAtt` intrinsic function returns a value for a specified attribute of
 
 For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html).
 
-#### TPSCode
+#### DashboardId
 
-A TPS Code is automatically generated on creation and assigned as the unique identifier.
+Unique identifier of the current dashboard
 

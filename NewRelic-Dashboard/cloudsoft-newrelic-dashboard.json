@@ -1,137 +1,433 @@
 {
-    "typeName": "Cloudsoft::NewRelic::Dashboard",
-    "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-    "definitions": {
-        "InitechDateFormat": {
-            "$comment": "Use the `definitions` block to provide shared resource property schemas",
-            "type": "string",
-            "format": "date-time"
-        },
-        "Memo": {
-            "type": "object",
-            "properties": {
-                "Heading": {
-                    "type": "string"
-                },
-                "Body": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false
-        },
-        "Tag": {
-            "description": "A key-value pair to associate with a resource.",
-            "type": "object",
-            "properties": {
-                "Key": {
-                    "type": "string",
-                    "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-                    "minLength": 1,
-                    "maxLength": 128
-                },
-                "Value": {
-                    "type": "string",
-                    "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-                    "minLength": 0,
-                    "maxLength": 256
-                }
-            },
-            "required": [
-                "Key",
-                "Value"
-            ],
-            "additionalProperties": false
-        }
+  "typeName": "Cloudsoft::NewRelic::Dashboard",
+  "description": "Manage New Relic Dashboard, including widgets",
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions": {
+    "AccountId": {
+      "type": "integer",
+      "description": "Source account to fetch data from."
     },
-    "properties": {
-        "TPSCode": {
-            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
-            "type": "string",
-            "pattern": "^[A-Z]{3,5}[0-9]{8}-[0-9]{4}$"
+    "Query": {
+      "type": "string",
+      "description": "The NRQL query that provides the data for the widget."
+    },
+    "Duration": {
+      "type": "number",
+      "description": "Duration of the requested time window, in milliseconds. When provided with endTime, the time window is set to the last x milliseconds ending at the specified time. If endTime is null, the time window is set to the last x milliseconds ending now."
+    },
+    "EndTime": {
+      "type": "number",
+      "description": "Optional. End of the time window, in milliseconds."
+    },
+    "EntityIds": {
+      "type": "array",
+      "description": "Array of source agent Ids to fetch data from.",
+      "insertionOrder": true,
+      "items": {
+        "type": "integer"
+      }
+    },
+    "Threshold": {
+      "type": "object",
+      "description": "Threshold to categorize the results of the query in different groups.",
+      "properties": {
+        "AlertSeverity": {
+          "type": "string",
+          "enum": [
+            "NOT_ALERTING",
+            "WARNING",
+            "CRITICAL"
+          ]
+        },
+        "Value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "AlertSeverity",
+        "Value"
+      ],
+      "additionalProperties": false
+    },
+    "Entity": {
+      "type": "object"
+    },
+    "Metric": {
+      "type": "object"
+    },
+    "Widget": {
+      "description": "A widget object definition.",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "The id of the widget.",
+          "minLength": 1
+        },
+        "Visualization": {
+          "type": "string",
+          "description": "The widget visualization type, as a string. For example: viz.line, viz.area. See the examples below.",
+          "enum": [
+            "area",
+            "area (metric)",
+            "bar",
+            "billboard",
+            "line",
+            "line (metric)",
+            "markdown",
+            "pie",
+            "table",
+            "bullet",
+            "event feed",
+            "funnel",
+            "heatmap",
+            "histogram",
+            "inventory",
+            "json",
+            "service map"
+          ]
+        },
+        "Layout": {
+          "type": "integer",
+          "description": "The widget's position and size in the dashboard. The maximum amount of columns is 12.",
+          "minimum": 1,
+          "maximum": 12
         },
         "Title": {
-            "description": "The title of the TPS report is a mandatory element.",
-            "type": "string",
-            "minLength": 20,
-            "maxLength": 250
+          "type": "string",
+          "description": "The title of the widget."
         },
-        "CoverSheetIncluded": {
-            "description": "Required for all TPS Reports submitted after 2/19/1999",
-            "type": "boolean"
-        },
-        "DueDate": {
-            "$ref": "#/definitions/InitechDateFormat"
-        },
-        "ApprovalDate": {
-            "$ref": "#/definitions/InitechDateFormat"
-        },
-        "Memo": {
-            "$ref": "#/definitions/Memo"
-        },
-        "SecondCopyOfMemo": {
-            "description": "In case you didn't get the first one.",
-            "$ref": "#/definitions/Memo"
-        },
-        "TestCode": {
-            "type": "string",
-            "enum": [
-                "NOT_STARTED",
-                "CANCELLED"
-            ]
-        },
-        "Authors": {
-            "type": "array",
-            "items": {
-                "type": "string"
+        "Configuration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TypedConfiguration"
+            },
+            {
+              "$ref": "#/definitions/BillboardConfiguration"
+            },
+            {
+              "$ref": "#/definitions/MarkdownConfiguration"
             }
+          ]
         },
-        "Tags": {
-            "description": "An array of key-value pairs to apply to this resource.",
-            "type": "array",
-            "uniqueItems": true,
-            "insertionOrder": false,
-            "items": {
-                "$ref": "#/definitions/Tag"
+        "RawConfiguration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TypedConfiguration"
+            },
+            {
+              "$ref": "#/definitions/AreaMetricConfiguration"
+            },
+            {
+              "$ref": "#/definitions/BulletConfiguration"
+            },
+            {
+              "$ref": "#/definitions/LineMetricConfiguration"
+            },
+            {
+              "$ref": "#/definitions/ServiceMapConfiguration"
             }
+          ]
         }
+      },
+      "required": [
+        "Id"
+      ],
+      "additionalProperties": false
     },
-    "additionalProperties": false,
-    "required": [
-        "TestCode",
-        "Title"
-    ],
-    "readOnlyProperties": [
-        "/properties/TPSCode"
-    ],
-    "primaryIdentifier": [
-        "/properties/TPSCode"
-    ],
-    "handlers": {
-        "create": {
-            "permissions": [
-                "initech:CreateReport"
-            ]
+    "TypedConfiguration": {
+      "type": "object",
+      "description": "Configuration object for standard typed widget. This includes: Area, Bar, Line, Pie, Table, Event Feed, Funnel, Heatmap, Histogram, JSON",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
         },
-        "read": {
-            "permissions": [
-                "initech:DescribeReport"
-            ]
-        },
-        "update": {
-            "permissions": [
-                "initech:UpdateReport"
-            ]
-        },
-        "delete": {
-            "permissions": [
-                "initech:DeleteReport"
-            ]
-        },
-        "list": {
-            "permissions": [
-                "initech:ListReports"
-            ]
+        "Query": {
+          "$ref": "#/definitions/Query"
         }
+      },
+      "required": [
+        "AccountId",
+        "Query"
+      ],
+      "additionalProperties": false
+    },
+    "BillboardConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Billboard.",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "Query": {
+          "$ref": "#/definitions/Query"
+        },
+        "Thresholds": {
+          "type": "array",
+          "description": "Optional. Array of thresholds to categorize the results of the query in different groups.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Threshold"
+          }
+        }
+      },
+      "required": [
+        "AccountId",
+        "Query"
+      ],
+      "additionalProperties": false
+    },
+    "MarkdownConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Markdown.",
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Content to be added in the markdown widget."
+        }
+      },
+      "required": [
+        "Text"
+      ],
+      "additionalProperties": false
+    },
+    "AreaMetricConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Area (Metric)",
+      "properties": {
+        "Duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "EndTime": {
+          "$ref": "#/definitions/EndTime"
+        },
+        "EntityIds": {
+          "$ref": "#/definitions/EntityIds"
+        },
+        "Metrics": {
+          "type": "array",
+          "description": "For type SCOPE_BREAKDOWN only. List of metrics to be fetched.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "Type": {
+          "type": "string",
+          "description": "Type of the predefined chart.",
+          "enum": [
+            "APPLICATION_BREAKDOWN",
+            "BACKGROUND_BREAKDOWN",
+            "BROWSER_BREAKDOWN",
+            "GC_RUNS_BREAKDOWN",
+            "SCOPE_BREAKDOWN",
+            "SOLR_BREAKDOWN"
+          ]
+        }
+      },
+      "required": [
+        "Duration",
+        "EntityIds",
+        "Type"
+      ],
+      "additionalProperties": false
+    },
+    "BulletConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Line (Metric).",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "Query": {
+          "$ref": "#/definitions/Query"
+        },
+        "Limit": {
+          "type": "number",
+          "description": "Goal against which all query results are compared to."
+        }
+      },
+      "required": [
+        "AccountId",
+        "Query",
+        "Limit"
+      ],
+      "additionalProperties": false
+    },
+    "InventoryConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Inventory.",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "Filters": {
+          "type": "object",
+          "description": "Map of the filters to be applied to the infrastructure sources."
+        },
+        "Sources": {
+          "type": "array",
+          "description": "List of the infrastructure sources to get data from.",
+          "insertionOrder": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "LineMetricConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Area (Metric)",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "CompareWith": {
+          "type": "object",
+          "description": "Optional. Additional time window to query. For example: {\noffsetDuration: 86400000\npresentation: {\"#c001\", \"Yesterday\"}\n}"
+        },
+        "Duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "EndTime": {
+          "$ref": "#/definitions/EndTime"
+        },
+        "EntityIds": {
+          "$ref": "#/definitions/EntityIds"
+        },
+        "Facets": {
+          "type": "string",
+          "description": "Optional. Facet the data by the given attribute. It can be host, agent, application, or mobile_version.",
+          "enum": [
+            "host", "agent", "application", "mobile_version"
+          ]
+        },
+        "Limit": {
+          "type": "integer",
+          "description": "Optional. Maximum amount of series to be returned."
+        },
+        "Metrics": {
+          "type": "array",
+          "description": "List of metrics to be fetched.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "OrderBy": {
+          "type": "string",
+          "description": "Optional. Used to sort the results in descending order."
+        }
+      },
+      "required": [
+        "AccountId",
+        "Duration",
+        "EndTime",
+        "EntityIds",
+        "Metrics"
+      ],
+      "additionalProperties": false
+    },
+    "ServiceMapConfiguration": {
+      "type": "object",
+      "description": "Configuration object for the widget Service Map.",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "AdditionalEntities": {
+          "type": "array",
+          "description": "Optional. An array of additional entities to include. The target is the entity downstream, while the source is upstream. Type, vendor, target, and source are optional.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Entity"
+          }
+        },
+        "DeemphasizedConditions": {
+          "type": "array",
+          "description": "Optional. Entities with these conditions have a faded appearance in the map.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Entity"
+          }
+        },
+        "HiddenEntities": {
+          "type": "array",
+          "description": "Optional. Entities to be excluded from the map.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Entity"
+          }
+        },
+        "PrimaryEntities": {
+          "type": "array",
+          "description": "The primary entities which start the map (most upstream).",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/Entity"
+          }
+        }
+      },
+      "required": [
+        "AccountId",
+        "PrimaryEntities"
+      ],
+      "additionalProperties": false
     }
+  },
+  "properties": {
+    "DashboardId": {
+      "type": "integer",
+      "description": "Unique identifier of the current dashboard"
+    },
+    "Title": {
+      "type": "string",
+      "description": "Title of the dashboard."
+    },
+    "AccountId": {
+      "type": "integer",
+      "description": "Account ID the dashboard should belong to."
+    },
+    "Widgets": {
+      "type": "array",
+      "description": "An array of widget objects to attach to this resource.",
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/Widget"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "Title",
+    "AccountId",
+    "Widgets"
+  ],
+  "createOnlyProperties": [
+    "/properties/AccountId"
+  ],
+  "readOnlyProperties": [
+    "/properties/DashboardId"
+  ],
+  "primaryIdentifier": [
+    "/properties/DashboardId"
+  ],
+  "handlers": {
+    "create": {
+      "permissions": []
+    },
+    "read": {
+      "permissions": []
+    },
+    "update": {
+      "permissions": []
+    },
+    "delete": {
+      "permissions": []
+    },
+    "list": {
+      "permissions": []
+    }
+  }
 }
