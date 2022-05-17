@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard Page
+# Cloudsoft::NewRelic::Dashboard DashboardCreateError
 
 ## Syntax
 
@@ -8,24 +8,23 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "<a href="#name" title="Name">Name</a>" : <i>String</i>,
-    "<a href="#widgets" title="Widgets">Widgets</a>" : <i>[ <a href="widget.md">Widget</a>, ... ]</i>
+    "<a href="#description" title="description">description</a>" : <i>String</i>,
+    "<a href="#type" title="type">type</a>" : <i>String</i>
 }
 </pre>
 
 ### YAML
 
 <pre>
-<a href="#name" title="Name">Name</a>: <i>String</i>
-<a href="#widgets" title="Widgets">Widgets</a>: <i>
-      - <a href="widget.md">Widget</a></i>
+<a href="#description" title="description">description</a>: <i>String</i>
+<a href="#type" title="type">type</a>: <i>String</i>
 </pre>
 
 ## Properties
 
-#### Name
+#### description
 
-Name of the dashboard page
+Error description
 
 _Required_: No
 
@@ -33,13 +32,13 @@ _Type_: String
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
-#### Widgets
+#### type
 
-An array of widget objects to attach to this resource.
+Error type
 
 _Required_: No
 
-_Type_: List of <a href="widget.md">Widget</a>
+_Type_: String
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 

@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard MarkdownConfiguration
+# Cloudsoft::NewRelic::Dashboard MarkdownWidgetInputConfigurationInputInput
 
 Configuration object for the widget Markdown.
 
@@ -24,7 +24,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 #### Text
 
-Content to be added in the markdown widget.
+Content to be added in the markdown WidgetInput.
 
 _Required_: Yes
 

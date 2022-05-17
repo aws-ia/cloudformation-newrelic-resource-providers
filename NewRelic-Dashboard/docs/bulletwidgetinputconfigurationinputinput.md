@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard BulletConfiguration
+# Cloudsoft::NewRelic::Dashboard BulletWidgetInputConfigurationInputInput
 
 Configuration object for the widget Line (Metric).
 
@@ -10,8 +10,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
-    "<a href="#query" title="Query">Query</a>" : <i>String</i>,
+    "<a href="#nrqlqueries" title="NrqlQueries">NrqlQueries</a>" : <i>[ <a href="nrqlqueryinput.md">NrqlQueryInput</a>, ... ]</i>,
     "<a href="#limit" title="Limit">Limit</a>" : <i>Double</i>
 }
 </pre>
@@ -19,30 +18,18 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 ### YAML
 
 <pre>
-<a href="#accountid" title="AccountId">AccountId</a>: <i>Integer</i>
-<a href="#query" title="Query">Query</a>: <i>String</i>
+<a href="#nrqlqueries" title="NrqlQueries">NrqlQueries</a>: <i>
+      - <a href="nrqlqueryinput.md">NrqlQueryInput</a></i>
 <a href="#limit" title="Limit">Limit</a>: <i>Double</i>
 </pre>
 
 ## Properties
 
-#### AccountId
+#### NrqlQueries
 
-Source account to fetch data from.
+_Required_: No
 
-_Required_: Yes
-
-_Type_: Integer
-
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
-
-#### Query
-
-The NRQL query that provides the data for the widget.
-
-_Required_: Yes
-
-_Type_: String
+_Type_: List of <a href="nrqlqueryinput.md">NrqlQueryInput</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
@@ -50,7 +37,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 Goal against which all query results are compared to.
 
-_Required_: Yes
+_Required_: No
 
 _Type_: Double
 

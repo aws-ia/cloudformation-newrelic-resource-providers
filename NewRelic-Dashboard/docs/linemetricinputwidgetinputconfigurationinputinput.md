@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard LineMetricConfiguration
+# Cloudsoft::NewRelic::Dashboard LineMetricInputWidgetInputConfigurationInputInput
 
 Configuration object for the widget Area (Metric)
 
@@ -53,7 +53,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 #### CompareWith
 
 Optional. Additional time window to query. For example: {
-offsetDuration: 86400000
+offsetDurationInput: 86400000
 presentation: {"#c001", "Yesterday"}
 }
 
