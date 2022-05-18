@@ -13,7 +13,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Type" : "Cloudsoft::NewRelic::Dashboard",
     "Properties" : {
         "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
-        "<a href="#dashboard" title="Dashboard">Dashboard</a>" : <i><a href="dashboardinput.md">DashboardInput</a></i>,
+        "<a href="#dashboard" title="Dashboard">Dashboard</a>" : <i><a href="dashboardinput.md">DashboardInput</a></i>
     }
 }
 </pre>

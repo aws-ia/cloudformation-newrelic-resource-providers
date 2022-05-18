@@ -4,6 +4,8 @@ mutation {
       guid
       name
       accountId
+      createdAt
+      updatedAt
     },
     errors {
       description

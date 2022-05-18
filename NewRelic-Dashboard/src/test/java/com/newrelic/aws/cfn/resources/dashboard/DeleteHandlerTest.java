@@ -33,7 +33,9 @@ public class DeleteHandlerTest {
     public void handleRequest_SimpleSuccess() {
         final DeleteHandler handler = new DeleteHandler();
 
-        final ResourceModel model = ResourceModel.builder().build();
+        final ResourceModel model = ResourceModel.builder()
+                .dashboardId("MzQ5NTE2N3xWSVp8REFTSEJPQVJEfGRhOjQxMDU3")
+                .build();
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)

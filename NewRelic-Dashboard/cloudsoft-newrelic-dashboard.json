@@ -476,67 +476,6 @@
         "PrimaryEntities"
       ],
       "additionalProperties": false
-    },
-    "DashboardEntityResult": {
-      "type": "object",
-      "description": "Dashboard creation result",
-      "properties": {
-        "accountId": {
-          "type": "integer",
-          "description": "Account ID."
-        },
-        "createdAt": {
-          "type": "integer",
-          "description": "Dashboard creation timestamp."
-        },
-        "guid": {
-          "type": "string",
-          "description": "Unique entity identifier."
-        },
-        "name": {
-          "type": "string",
-          "description": "Dashboard name."
-        },
-        "owner": {
-          "type": "string"
-        },
-        "updatedAt": {
-          "type": "string",
-          "description": "Dashboard update timestamp."
-        }
-      },
-      "additionalProperties": false
-    },
-    "DashboardCreateError": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "Error description"
-        },
-        "type": {
-          "type": "string",
-          "description": "Error type"
-        }
-      },
-      "additionalProperties": false
-    },
-    "DashboardCreateResult": {
-      "type": "object",
-      "properties": {
-        "entityResult": {
-          "$ref": "#/definitions/DashboardEntityResult"
-        },
-        "errors": {
-          "type": "array",
-          "description": "Expected errors while processing request",
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/DashboardCreateError"
-          }
-        }
-      },
-      "additionalProperties": false
     }
   },
   "properties": {
@@ -550,9 +489,6 @@
     },
     "Dashboard": {
       "$ref": "#/definitions/DashboardInput"
-    },
-    "DashboardCreateResult": {
-      "$ref": "#/definitions/DashboardCreateResult"
     }
   },
   "additionalProperties": false,
