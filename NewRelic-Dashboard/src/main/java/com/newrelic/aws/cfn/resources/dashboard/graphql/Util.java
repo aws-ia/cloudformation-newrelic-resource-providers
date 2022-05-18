@@ -32,7 +32,7 @@ public class Util {
         try {
             URL resource = Resources.getResource("graphql/" + name);
             return Resources.toString(resource, StandardCharsets.UTF_8);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CfnHandlerInternalFailureException(new Exception(String.format("Fail to retrieve the GraphQL template \"%s\"", name), e));
         }
     }

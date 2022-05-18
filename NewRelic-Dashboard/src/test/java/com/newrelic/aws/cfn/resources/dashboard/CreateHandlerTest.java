@@ -65,8 +65,13 @@ public class CreateHandlerTest {
             .desiredResourceState(model)
             .build();
 
+        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder()
+                .endpoint("https://api.eu.newrelic.com/graphql")
+                .apiKey("NRAK-5SE8PNXSYWYDOGSHDYX5HBWMLH4")
+                .build();
+
         final ProgressEvent<ResourceModel, CallbackContext> response
-            = handler.handleRequest(proxy, request, null, logger);
+            = handler.handleRequest(proxy, request, null, logger, typeConfigurationModel);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);

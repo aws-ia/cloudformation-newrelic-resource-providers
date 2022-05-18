@@ -13,10 +13,7 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.util.stream.Collectors;
 
-public class CreateHandler extends BaseHandler<CallbackContext> {
-
-    private String NR_HOST = "https://api.eu.newrelic.com/graphql";
-    private String NR_API_KEY = "NRAK-5SE8PNXSYWYDOGSHDYX5HBWMLH4";
+public class CreateHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     private Util util;
 
@@ -33,14 +30,15 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             final AmazonWebServicesClientProxy proxy,
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
-            final Logger logger) {
+            final Logger logger,
+            final TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
 
         try {
             String template = util.getGraphQLTemplate("dashboardCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), util.genGraphQLArg(model.getDashboard()));
-            GraphQLResponseData graphQLResponse = util.doRequest(NR_HOST, "", NR_API_KEY, mutation);
+            GraphQLResponseData graphQLResponse = util.doRequest(typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
             if (graphQLResponse.getDashboardCreateResult() != null && graphQLResponse.getDashboardCreateResult().getErrors() != null) {
                 String errorMessage = graphQLResponse.getDashboardCreateResult().getErrors()

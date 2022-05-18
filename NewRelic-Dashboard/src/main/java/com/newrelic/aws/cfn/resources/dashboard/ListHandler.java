@@ -9,14 +9,15 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListHandler extends BaseHandler<CallbackContext> {
+public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
         final AmazonWebServicesClientProxy proxy,
         final ResourceHandlerRequest<ResourceModel> request,
         final CallbackContext callbackContext,
-        final Logger logger) {
+        final Logger logger,
+        final TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
 

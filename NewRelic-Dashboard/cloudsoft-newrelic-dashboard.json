@@ -2,7 +2,31 @@
   "typeName": "Cloudsoft::NewRelic::Dashboard",
   "description": "Manage New Relic Dashboard, including WidgetInputs",
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "typeConfiguration": {
+    "properties": {
+      "Endpoint": {
+        "$ref": "#/definitions/NewRelicEndpoint"
+      },
+      "ApiKey": {
+        "$ref": "#/definitions/NewRelicApiKey"
+      }
+    },
+    "required": [
+      "Endpoint",
+      "ApiKey"
+    ],
+    "additionalProperties": false
+  },
   "definitions": {
+    "NewRelicEndpoint": {
+      "type": "string",
+      "description": "Endpoint to the NerdGraph API.",
+      "default": "https://api.eu.newrelic.com/graphql"
+    },
+    "NewRelicApiKey": {
+      "type": "string",
+      "description": "API key for the New Relic NerdGraph."
+    },
     "DashboardInput": {
       "type": "object",
       "properties": {

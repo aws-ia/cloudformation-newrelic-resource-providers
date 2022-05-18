@@ -39,8 +39,10 @@ public class ReadHandlerTest {
             .desiredResourceState(model)
             .build();
 
+        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder().build();
+
         final ProgressEvent<ResourceModel, CallbackContext> response
-            = handler.handleRequest(proxy, request, null, logger);
+            = handler.handleRequest(proxy, request, null, logger, typeConfigurationModel);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
