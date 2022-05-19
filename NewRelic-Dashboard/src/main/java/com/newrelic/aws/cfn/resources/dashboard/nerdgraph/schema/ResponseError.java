@@ -1,4 +1,4 @@
-package com.newrelic.aws.cfn.resources.dashboard.graphql;
+package com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -35,7 +35,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class GraphQLResponseError {
+public class ResponseError {
     @JsonProperty("message")
     private String message;
 

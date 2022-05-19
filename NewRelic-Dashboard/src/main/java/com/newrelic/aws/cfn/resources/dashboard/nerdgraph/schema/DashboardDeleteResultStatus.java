@@ -1,4 +1,4 @@
-package com.newrelic.aws.cfn.resources.dashboard.graphql;
+package com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema;
 
 public enum DashboardDeleteResultStatus {
     FAILURE,

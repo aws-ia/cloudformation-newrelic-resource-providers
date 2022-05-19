@@ -1,4 +1,4 @@
-package com.newrelic.aws.cfn.resources.dashboard.graphql;
+package com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,15 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class DashboardCreateError {
-    @JsonProperty("description")
-    private String description;
-
-    @JsonProperty("type")
-    private DashboardCreateErrorType type;
+public class Results<T extends EntityResult> {
+    @JsonProperty("entities")
+    private List<T> entities;
 }

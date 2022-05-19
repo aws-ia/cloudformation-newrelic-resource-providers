@@ -1,4 +1,4 @@
-package com.newrelic.aws.cfn.resources.dashboard.graphql;
+package com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,10 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class GraphQLResponse<T extends EntityResult> {
-    @JsonProperty("data")
-    private GraphQLResponseData<T> graphQLResponseData;
+public class DashboardCreateResult {
+    @JsonProperty("entityResult")
+    private DashboardEntityResult entityResult;
 
     @JsonProperty("errors")
-    private List<GraphQLResponseError> graphQLResponseError;
+    private List<DashboardCreateError> errors;
 }

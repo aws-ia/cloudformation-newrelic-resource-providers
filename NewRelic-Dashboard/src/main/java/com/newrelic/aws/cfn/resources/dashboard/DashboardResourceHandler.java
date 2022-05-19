@@ -1,9 +1,9 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
-import com.newrelic.aws.cfn.resources.dashboard.graphql.DashboardEntityResult;
-import com.newrelic.aws.cfn.resources.dashboard.graphql.GraphQLResponseData;
-import com.newrelic.aws.cfn.resources.dashboard.graphql.Util;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardEntityResult;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.NerdGraphClient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -39,10 +39,10 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
     class DashboardHelper extends Helper {
 
-        private final Util util;
+        private final NerdGraphClient nerdGraphClient;
 
         public DashboardHelper() {
-            util = new Util();
+            nerdGraphClient = new NerdGraphClient();
         }
 
         @Override
@@ -54,17 +54,17 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
         @Override
         protected Optional<DashboardEntityResult> findExistingItemWithNonNullId(Pair<Integer, String> id) throws Exception {
-            String template = util.getGraphQLTemplate("dashboardRead.query.template");
+            String template = nerdGraphClient.getGraphQLTemplate("dashboardRead.query.template");
             String query = String.format(template, id.getRight());
-            GraphQLResponseData<DashboardEntityResult> graphQLResponse = util.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
 
             return Optional.of(graphQLResponse.getActor().getEntity());
         }
 
         @Override
         public List<DashboardEntityResult> readExistingItems() throws Exception {
-            String template = util.getGraphQLTemplate("dashboardSearch.query.template");
-            GraphQLResponseData<DashboardEntityResult> graphQLResponse = util.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), template);
+            String template = nerdGraphClient.getGraphQLTemplate("dashboardSearch.query.template");
+            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), template);
 
             return graphQLResponse.getActor().getEntitySearch().getResults().getEntities();
         }
@@ -80,9 +80,9 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
         @Override
         public DashboardEntityResult createItem() throws Exception {
-            String template = util.getGraphQLTemplate("dashboardCreate.mutation.template");
-            String mutation = String.format(template, model.getAccountId(), util.genGraphQLArg(model.getDashboard()));
-            GraphQLResponseData<DashboardEntityResult> graphQLResponse = util.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            String template = nerdGraphClient.getGraphQLTemplate("dashboardCreate.mutation.template");
+            String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
+            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
             if (graphQLResponse.getDashboardCreateResult() != null && graphQLResponse.getDashboardCreateResult().getErrors() != null) {
                 throw new CfnServiceInternalErrorException("NerdGraph dashboardCreate mutation", new Exception(graphQLResponse.getDashboardCreateResult().getErrors()
@@ -96,9 +96,9 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
         @Override
         public void updateItem(DashboardEntityResult dashboardEntityResult, List<String> list) throws Exception {
-            String template = util.getGraphQLTemplate("dashboardUpdate.mutation.template");
-            String mutation = String.format(template, model.getDashboardId(), util.genGraphQLArg(model.getDashboard()));
-            GraphQLResponseData<DashboardEntityResult> graphQLResponse = util.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            String template = nerdGraphClient.getGraphQLTemplate("dashboardUpdate.mutation.template");
+            String mutation = String.format(template, model.getDashboardId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
+            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
             if (graphQLResponse.getDashboardDeleteResult() != null && graphQLResponse.getDashboardDeleteResult().getErrors() != null) {
                 throw new CfnServiceInternalErrorException("NerdGraph dashboardUpdate mutation", new Exception(graphQLResponse.getDashboardDeleteResult().getErrors()
@@ -110,9 +110,9 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
         @Override
         public void deleteItem(DashboardEntityResult dashboardEntityResult) throws Exception {
-            String template = util.getGraphQLTemplate("dashboardDelete.mutation.template");
+            String template = nerdGraphClient.getGraphQLTemplate("dashboardDelete.mutation.template");
             String mutation = String.format(template, model.getDashboardId());
-            GraphQLResponseData<DashboardEntityResult> graphQLResponse = util.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
             if (graphQLResponse.getDashboardDeleteResult() != null && graphQLResponse.getDashboardDeleteResult().getErrors() != null) {
                 throw new CfnServiceInternalErrorException("NerdGraph dashboardDelete mutation", new Exception(graphQLResponse.getDashboardDeleteResult().getErrors()

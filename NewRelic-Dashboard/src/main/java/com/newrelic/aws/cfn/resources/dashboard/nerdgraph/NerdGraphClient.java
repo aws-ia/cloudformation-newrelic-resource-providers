@@ -1,12 +1,13 @@
-package com.newrelic.aws.cfn.resources.dashboard.graphql;
+package com.newrelic.aws.cfn.resources.dashboard.nerdgraph;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.EntityResult;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.Response;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
 import software.amazon.cloudformation.exceptions.CfnHandlerInternalFailureException;
 import software.amazon.cloudformation.exceptions.CfnNetworkFailureException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -14,7 +15,6 @@ import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorExceptio
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
@@ -28,9 +28,9 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-public class Util {
+public class NerdGraphClient {
 
-    public String getGraphQLTemplate(String name) {
+    public String getGraphQLTemplate(String name) throws CfnHandlerInternalFailureException {
         try {
             URL resource = Resources.getResource("graphql/" + name);
             return Resources.toString(resource, StandardCharsets.UTF_8);
@@ -73,15 +73,20 @@ public class Util {
         return schema.toString();
     }
 
-    public <T extends EntityResult> GraphQLResponseData<T> doRequest(Class<T> clazz, String endpoint, String variables, String apiKey, String query) {
-        GraphQLResponse<T> result;
+    public <T extends EntityResult> ResponseData<T> doRequest(Class<T> resultType,
+                                                              String endpoint,
+                                                              String variables,
+                                                              String apiKey,
+                                                              String query)
+            throws CfnNetworkFailureException, CfnServiceInternalErrorException {
+        Response<T> result;
 
         try {
             ObjectMapper mapper = new ObjectMapper();
 
             ImmutableMap<String, String> of = ImmutableMap.of(
                     "query", query,
-                    "variable",  variables);
+                    "variable", variables);
             byte[] dataBytes = mapper.writeValueAsString(of).getBytes(StandardCharsets.UTF_8);
 
             URL url = new URL(endpoint);
@@ -96,24 +101,24 @@ public class Util {
             Reader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
             StringBuilder sb = new StringBuilder();
-            for (int c; (c = in.read()) >= 0;)
-                sb.append((char)c);
+            for (int c; (c = in.read()) >= 0; )
+                sb.append((char) c);
             String response = sb.toString();
 
             result = mapper.readValue(response, mapper
                     .getTypeFactory()
-                    .constructParametricType(GraphQLResponse.class, clazz));
+                    .constructParametricType(Response.class, resultType));
         } catch (Exception ex) {
-            throw new CfnNetworkFailureException("Fail to execute the request to NerdGraph API", ex);
+            throw new CfnNetworkFailureException("Request to NerdGraph API", ex);
         }
 
-        if (result.getGraphQLResponseError() != null) {
-            throw new CfnServiceInternalErrorException(result.getGraphQLResponseError()
+        if (result.getResponseError() != null) {
+            throw new CfnServiceInternalErrorException(result.getResponseError()
                     .stream()
                     .map(graphQLResponseError -> String.format("==> For path \"%s\": %s", graphQLResponseError.getPath(), graphQLResponseError.getMessage()))
                     .collect(Collectors.joining("\n", "The following error occurred while talking to New Relic NerdGraph API:\n", "")));
         }
 
-        return result.getGraphQLResponseData();
+        return result.getResponseData();
     }
 }
