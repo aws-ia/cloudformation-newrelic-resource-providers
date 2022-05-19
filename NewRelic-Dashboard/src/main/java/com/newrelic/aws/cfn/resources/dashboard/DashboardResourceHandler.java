@@ -1,9 +1,10 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
-import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardEntityResult;
-import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.NerdGraphClient;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardEntityResult;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardError;
+import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -20,7 +21,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DashboardResourceHandler.class);
 
-    public static class BaseHandlerAdapter extends BaseHandler<CallbackContext,TypeConfigurationModel> implements BaseHandlerAdapterDefault<DashboardResourceHandler, ResourceModel,CallbackContext,TypeConfigurationModel> {
+    public static class BaseHandlerAdapter extends BaseHandler<CallbackContext, TypeConfigurationModel> implements BaseHandlerAdapterDefault<DashboardResourceHandler, ResourceModel, CallbackContext, TypeConfigurationModel> {
         @Override
         public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext, Logger logger, TypeConfigurationModel typeConfiguration) {
             return BaseHandlerAdapterDefault.super.handleRequest(proxy, request, callbackContext, logger, typeConfiguration);
@@ -82,43 +83,37 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         public DashboardEntityResult createItem() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
-            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
-            if (graphQLResponse.getDashboardCreateResult() != null && graphQLResponse.getDashboardCreateResult().getErrors() != null) {
-                throw new CfnServiceInternalErrorException("NerdGraph dashboardCreate mutation", new Exception(graphQLResponse.getDashboardCreateResult().getErrors()
-                        .stream()
-                        .map(dashboardCreateError -> String.format("==> %s", dashboardCreateError.getDescription()))
-                        .collect(Collectors.joining("\n", "The following error occurred while trying to create the New Relic dashboard:\n", ""))));
-            }
+            checkForDashboardErrors(responseData.getDashboardCreateResult().getErrors(), "NerdGraph dashboardCreate mutation");
 
-            return graphQLResponse.getDashboardCreateResult().getEntityResult();
+            return responseData.getDashboardCreateResult().getEntityResult();
         }
 
         @Override
         public void updateItem(DashboardEntityResult dashboardEntityResult, List<String> list) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardUpdate.mutation.template");
             String mutation = String.format(template, model.getDashboardId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
-            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
-            if (graphQLResponse.getDashboardDeleteResult() != null && graphQLResponse.getDashboardDeleteResult().getErrors() != null) {
-                throw new CfnServiceInternalErrorException("NerdGraph dashboardUpdate mutation", new Exception(graphQLResponse.getDashboardDeleteResult().getErrors()
-                        .stream()
-                        .map(dashboardDeleteError -> String.format("==> %s", dashboardDeleteError.getDescription()))
-                        .collect(Collectors.joining("\n", "The following error occurred while trying to delete the New Relic dashboard:\n", ""))));
-            }
+            checkForDashboardErrors(responseData.getDashboardUpdateResult().getErrors(), "NerdGraph dashboardUpdate mutation");
         }
 
         @Override
         public void deleteItem(DashboardEntityResult dashboardEntityResult) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardDelete.mutation.template");
             String mutation = String.format(template, model.getDashboardId());
-            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
 
-            if (graphQLResponse.getDashboardDeleteResult() != null && graphQLResponse.getDashboardDeleteResult().getErrors() != null) {
-                throw new CfnServiceInternalErrorException("NerdGraph dashboardDelete mutation", new Exception(graphQLResponse.getDashboardDeleteResult().getErrors()
+            checkForDashboardErrors(responseData.getDashboardDeleteResult().getErrors(), "NerdGraph dashboardDelete mutation");
+        }
+
+        private <ErrorTypeT> void checkForDashboardErrors(List<DashboardError<ErrorTypeT>> dashboardErrors, String operation) throws CfnServiceInternalErrorException {
+            if (dashboardErrors != null && !dashboardErrors.isEmpty()) {
+                throw new CfnServiceInternalErrorException(operation, new Exception(dashboardErrors
                         .stream()
-                        .map(dashboardDeleteError -> String.format("==> %s", dashboardDeleteError.getDescription()))
-                        .collect(Collectors.joining("\n", "The following error occurred while trying to delete the New Relic dashboard:\n", ""))));
+                        .map(dashboardError -> String.format("==> [%s] %s", dashboardError.getType(), dashboardError.getDescription()))
+                        .collect(Collectors.joining("\n", "The following error(s) occurred interacting with the NerdGraph API:\n", ""))));
             }
         }
     }

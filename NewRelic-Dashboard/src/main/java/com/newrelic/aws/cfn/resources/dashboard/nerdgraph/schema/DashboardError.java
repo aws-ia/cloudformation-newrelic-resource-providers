@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class DashboardCreateError {
+public class DashboardError<ErrorTypeT> {
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("type")
-    private DashboardCreateErrorType type;
+    private ErrorTypeT type;
 }

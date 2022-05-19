@@ -115,7 +115,7 @@ public class NerdGraphClient {
         if (result.getResponseError() != null) {
             throw new CfnServiceInternalErrorException(result.getResponseError()
                     .stream()
-                    .map(graphQLResponseError -> String.format("==> For path \"%s\": %s", graphQLResponseError.getPath(), graphQLResponseError.getMessage()))
+                    .map(responseError -> String.format("==> For path \"%s\": %s", responseError.getPath(), responseError.getMessage()))
                     .collect(Collectors.joining("\n", "The following error occurred while talking to New Relic NerdGraph API:\n", "")));
         }
 

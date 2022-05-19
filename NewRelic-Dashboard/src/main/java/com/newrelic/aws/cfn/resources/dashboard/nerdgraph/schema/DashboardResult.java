@@ -3,19 +3,18 @@ package com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class DashboardDeleteError {
-    @JsonProperty("description")
-    private String description;
-
-    @JsonProperty("type")
-    private DashboardDeleteErrorType type;
+public abstract class DashboardResult<ErrorT extends DashboardError<?>> {
+    @JsonProperty("errors")
+    private List<ErrorT> errors;
 }
