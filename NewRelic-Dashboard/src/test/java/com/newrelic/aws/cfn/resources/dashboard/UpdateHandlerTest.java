@@ -1,5 +1,6 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
+import com.google.common.collect.ImmutableList;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.OperationStatus;
@@ -33,13 +34,60 @@ public class UpdateHandlerTest {
     public void handleRequest_SimpleSuccess() {
         final UpdateHandler handler = new UpdateHandler();
 
-        final ResourceModel model = ResourceModel.builder().build();
+        final ResourceModel model = ResourceModel.builder()
+                .accountId(3495167)
+                .dashboardId("MzQ5NTE2N3xWSVp8REFTSEJPQVJEfGRhOjQxNDIw")
+                .dashboard(DashboardInput.builder()
+                        .name("My Dashboard")
+                        .description("Dashboard for my new app")
+                        .pages(ImmutableList.of(PageInput.builder()
+                                .name("Foo")
+                                .description("Page 'foo of my new dashboard")
+                                .widgets(ImmutableList.of(
+                                        WidgetInput.builder()
+                                                .configuration(
+                                                        WidgetInputConfigurationInput.builder()
+                                                                .line(TypeWidgetInputConfigurationInputInput.builder()
+                                                                        .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
+                                                                                .accountId(3495167)
+                                                                                .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")
+                                                                                .build()))
+                                                                        .build())
+                                                                .build())
+                                                .title("Widget Foo A")
+                                                .build()
+                                ))
+                                .build(),
+                                PageInput.builder()
+                                        .name("Bar")
+                                        .description("Page 'bar' of my new dashboard")
+                                        .widgets(ImmutableList.of(
+                                                WidgetInput.builder()
+                                                        .configuration(
+                                                                WidgetInputConfigurationInput.builder()
+                                                                        .line(TypeWidgetInputConfigurationInputInput.builder()
+                                                                                .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
+                                                                                        .accountId(3495167)
+                                                                                        .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")
+                                                                                        .build()))
+                                                                                .build())
+                                                                        .build())
+                                                        .title("Widget Bar A")
+                                                        .build()
+                                        ))
+                                        .build()))
+                        .permissions("PRIVATE")
+                        .build())
+                .build();
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)
             .build();
 
-        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder().build();
+        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder()
+                .endpoint("https://api.eu.newrelic.com/graphql")
+                .apiKey("NRAK-5SE8PNXSYWYDOGSHDYX5HBWMLH4")
+                .build();
 
         final ProgressEvent<ResourceModel, CallbackContext> response
             = handler.handleRequest(proxy, request, null, logger, typeConfigurationModel);
@@ -50,7 +98,7 @@ public class UpdateHandlerTest {
         assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
         assertThat(response.getResourceModel()).isEqualTo(request.getDesiredResourceState());
         assertThat(response.getResourceModels()).isNull();
-        assertThat(response.getMessage()).isNull();
+        assertThat(response.getMessage()).isEqualTo("No changes");
         assertThat(response.getErrorCode()).isNull();
     }
 }

@@ -1,7 +1,12 @@
 package com.newrelic.aws.cfn.resources.dashboard.graphql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -25,19 +30,15 @@ import java.util.List;
  *     }
  */
 @JsonIgnoreProperties
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class GraphQLResponseError {
-
     @JsonProperty("message")
     private String message;
 
     @JsonProperty("path")
     private List<String> path;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public List<String> getPath() {
-        return path;
-    }
 }

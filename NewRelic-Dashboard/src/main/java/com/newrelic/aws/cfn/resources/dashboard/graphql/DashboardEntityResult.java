@@ -1,10 +1,20 @@
 package com.newrelic.aws.cfn.resources.dashboard.graphql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
-public class DashboardEntityResult {
+@Data
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
+public class DashboardEntityResult implements EntityResult {
     @JsonProperty("accountId")
     private Integer accountId;
 
@@ -19,24 +29,4 @@ public class DashboardEntityResult {
 
     @JsonProperty("updatedAt")
     private Date updatedAt;
-
-    public Integer getAccountId() {
-        return accountId;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
 }

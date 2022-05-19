@@ -1,6 +1,8 @@
 package com.newrelic.aws.cfn.resources.dashboard.graphql;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -71,8 +73,8 @@ public class Util {
         return schema.toString();
     }
 
-    public GraphQLResponseData doRequest(String endpoint, String variables, String apiKey, String query) {
-        GraphQLResponse result;
+    public <T extends EntityResult> GraphQLResponseData<T> doRequest(Class<T> clazz, String endpoint, String variables, String apiKey, String query) {
+        GraphQLResponse<T> result;
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -98,8 +100,9 @@ public class Util {
                 sb.append((char)c);
             String response = sb.toString();
 
-            // Manually converting the response body InputStream to APOD using Jackson
-            result = mapper.readValue(response, GraphQLResponse.class);
+            result = mapper.readValue(response, mapper
+                    .getTypeFactory()
+                    .constructParametricType(GraphQLResponse.class, clazz));
         } catch (Exception ex) {
             throw new CfnNetworkFailureException("Fail to execute the request to NerdGraph API", ex);
         }

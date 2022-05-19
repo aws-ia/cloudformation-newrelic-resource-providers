@@ -14,10 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class DashboardCreateResult {
-    @JsonProperty("entityResult")
-    private DashboardEntityResult entityResult;
-
-    @JsonProperty("errors")
-    private List<DashboardCreateError> errors;
+public class Results<T extends EntityResult> {
+    @JsonProperty("entities")
+    private List<T> entities;
 }

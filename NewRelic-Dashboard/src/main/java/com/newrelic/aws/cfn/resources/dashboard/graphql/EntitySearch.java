@@ -7,17 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class DashboardCreateResult {
-    @JsonProperty("entityResult")
-    private DashboardEntityResult entityResult;
-
-    @JsonProperty("errors")
-    private List<DashboardCreateError> errors;
+public class EntitySearch<T extends EntityResult> {
+    @JsonProperty("results")
+    private Results<T> results;
 }

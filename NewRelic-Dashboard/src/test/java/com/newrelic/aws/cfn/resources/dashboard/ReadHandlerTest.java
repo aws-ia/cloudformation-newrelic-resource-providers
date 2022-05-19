@@ -33,13 +33,19 @@ public class ReadHandlerTest {
     public void handleRequest_SimpleSuccess() {
         final ReadHandler handler = new ReadHandler();
 
-        final ResourceModel model = ResourceModel.builder().build();
+        final ResourceModel model = ResourceModel.builder()
+                .accountId(3495167)
+                .dashboardId("MzQ5NTE2N3xWSVp8REFTSEJPQVJEfGRhOjQxNDIw")
+                .build();
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)
             .build();
 
-        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder().build();
+        final TypeConfigurationModel typeConfigurationModel = TypeConfigurationModel.builder()
+                .endpoint("https://api.eu.newrelic.com/graphql")
+                .apiKey("NRAK-5SE8PNXSYWYDOGSHDYX5HBWMLH4")
+                .build();
 
         final ProgressEvent<ResourceModel, CallbackContext> response
             = handler.handleRequest(proxy, request, null, logger, typeConfigurationModel);

@@ -1,5 +1,6 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
+import com.google.common.collect.ImmutableList;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.OperationStatus;
@@ -34,7 +35,31 @@ public class DeleteHandlerTest {
         final DeleteHandler handler = new DeleteHandler();
 
         final ResourceModel model = ResourceModel.builder()
-                .dashboardId("MzQ5NTE2N3xWSVp8REFTSEJPQVJEfGRhOjQxMDkz")
+                .accountId(3495167)
+                .dashboardId("MzQ5NTE2N3xWSVp8REFTSEJPQVJEfGRhOjQxNDI4")
+                .dashboard(DashboardInput.builder()
+                        .name("My Dashboard")
+                        .description("Dashboard for my new app")
+                        .pages(ImmutableList.of(PageInput.builder()
+                                .name("Page 1")
+                                .description("Page 1 of my new dashboard")
+                                .widgets(ImmutableList.of(
+                                        WidgetInput.builder()
+                                                .configuration(
+                                                        WidgetInputConfigurationInput.builder()
+                                                                .line(TypeWidgetInputConfigurationInputInput.builder()
+                                                                        .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
+                                                                                .accountId(3495167)
+                                                                                .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")
+                                                                                .build()))
+                                                                        .build())
+                                                                .build())
+                                                .title("Widget A")
+                                                .build()
+                                ))
+                                .build()))
+                        .permissions("PRIVATE")
+                        .build())
                 .build();
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
@@ -53,7 +78,7 @@ public class DeleteHandlerTest {
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
         assertThat(response.getCallbackContext()).isNull();
         assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
-        assertThat(response.getResourceModel()).isEqualTo(request.getDesiredResourceState());
+        assertThat(response.getResourceModel()).isNull();
         assertThat(response.getResourceModels()).isNull();
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
