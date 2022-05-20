@@ -8,6 +8,7 @@ import com.google.common.io.Resources;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.EntityResult;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.Response;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
+import org.apache.commons.lang3.ClassUtils;
 import software.amazon.cloudformation.exceptions.CfnHandlerInternalFailureException;
 import software.amazon.cloudformation.exceptions.CfnNetworkFailureException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -22,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -42,10 +44,15 @@ public class NerdGraphClient {
     public String genGraphQLArg(Object instance) {
         // We need to maintain a list of enums fields, because GraphQL SDL expects enum values without quotes!
         List<String> enumFieldNames = ImmutableList.of("permissions", "visualization", "type", "facets", "alertSeverity");
-        Field[] allFields = instance.getClass().getDeclaredFields();
+        Class<?> currentInstanceClass = instance.getClass();
+        List<Field> fields = new ArrayList<>(Arrays.asList(currentInstanceClass.getDeclaredFields()));
+        while (currentInstanceClass.getSuperclass() != null) {
+            fields.addAll(Arrays.asList(currentInstanceClass.getSuperclass().getDeclaredFields()));
+            currentInstanceClass = currentInstanceClass.getSuperclass();
+        }
 
         StringJoiner schema = new StringJoiner(", ", "{", "}");
-        Arrays.stream(allFields)
+        fields.stream()
                 .filter(field -> field.isAnnotationPresent(JsonProperty.class))
                 .collect(Collectors.toList())
                 .forEach(field -> {
@@ -54,7 +61,7 @@ public class NerdGraphClient {
                         if (value == null) {
                             return;
                         }
-                        if (value instanceof List) {
+                        if (List.class.isAssignableFrom(value.getClass())) {
                             @SuppressWarnings("unchecked")
                             List<Object> list = (List<Object>) value;
                             schema.add(String.format("%1$s: %2$s", field.getName(), list.stream().map(this::genGraphQLArg).collect(Collectors.joining(", ", "[", "]"))));
