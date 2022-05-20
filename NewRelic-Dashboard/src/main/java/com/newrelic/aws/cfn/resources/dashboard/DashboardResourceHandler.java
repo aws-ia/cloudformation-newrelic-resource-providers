@@ -57,25 +57,25 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         protected Optional<DashboardEntityResult> findExistingItemWithNonNullId(Pair<Integer, String> id) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardRead.query.template");
             String query = String.format(template, id.getRight());
-            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
 
-            return Optional.of(graphQLResponse.getActor().getEntity());
+            return Optional.ofNullable(responseData.getActor().getEntity());
         }
 
         @Override
         public List<DashboardEntityResult> readExistingItems() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardSearch.query.template");
-            ResponseData<DashboardEntityResult> graphQLResponse = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), template);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), template);
 
-            return graphQLResponse.getActor().getEntitySearch().getResults().getEntities();
+            return responseData.getActor().getEntitySearch().getResults().getEntities();
         }
 
         @Override
         public ResourceModel modelFromItem(DashboardEntityResult dashboardEntityResult) {
             return ResourceModel.builder()
-                    .accountId(dashboardEntityResult.getAccountId())
-                    .dashboardId(dashboardEntityResult.getGuid())
-                    .dashboard(model.getDashboard())
+                    .accountId(dashboardEntityResult != null ? dashboardEntityResult.getAccountId() : null)
+                    .dashboardId(dashboardEntityResult != null ? dashboardEntityResult.getGuid() : null)
+                    .dashboard(model != null ? model.getDashboard() : null)
                     .build();
         }
 
