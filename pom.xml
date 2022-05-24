@@ -253,9 +253,9 @@
                 </includes>
             </resource>
             <resource>
-                <directory>${project.basedir}</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
                 <includes>
-                    <include>**/*.template</include>
+                    <include>graphql/**/*.template</include>
                 </includes>
             </resource>
             <resource>

@@ -1,0 +1,17 @@
+{
+  actor {
+    entitySearch(queryBuilder: {type: DASHBOARD}) {
+      results {
+        entities {
+          ... on DashboardEntityOutline {
+            guid
+            name
+            createdAt
+            accountId
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+}
