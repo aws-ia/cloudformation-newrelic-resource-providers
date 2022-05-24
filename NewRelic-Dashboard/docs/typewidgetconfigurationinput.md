@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard TypeWidgetInputConfigurationInputInput
+# Cloudsoft::NewRelic::Dashboard TypeWidgetConfigurationInput
 
 Configuration object for standard typed widget. This includes: Area, Bar, Line, Pie, Table, Event Feed, Funnel, Heatmap, Histogram, JSON
 

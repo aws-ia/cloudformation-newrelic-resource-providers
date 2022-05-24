@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard BillboardWidgetInputConfigurationInputInput
+# Cloudsoft::NewRelic::Dashboard BillboardWidgetConfigurationInput
 
 Configuration object for the widget Billboard.
 

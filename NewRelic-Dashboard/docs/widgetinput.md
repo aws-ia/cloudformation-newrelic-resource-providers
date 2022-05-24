@@ -11,11 +11,11 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 <pre>
 {
     "<a href="#id" title="Id">Id</a>" : <i>String</i>,
-    "<a href="#visualization" title="Visualization">Visualization</a>" : <i>String</i>,
+    "<a href="#visualization" title="Visualization">Visualization</a>" : <i><a href="widgetvisualizationinput.md">WidgetVisualizationInput</a></i>,
     "<a href="#layout" title="Layout">Layout</a>" : <i><a href="layoutinput.md">LayoutInput</a></i>,
     "<a href="#title" title="Title">Title</a>" : <i>String</i>,
-    "<a href="#configuration" title="Configuration">Configuration</a>" : <i><a href="widgetinputconfigurationinput.md">WidgetInputConfigurationInput</a></i>,
-    "<a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>" : <i><a href="typewidgetinputconfigurationinputinput.md">TypeWidgetInputConfigurationInputInput</a>, <a href="areametricinputwidgetinputconfigurationinputinput.md">AreaMetricInputWidgetInputConfigurationInputInput</a>, <a href="bulletwidgetinputconfigurationinputinput.md">BulletWidgetInputConfigurationInputInput</a>, <a href="linemetricinputwidgetinputconfigurationinputinput.md">LineMetricInputWidgetInputConfigurationInputInput</a>, <a href="servicemapwidgetinputconfigurationinputinput.md">ServiceMapWidgetInputConfigurationInputInput</a></i>
+    "<a href="#configuration" title="Configuration">Configuration</a>" : <i><a href="widgetconfigurationinput.md">WidgetConfigurationInput</a></i>,
+    "<a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>" : <i><a href="typewidgetconfigurationinput.md">TypeWidgetConfigurationInput</a>, <a href="areametricwidgetconfigurationinput.md">AreaMetricWidgetConfigurationInput</a>, <a href="bulletwidgetconfigurationinput.md">BulletWidgetConfigurationInput</a>, <a href="inventorywidgetconfigurationinput.md">InventoryWidgetConfigurationInput</a>, <a href="linemetricwidgetconfigurationinput.md">LineMetricWidgetConfigurationInput</a>, <a href="servicemapwidgetconfigurationinput.md">ServiceMapWidgetConfigurationInput</a></i>
 }
 </pre>
 
@@ -23,11 +23,11 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 <a href="#id" title="Id">Id</a>: <i>String</i>
-<a href="#visualization" title="Visualization">Visualization</a>: <i>String</i>
+<a href="#visualization" title="Visualization">Visualization</a>: <i><a href="widgetvisualizationinput.md">WidgetVisualizationInput</a></i>
 <a href="#layout" title="Layout">Layout</a>: <i><a href="layoutinput.md">LayoutInput</a></i>
 <a href="#title" title="Title">Title</a>: <i>String</i>
-<a href="#configuration" title="Configuration">Configuration</a>: <i><a href="widgetinputconfigurationinput.md">WidgetInputConfigurationInput</a></i>
-<a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>: <i><a href="typewidgetinputconfigurationinputinput.md">TypeWidgetInputConfigurationInputInput</a>, <a href="areametricinputwidgetinputconfigurationinputinput.md">AreaMetricInputWidgetInputConfigurationInputInput</a>, <a href="bulletwidgetinputconfigurationinputinput.md">BulletWidgetInputConfigurationInputInput</a>, <a href="linemetricinputwidgetinputconfigurationinputinput.md">LineMetricInputWidgetInputConfigurationInputInput</a>, <a href="servicemapwidgetinputconfigurationinputinput.md">ServiceMapWidgetInputConfigurationInputInput</a></i>
+<a href="#configuration" title="Configuration">Configuration</a>: <i><a href="widgetconfigurationinput.md">WidgetConfigurationInput</a></i>
+<a href="#rawconfiguration" title="RawConfiguration">RawConfiguration</a>: <i><a href="typewidgetconfigurationinput.md">TypeWidgetConfigurationInput</a>, <a href="areametricwidgetconfigurationinput.md">AreaMetricWidgetConfigurationInput</a>, <a href="bulletwidgetconfigurationinput.md">BulletWidgetConfigurationInput</a>, <a href="inventorywidgetconfigurationinput.md">InventoryWidgetConfigurationInput</a>, <a href="linemetricwidgetconfigurationinput.md">LineMetricWidgetConfigurationInput</a>, <a href="servicemapwidgetconfigurationinput.md">ServiceMapWidgetConfigurationInput</a></i>
 </pre>
 
 ## Properties
@@ -46,13 +46,11 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 #### Visualization
 
-The widget visualization type, as a string. For example: viz.line, viz.area. See the examples below.
+Specifies how this widget will be visualized. If null, the WidgetConfigurationInput will be used to determine the visualization.
 
 _Required_: No
 
-_Type_: String
-
-_Allowed Values_: <code>viz.area</code> | <code>viz.bar</code> | <code>viz.billboard</code> | <code>viz.line</code> | <code>viz.markdown</code> | <code>viz.pie</code> | <code>viz.table</code> | <code>viz.bullet</code> | <code>viz.eventfeed</code> | <code>viz.funnel</code> | <code>viz.heatmap</code> | <code>viz.histogram</code> | <code>viz.inventory</code> | <code>viz.json</code> | <code>viz.servicemap</code>
+_Type_: <a href="widgetvisualizationinput.md">WidgetVisualizationInput</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
@@ -80,7 +78,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 _Required_: No
 
-_Type_: <a href="widgetinputconfigurationinput.md">WidgetInputConfigurationInput</a>
+_Type_: <a href="widgetconfigurationinput.md">WidgetConfigurationInput</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
@@ -88,7 +86,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 _Required_: No
 
-_Type_: <a href="typewidgetinputconfigurationinputinput.md">TypeWidgetInputConfigurationInputInput</a>, <a href="areametricinputwidgetinputconfigurationinputinput.md">AreaMetricInputWidgetInputConfigurationInputInput</a>, <a href="bulletwidgetinputconfigurationinputinput.md">BulletWidgetInputConfigurationInputInput</a>, <a href="linemetricinputwidgetinputconfigurationinputinput.md">LineMetricInputWidgetInputConfigurationInputInput</a>, <a href="servicemapwidgetinputconfigurationinputinput.md">ServiceMapWidgetInputConfigurationInputInput</a>
+_Type_: <a href="typewidgetconfigurationinput.md">TypeWidgetConfigurationInput</a>, <a href="areametricwidgetconfigurationinput.md">AreaMetricWidgetConfigurationInput</a>, <a href="bulletwidgetconfigurationinput.md">BulletWidgetConfigurationInput</a>, <a href="inventorywidgetconfigurationinput.md">InventoryWidgetConfigurationInput</a>, <a href="linemetricwidgetconfigurationinput.md">LineMetricWidgetConfigurationInput</a>, <a href="servicemapwidgetconfigurationinput.md">ServiceMapWidgetConfigurationInput</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 

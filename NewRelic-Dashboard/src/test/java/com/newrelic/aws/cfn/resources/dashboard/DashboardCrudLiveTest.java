@@ -39,8 +39,8 @@ public class DashboardCrudLiveTest extends AbstractResourceCrudLiveTest<Dashboar
                                 .widgets(ImmutableList.of(
                                         WidgetInput.builder()
                                                 .configuration(
-                                                        WidgetInputConfigurationInput.builder()
-                                                                .line(TypeWidgetInputConfigurationInputInput.builder()
+                                                        WidgetConfigurationInput.builder()
+                                                                .line(TypeWidgetConfigurationInput.builder()
                                                                         .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
                                                                                 .accountId(accountId)
                                                                                 .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")
@@ -70,8 +70,8 @@ public class DashboardCrudLiveTest extends AbstractResourceCrudLiveTest<Dashboar
                                 .widgets(ImmutableList.of(
                                         WidgetInput.builder()
                                                 .configuration(
-                                                        WidgetInputConfigurationInput.builder()
-                                                                .bar(TypeWidgetInputConfigurationInputInput.builder()
+                                                        WidgetConfigurationInput.builder()
+                                                                .bar(TypeWidgetConfigurationInput.builder()
                                                                         .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
                                                                                 .accountId(this.model.getAccountId())
                                                                                 .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")
@@ -82,8 +82,8 @@ public class DashboardCrudLiveTest extends AbstractResourceCrudLiveTest<Dashboar
                                                 .build(),
                                         WidgetInput.builder()
                                                 .configuration(
-                                                        WidgetInputConfigurationInput.builder()
-                                                                .area(TypeWidgetInputConfigurationInputInput.builder()
+                                                        WidgetConfigurationInput.builder()
+                                                                .area(TypeWidgetConfigurationInput.builder()
                                                                         .nrqlQueries(ImmutableList.of(NrqlQueryInput.builder()
                                                                                 .accountId(this.model.getAccountId())
                                                                                 .query("SELECT count(*) FROM Transaction FACET appName TIMESERIES")

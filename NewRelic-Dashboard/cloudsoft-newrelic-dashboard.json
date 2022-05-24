@@ -192,8 +192,50 @@
           "minLength": 1
         },
         "Visualization": {
+          "$ref": "#/definitions/WidgetVisualizationInput"
+        },
+        "Layout": {
+          "$ref": "#/definitions/LayoutInput"
+        },
+        "Title": {
           "type": "string",
-          "description": "The widget visualization type, as a string. For example: viz.line, viz.area. See the examples below.",
+          "description": "The title of the widget."
+        },
+        "Configuration": {
+          "$ref": "#/definitions/WidgetConfigurationInput"
+        },
+        "RawConfiguration": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TypeWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/AreaMetricWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/BulletWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/InventoryWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/LineMetricWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/ServiceMapWidgetConfigurationInput"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "WidgetVisualizationInput": {
+      "type": "object",
+      "description": "Specifies how this widget will be visualized. If null, the WidgetConfigurationInput will be used to determine the visualization.",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "Nerdpack artifact ID",
           "enum": [
             "viz.area",
             "viz.bar",
@@ -211,67 +253,41 @@
             "viz.json",
             "viz.servicemap"
           ]
-        },
-        "Layout": {
-          "$ref": "#/definitions/LayoutInput"
-        },
-        "Title": {
-          "type": "string",
-          "description": "The title of the widget."
-        },
-        "Configuration": {
-          "$ref": "#/definitions/WidgetInputConfigurationInput"
-        },
-        "RawConfiguration": {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
-            },
-            {
-              "$ref": "#/definitions/AreaMetricInputWidgetInputConfigurationInputInput"
-            },
-            {
-              "$ref": "#/definitions/BulletWidgetInputConfigurationInputInput"
-            },
-            {
-              "$ref": "#/definitions/LineMetricInputWidgetInputConfigurationInputInput"
-            },
-            {
-              "$ref": "#/definitions/ServiceMapWidgetInputConfigurationInputInput"
-            }
-          ]
         }
       },
+      "required": [
+        "Id"
+      ],
       "additionalProperties": false
     },
-    "WidgetInputConfigurationInput": {
+    "WidgetConfigurationInput": {
       "type": "object",
       "properties": {
         "Area": {
-          "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
         },
         "Bar": {
-          "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
         },
         "Billboard": {
-          "$ref": "#/definitions/BillboardWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/BillboardWidgetConfigurationInput"
         },
         "Line": {
-          "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
         },
         "Markdown": {
-          "$ref": "#/definitions/MarkdownWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/MarkdownWidgetConfigurationInput"
         },
         "Pie": {
-          "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
         },
         "Table": {
-          "$ref": "#/definitions/TypeWidgetInputConfigurationInputInput"
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
         }
       },
       "additionalProperties": false
     },
-    "TypeWidgetInputConfigurationInputInput": {
+    "TypeWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for standard typed widget. This includes: Area, Bar, Line, Pie, Table, Event Feed, Funnel, Heatmap, Histogram, JSON",
       "properties": {
@@ -285,7 +301,7 @@
       },
       "additionalProperties": false
     },
-    "BillboardWidgetInputConfigurationInputInput": {
+    "BillboardWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Billboard.",
       "properties": {
@@ -307,7 +323,7 @@
       },
       "additionalProperties": false
     },
-    "MarkdownWidgetInputConfigurationInputInput": {
+    "MarkdownWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Markdown.",
       "properties": {
@@ -321,7 +337,7 @@
       ],
       "additionalProperties": false
     },
-    "AreaMetricInputWidgetInputConfigurationInputInput": {
+    "AreaMetricWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Area (Metric)",
       "properties": {
@@ -362,7 +378,7 @@
       ],
       "additionalProperties": false
     },
-    "BulletWidgetInputConfigurationInputInput": {
+    "BulletWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Line (Metric).",
       "properties": {
@@ -380,7 +396,7 @@
       },
       "additionalProperties": false
     },
-    "InventoryWidgetInputConfigurationInputInput": {
+    "InventoryWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Inventory.",
       "properties": {
@@ -402,7 +418,7 @@
       },
       "additionalProperties": false
     },
-    "LineMetricInputWidgetInputConfigurationInputInput": {
+    "LineMetricWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Area (Metric)",
       "properties": {
@@ -455,7 +471,7 @@
       ],
       "additionalProperties": false
     },
-    "ServiceMapWidgetInputConfigurationInputInput": {
+    "ServiceMapWidgetConfigurationInput": {
       "type": "object",
       "description": "Configuration object for the widget Service Map.",
       "properties": {
