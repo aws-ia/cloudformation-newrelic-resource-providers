@@ -1,5 +1,5 @@
 {
-  "typeName": "Cloudsoft::NewRelic::Dashboard",
+  "typeName": "NewRelic::Dashboard::Dashboard",
   "description": "Manage New Relic Dashboard, including WidgetInputs",
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
   "typeConfiguration": {

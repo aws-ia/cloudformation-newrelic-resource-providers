@@ -108,7 +108,7 @@ to use. This is done in `~/.cfn-cli/typeConfiguration.json`:
 For most resources it is also necessary to set specific parameters to pass for CREATE and UPDATE,
 e.g. in `NewRelic-Dashboard`, you can see an example with the [overrides.json](../../NewRelic-Dashboard/overrides.json)
 
-If there are resources in GitLab which must exist prior to execution, add them manually
+If there are resources in New Relic which must exist prior to execution, add them manually
 (or in `template.yml` and you can then refer to them per the instructions above).
 
 Next start the lambda:
@@ -159,7 +159,7 @@ done
 ### Setting Type Configuration
 
 If this is the first time registering, you will need to set up the type configuration used for
-each of these types, containing the access token for connecting to GitLab.
+each of these types, containing the endpoint and the API KEY for connecting to New Relic.
 We recommend entering the api key into Systems Manager, say under path `/cfn/newrelic/api-key`,
 and then referring to it, e.g. as `{{resolve:ssm-secure:/cfn/newrelic/api-key}}`.
 
@@ -230,11 +230,11 @@ There is also scaffolding for tests allowing a default pattern of CRUD to be eas
 extended with other tests where desired.
 
 
-### How to Add Code for a New New Relic Resource
+### How to Add Code for a new "New Relic" Resource
 
 The recommended way to add a new resource is to use `cfn init` in the directory for the new resource,
 e.g. `NewRelic-Xxxx-Yyyyy`,
-using a package such as `com.gitlab.aws.cfn.resources.xxxx.yyyy`.
+using a package such as `com.newrelic.aws.cfn.resources.xxxx.yyyy`.
 
 Then to prepare the code, we typically:
 

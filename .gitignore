@@ -14,7 +14,7 @@ out/
 .project
 
 # auto-generated files
-NewRelic-Dashboard/target/
+target/
 .hypothesis
 
 # our logs
