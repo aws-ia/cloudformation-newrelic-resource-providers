@@ -29,7 +29,7 @@ import java.util.List;
  *       ]
  *     }
  */
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
 @AllArgsConstructor
