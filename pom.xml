@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>NewRelic-Dashboard</module>
+        <module>NewRelic-Dashboard-Dashboard</module>
     </modules>
 
     <properties>
