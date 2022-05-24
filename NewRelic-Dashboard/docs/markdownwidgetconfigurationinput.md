@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard MarkdownWidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard MarkdownWidgetConfigurationInput
 
 Configuration object for the widget Markdown.
 

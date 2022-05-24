@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard NrqlQueryInput
+# NewRelic::Dashboard::Dashboard NrqlQueryInput
 
 ## Syntax
 

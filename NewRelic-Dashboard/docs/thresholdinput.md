@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard ThresholdInput
+# NewRelic::Dashboard::Dashboard ThresholdInput
 
 Threshold to categorize the results of the query in different groups.
 

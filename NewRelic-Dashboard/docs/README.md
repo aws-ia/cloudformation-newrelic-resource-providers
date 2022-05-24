@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard
+# NewRelic::Dashboard::Dashboard
 
 Manage New Relic Dashboard, including WidgetInputs
 
@@ -10,7 +10,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "Type" : "Cloudsoft::NewRelic::Dashboard",
+    "Type" : "NewRelic::Dashboard::Dashboard",
     "Properties" : {
         "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
         "<a href="#dashboard" title="Dashboard">Dashboard</a>" : <i><a href="dashboardinput.md">DashboardInput</a></i>
@@ -21,7 +21,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 ### YAML
 
 <pre>
-Type: Cloudsoft::NewRelic::Dashboard
+Type: NewRelic::Dashboard::Dashboard
 Properties:
     <a href="#accountid" title="AccountId">AccountId</a>: <i>Integer</i>
     <a href="#dashboard" title="Dashboard">Dashboard</a>: <i><a href="dashboardinput.md">DashboardInput</a></i>

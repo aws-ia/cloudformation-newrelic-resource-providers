@@ -1,6 +1,6 @@
 {
     "artifact_type": "RESOURCE",
-    "typeName": "Cloudsoft::NewRelic::Dashboard",
+    "typeName": "NewRelic::Dashboard::Dashboard",
     "language": "java",
     "runtime": "java8",
     "entrypoint": "com.newrelic.aws.cfn.resources.dashboard.HandlerWrapper::handleRequest",

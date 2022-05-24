@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard WidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard WidgetConfigurationInput
 
 ## Syntax
 

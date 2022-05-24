@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard LineMetricWidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard LineMetricWidgetConfigurationInput
 
 Configuration object for the widget Area (Metric)
 

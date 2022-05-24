@@ -2,7 +2,7 @@
   "CREATE": {
     "/AccountId": 3495167,
     "/Dashboard": {
-      "Name": "Contract testing (Cloudsoft::NewRelic::Dashboard)",
+      "Name": "Contract testing (NewRelic::Dashboard::Dashboard)",
       "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
       "Pages": [
         {
@@ -33,7 +33,7 @@
   },
   "UPDATE": {
     "/Dashboard": {
-      "Name": "Contract testing (Cloudsoft::NewRelic::Dashboard) - UPDATED!",
+      "Name": "Contract testing (NewRelic::Dashboard:Dashboard) - UPDATED!",
       "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
       "Pages": [
         {

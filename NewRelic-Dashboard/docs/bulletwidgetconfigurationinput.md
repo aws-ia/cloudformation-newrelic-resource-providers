@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard BulletWidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard BulletWidgetConfigurationInput
 
 Configuration object for the widget Line (Metric).
 

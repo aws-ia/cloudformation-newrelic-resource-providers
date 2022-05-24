@@ -12,8 +12,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Cloudsoft::NewRelic::Dashboard</name>
-    <artifactId>cloudsoft-newrelic-dashboard</artifactId>
+    <name>NewRelic::Dashboard::Dashboard</name>
+    <artifactId>newrelic-dashboard-dashboard</artifactId>
     <packaging>jar</packaging>
 
     <build>

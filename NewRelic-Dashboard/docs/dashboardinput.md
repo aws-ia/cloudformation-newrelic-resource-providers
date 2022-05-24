@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard DashboardInput
+# NewRelic::Dashboard::Dashboard DashboardInput
 
 ## Syntax
 

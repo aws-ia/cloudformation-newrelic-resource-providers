@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard ServiceMapWidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard ServiceMapWidgetConfigurationInput
 
 Configuration object for the widget Service Map.
 

@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard WidgetVisualizationInput
+# NewRelic::Dashboard::Dashboard WidgetVisualizationInput
 
 Specifies how this widget will be visualized. If null, the WidgetConfigurationInput will be used to determine the visualization.
 

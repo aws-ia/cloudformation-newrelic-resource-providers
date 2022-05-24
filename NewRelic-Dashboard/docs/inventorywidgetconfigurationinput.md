@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard InventoryWidgetConfigurationInput
+# NewRelic::Dashboard::Dashboard InventoryWidgetConfigurationInput
 
 Configuration object for the widget Inventory.
 

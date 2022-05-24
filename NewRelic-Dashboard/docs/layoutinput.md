@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard LayoutInput
+# NewRelic::Dashboard::Dashboard LayoutInput
 
 The widget's position and size in the dashboard. The maximum amount of columns is 12.
 

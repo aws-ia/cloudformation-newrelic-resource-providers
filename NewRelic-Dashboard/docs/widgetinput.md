@@ -1,4 +1,4 @@
-# Cloudsoft::NewRelic::Dashboard WidgetInput
+# NewRelic::Dashboard::Dashboard WidgetInput
 
 A widget object definition.
 
