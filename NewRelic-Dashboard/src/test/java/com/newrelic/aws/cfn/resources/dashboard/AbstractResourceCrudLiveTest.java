@@ -60,6 +60,8 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
 
     protected abstract ResourceModelT newModelForCreate() throws Exception;
 
+    protected abstract ResourceModelT newModelForUpdate() throws Exception;
+
     protected abstract LambdaWrapper<ResourceModelT, CallbackContextT, TypeConfigurationModelT> newHandlerWrapper();
 
     protected LambdaWrapper<ResourceModelT, CallbackContextT, TypeConfigurationModelT> newHandlerWrapperInitialized() {
@@ -150,7 +152,7 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
 
     @Test
     @Order(30)
-    public void testList() throws Exception {
+    public void testListAfterCreate() throws Exception {
         if (this.model == null) {
             Assertions.fail("Create test must succeed for this to be meaningful.");
         }
@@ -165,7 +167,7 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
 
     @Test
     @Order(40)
-    public void testUpdateNoChange() throws Exception {
+    public void testUpdateWithoutChange() throws Exception {
         if (this.model == null) {
             Assertions.fail("Create test must succeed for this to be meaningful.");
         }
@@ -178,6 +180,32 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
 
     @Test
     @Order(50)
+    public void testUpdateWithChange() throws Exception {
+        this.model = this.newModelForUpdate();
+        ProgressEvent<ResourceModelT, CallbackContextT> response = this.invoke(Action.UPDATE);
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+        Assertions.assertThat(response.getResourceModel()).isEqualTo(this.model);
+    }
+
+
+    @Test
+    @Order(60)
+    public void testListAfterUpdate() throws Exception {
+        if (this.model == null) {
+            Assertions.fail("Create test must succeed for this to be meaningful.");
+        }
+
+        ProgressEvent<ResourceModelT, CallbackContextT> response = this.invoke(Action.LIST);
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+        Assertions.assertThat(response.getResourceModels()).anyMatch((m) -> {
+            return m.equals(this.model);
+        });
+    }
+
+    @Test
+    @Order(70)
     public void testDelete() throws Exception {
         if (this.model == null) {
             Assertions.fail("Create test must succeed for this to be meaningful.");

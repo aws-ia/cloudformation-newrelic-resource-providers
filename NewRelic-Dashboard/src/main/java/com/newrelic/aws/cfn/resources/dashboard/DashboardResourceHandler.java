@@ -73,8 +73,8 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         @Override
         public ResourceModel modelFromItem(DashboardEntityResult dashboardEntityResult) {
             return ResourceModel.builder()
-                    .accountId(dashboardEntityResult != null ? dashboardEntityResult.getAccountId() : null)
-                    .dashboardId(dashboardEntityResult != null ? dashboardEntityResult.getGuid() : null)
+                    .accountId(dashboardEntityResult != null ? dashboardEntityResult.getAccountId() : model.getAccountId())
+                    .dashboardId(dashboardEntityResult != null ? dashboardEntityResult.getGuid() : model.getDashboardId())
                     .dashboard(model != null ? model.getDashboard() : null)
                     .build();
         }
