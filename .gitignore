@@ -15,9 +15,11 @@ out/
 
 # auto-generated files
 NewRelic-Dashboard/target/
+.hypothesis
 
 # our logs
 rpdk.log*
+java-tests.log*
 
 # contains credentials
 sam-tests/

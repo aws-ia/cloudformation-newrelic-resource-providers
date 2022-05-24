@@ -1,0 +1,81 @@
+{
+  "CREATE": {
+    "/AccountId": 3495167,
+    "/Dashboard": {
+      "Name": "Contract testing (Cloudsoft::NewRelic::Dashboard)",
+      "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
+      "Pages": [
+        {
+          "Name": "First page",
+          "Description": "First and only page for this dashboard",
+          "Widgets": [
+            {
+              "Title": "My first widget",
+              "Configuration": {
+                "Line": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": 3495167,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.line"
+              }
+            }
+          ]
+        }
+      ],
+      "Permissions": "PRIVATE"
+    }
+  },
+  "UPDATE": {
+    "/Dashboard": {
+      "Name": "Contract testing (Cloudsoft::NewRelic::Dashboard) - UPDATED!",
+      "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
+      "Pages": [
+        {
+          "Name": "First page",
+          "Description": "First and only page for this dashboard",
+          "Widgets": [
+            {
+              "Title": "My first widget",
+              "Configuration": {
+                "Area": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": 3495167,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.area"
+              }
+            },
+            {
+              "Title": "My Second widget",
+              "Configuration": {
+                "Bar": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": 3495167,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.bar"
+              }
+            }
+          ]
+        }
+      ],
+      "Permissions": "PRIVATE"
+    }
+  }
+}
