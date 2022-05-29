@@ -14,6 +14,7 @@
 
     <modules>
         <module>NewRelic-Dashboard-Dashboard</module>
+        <module>NewRelic-Alert-AlertsPolicy</module>
     </modules>
 
     <properties>
