@@ -12,7 +12,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public abstract class AlertsPolicyResult {
+public class AlertsPolicyResult {
     @JsonProperty("id")
     private Integer alertsPolicyId;
+    @JsonProperty("accountId")
+    private Integer accountId;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("incidentPreference")
+    private IncidentPreference incidentPreference;
 }

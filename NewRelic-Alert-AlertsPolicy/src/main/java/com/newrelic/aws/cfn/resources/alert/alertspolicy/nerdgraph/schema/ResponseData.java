@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ResponseData<T extends AlertsPolicyResult> {
     @JsonProperty("alertsPolicyCreate")
-    private AlertsPolicyCreateResult alertCreateResult;
+    private AlertsPolicyResult alertCreateResult;
 
     @JsonProperty("alertsPolicyUpdate")
-    private AlertsPolicyUpdateResult alertUpdateResult;
+    private AlertsPolicyResult alertUpdateResult;
 
     @JsonProperty("alertsPolicyDelete")
-    private AlertsPolicyDeleteResult alertsPolicyDeleteResult;
+    private AlertsPolicyResult alertsPolicyDeleteResult;
 
     @JsonProperty("actor")
     private Actor<T> actor;

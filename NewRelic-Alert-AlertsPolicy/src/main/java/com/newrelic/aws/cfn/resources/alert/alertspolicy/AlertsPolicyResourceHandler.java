@@ -5,9 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.checkerframework.checker.nullness.Opt;
 import org.slf4j.LoggerFactory;
-import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -15,7 +13,6 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler<AlertsPolicyResourceHandler, AlertsPolicyResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
 
@@ -73,10 +70,16 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public ResourceModel modelFromItem(AlertsPolicyResult alertEntityResult) {
-            return ResourceModel.builder()
-                    .accountId(alertEntityResult != null && alertEntityResult instanceof HasAccountId ? ((HasAccountId)alertEntityResult).getAccountId() : model.getAccountId())
-                    .alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId())
-                    .build();
+            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
+            builder.accountId(alertEntityResult != null && alertEntityResult instanceof HasAccountId ? ((HasAccountId)alertEntityResult).getAccountId() : model.getAccountId());
+            builder.alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId());
+            if (alertEntityResult != null && alertEntityResult.getName() != null) {
+                builder.alertsPolicy(AlertsPolicyInput.builder()
+                                .incidentPreference(alertEntityResult.getIncidentPreference().name())
+                                .name(alertEntityResult.getName())
+                        .build());
+            }
+            return builder.build();
         }
 
         @Override
@@ -88,10 +91,13 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
         }
 
         @Override
-        public void updateItem(AlertsPolicyResult alertEntityResult, List<String> list) throws Exception {
+        public void updateItem(AlertsPolicyResult alertEntityResult, List<String> updates) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyUpdate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            if (responseData.getAlertUpdateResult() != null) {
+                updates.add("Updated");
+            }
         }
 
         @Override
