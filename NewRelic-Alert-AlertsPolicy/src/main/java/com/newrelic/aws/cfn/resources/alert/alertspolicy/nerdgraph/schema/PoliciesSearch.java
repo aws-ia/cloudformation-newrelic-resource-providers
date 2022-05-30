@@ -16,5 +16,5 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class PoliciesSearch {
     @JsonProperty("policies")
-    List<AlertsPolicySearchResult> policies;
+    List<AlertsPolicyResult> policies;
 }

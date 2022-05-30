@@ -62,7 +62,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
         public List<AlertsPolicyResult> readExistingItems() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicySearch.query.template");
             String query = String.format(template, model.getAccountId());
-            ResponseData<AlertsPolicySearchResult> responseData = nerdGraphClient.doRequest(AlertsPolicySearchResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
 
             return ImmutableList.<AlertsPolicyResult>builder()
                     .addAll(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResults().getPolicies()).build();
@@ -71,7 +71,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
         @Override
         public ResourceModel modelFromItem(AlertsPolicyResult alertEntityResult) {
             ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
-            builder.accountId(alertEntityResult != null && alertEntityResult instanceof HasAccountId ? ((HasAccountId)alertEntityResult).getAccountId() : model.getAccountId());
+            builder.accountId(alertEntityResult != null ? alertEntityResult.getAccountId() : model.getAccountId());
             builder.alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId());
             if (alertEntityResult != null && alertEntityResult.getName() != null) {
                 builder.alertsPolicy(AlertsPolicyInput.builder()

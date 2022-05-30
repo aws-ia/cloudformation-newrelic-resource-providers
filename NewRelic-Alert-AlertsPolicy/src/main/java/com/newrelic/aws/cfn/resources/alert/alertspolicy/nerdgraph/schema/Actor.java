@@ -15,9 +15,4 @@ import lombok.NoArgsConstructor;
 public class Actor<T extends AlertsPolicyResult> {
     @JsonProperty("account")
     private Account account;
-//    @JsonProperty("entitySearch")
-//    private EntitySearch<T> entitySearch;
-//
-//    @JsonProperty("entity")
-//    private T entity;
 }

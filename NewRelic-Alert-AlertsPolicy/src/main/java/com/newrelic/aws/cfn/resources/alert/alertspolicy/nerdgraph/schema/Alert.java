@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,7 +14,7 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Alert {
     @JsonProperty("policy")
-    private AlertsPolicySearchResult alertsPolicyResult;
+    private AlertsPolicyResult alertsPolicyResult;
     @JsonProperty("policiesSearch")
     private PoliciesSearch alertsPolicyResults;
 }
