@@ -8,21 +8,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class ResponseError {
-    @JsonProperty("message")
-    private String message;
-
-    @JsonProperty("path")
-    private List<String> path;
-
-    @JsonProperty("extensions")
-    private ErrorExtension extension;
+public class ErrorExtension {
+    @JsonProperty("errorClass")
+    private String errorClass;
 }

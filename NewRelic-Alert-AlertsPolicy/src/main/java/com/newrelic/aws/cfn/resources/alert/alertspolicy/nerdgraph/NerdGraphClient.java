@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicyResult;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.EntityResult;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.Response;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.ResponseData;
+import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.ResponseError;
 import software.amazon.cloudformation.exceptions.CfnHandlerInternalFailureException;
 import software.amazon.cloudformation.exceptions.CfnNetworkFailureException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -82,6 +82,17 @@ public class NerdGraphClient {
                                                                     String apiKey,
                                                                     String query)
             throws CfnNetworkFailureException, CfnServiceInternalErrorException {
+        return doRequest(resultType, endpoint, variables, apiKey, query, ImmutableList.of());
+
+    }
+
+    public <T extends AlertsPolicyResult> ResponseData<T> doRequest(Class<T> resultType,
+                                                                    String endpoint,
+                                                                    String variables,
+                                                                    String apiKey,
+                                                                    String query,
+                                                                    List<String> ignoreErrorClasses)
+            throws CfnNetworkFailureException, CfnServiceInternalErrorException {
         Response<T> result;
 
         try {
@@ -115,12 +126,17 @@ public class NerdGraphClient {
             throw new CfnNetworkFailureException("Request to NerdGraph API", ex);
         }
 
-//        if (result.getResponseError() != null) {
-//            throw new CfnServiceInternalErrorException(result.getResponseError()
-//                    .stream()
-//                    .map(responseError -> String.format("==> For path \"%s\": %s", responseError.getPath(), responseError.getMessage()))
-//                    .collect(Collectors.joining("\n", "The following error occurred while talking to New Relic NerdGraph API:\n", "")));
-//        }
+        if (result.getResponseError() != null) {
+            List<ResponseError> errors = result.getResponseError().stream().filter(responseError -> {
+               return !ignoreErrorClasses.contains(responseError.getExtension() == null ? "" : responseError.getExtension().getErrorClass());
+            }).collect(Collectors.toList());
+            if (errors.size() > 0) {
+                throw new CfnServiceInternalErrorException(errors
+                        .stream()
+                        .map(responseError -> String.format("==> For path \"%s\": %s", responseError.getPath(), responseError.getMessage()))
+                        .collect(Collectors.joining("\n", "The following error occurred while talking to New Relic NerdGraph API:\n", "")));
+            }
+        }
 
         return result.getResponseData();
     }

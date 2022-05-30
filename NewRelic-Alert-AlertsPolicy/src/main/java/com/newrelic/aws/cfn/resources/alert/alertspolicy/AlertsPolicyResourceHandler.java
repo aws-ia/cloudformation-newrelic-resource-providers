@@ -3,10 +3,7 @@ package com.newrelic.aws.cfn.resources.alert.alertspolicy;
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.NerdGraphClient;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicyResult;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicySearchResult;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.HasAccountId;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.ResponseData;
+import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.nullness.Opt;
 import org.slf4j.LoggerFactory;
@@ -60,7 +57,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
         protected Optional<AlertsPolicyResult> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyRead.query.template");
             String query = String.format(template, id.getLeft(), id.getRight());
-            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
             return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResult());
         }
 
@@ -87,9 +84,6 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-
-//            checkForAlertErrors(responseData.getAlertCreateResult().getErrors(), "NerdGraph alertsPolicyCreate mutation");
-
             return responseData.getAlertCreateResult();
         }
 
@@ -98,8 +92,6 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyUpdate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-
-//            checkForAlertErrors(responseData.getAlertUpdateResult().getErrors(), "NerdGraph alertsPolicyUpdate mutation");
         }
 
         @Override
@@ -107,17 +99,6 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId());
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-
-//            checkForAlertErrors(responseData.getAlertsPolicyDeleteResult().getErrors(), "NerdGraph alertsPolicyDelete mutation");
         }
-
-//        private <ErrorTypeT> void checkForAlertErrors(List<AlertsPolicyError<ErrorTypeT>> alertErrors, String operation) throws CfnServiceInternalErrorException {
-//            if (alertErrors != null && !alertErrors.isEmpty()) {
-//                throw new CfnServiceInternalErrorException(operation, new Exception(alertErrors
-//                        .stream()
-//                        .map(alertError -> String.format("==> [%s] %s", alertError.getType(), alertError.getDescription()))
-//                        .collect(Collectors.joining("\n", "The following error(s) occurred interacting with the NerdGraph API:\n", ""))));
-//            }
-//        }
     }
 }
