@@ -1,0 +1,16 @@
+{
+  actor {
+    account(id: 3504143) {
+      alerts {
+        policiesSearch {
+          policies {
+            accountId
+            incidentPreference
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

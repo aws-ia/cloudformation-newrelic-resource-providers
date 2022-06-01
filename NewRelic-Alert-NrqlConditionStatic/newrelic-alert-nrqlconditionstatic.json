@@ -1,0 +1,248 @@
+{
+    "typeName": "NewRelic::Alert::NrqlConditionStatic",
+    "description": "Manage New Relic NRQL Static Alerts Condition",
+    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+    "typeConfiguration": {
+        "properties": {
+            "Endpoint": {
+                "$ref": "#/definitions/NewRelicEndpoint"
+            },
+            "ApiKey": {
+                "$ref": "#/definitions/NewRelicApiKey"
+            }
+        },
+        "required": [
+            "Endpoint",
+            "ApiKey"
+        ],
+        "additionalProperties": false
+    },
+    "definitions": {
+        "NewRelicEndpoint": {
+            "type": "string",
+            "description": "Endpoint to the NerdGraph API.",
+            "default": "https://api.eu.newrelic.com/graphql"
+        },
+        "NewRelicApiKey": {
+            "type": "string",
+            "description": "API key for the New Relic NerdGraph."
+        },
+        "ConditionInput": {
+            "type": "object",
+            "description": "Input settings for the static NRQL condition.",
+            "properties": {
+                "Description": {
+                    "type": "string",
+                    "description": "The custom violation description."
+                },
+                "Enabled": {
+                    "type": "boolean",
+                    "description": "Whether the NRQL condition is enabled."
+                },
+                "Expiration": {
+                    "type": "object",
+                    "description": "Settings for how violations are opened or closed when a signal expires.",
+                    "properties": {
+                        "CloseViolationsOnExpiration": {
+                            "type": "boolean",
+                            "description": "Whether to close all open violations when the signal expires. Defaults to true.",
+                            "default": true
+                        },
+                        "ExpirationDuration": {
+                            "type": "integer",
+                            "description": "The amount of time (in seconds) to wait before considering if the signal has been lost. Max value of 172800 (48 hours)."
+                        },
+                        "OpenViolationOnExpiration": {
+                            "type": "boolean",
+                            "description": "Whether to create a new \"lost signal\" violation to capture that the signal expired. Defaults to false.",
+                            "default": false
+                        }
+                    }
+                },
+                "Name": {
+                    "type": "string",
+                    "description": "Name of the NRQL condition."
+                },
+                "Nrql": {
+                    "type": "object",
+                    "description": "The NRQL query that defines the signal for the condition.",
+                    "properties": {
+                        "Query": {
+                            "type": "string",
+                            "description": "NRQL syntax that defines the query."
+                        }
+                    },
+                    "required": [
+                        "Query"
+                    ]
+                },
+                "RunbookUrl": {
+                    "type": "string",
+                    "description": "Runbook URL."
+                },
+                "Signal": {
+                    "type": "object",
+                    "description": "Configuration that defines the signal that the NRQL condition will use to evaluate.",
+                    "properties": {
+                        "AggregationDelay": {
+                            "type": "integer",
+                            "default": 120,
+                            "description": "How long we wait for data that belongs in each aggregation window"
+                        },
+                        "AggregationMethod": {
+                            "type": "string",
+                            "enum": [
+                                "CADENCE",
+                                "EVENT_FLOW",
+                                "EVENT_TIMER"
+                            ],
+                            "description": "The method that determines when we consider an aggregation window to be complete so that we can evaluate the signal for violations",
+                            "default": "EVENT_FLOW"
+                        },
+                        "AggregationTimer": {
+                            "type": "integer",
+                            "description": "How long we wait after each data point arrives to make sure we've processed the whole batch",
+                            "default": 60
+                        },
+                        "AggregationWindow": {
+                            "description": "Aggregation window controls the duration of the time window used to evaluate the NRQL query, in seconds",
+                            "type": "integer",
+                            "default": 60
+                        },
+                        "FillOption": {
+                            "description": "Option that determines the type of value that should be used to fill gaps (empty windows)",
+                            "type": "string",
+                            "enum": [
+                                "LAST_VALUE",
+                                "NONE",
+                                "STATIC"
+                            ],
+                            "default": "STATIC"
+                        },
+                        "FillValue": {
+                            "description": "If using the static fill option, this the value used for filling",
+                            "type": "integer",
+                            "default": 0
+                        },
+                        "SlideBy": {
+                            "description": "This setting gathers data in overlapping time windows to smooth the chart line, making it easier to spot trends",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "Terms": {
+                    "type": "object",
+                    "description": "List of critical and warning terms for the condition",
+                    "properties": {
+                        "Operator": {
+                            "type": "string",
+                            "description": "Operator used to compare against the threshold.",
+                            "enum": [
+                                "ABOVE",
+                                "ABOVE_OR_EQUALS",
+                                "BELOW",
+                                "BELOW_OR_EQUALS",
+                                "EQUALS",
+                                "NOT_EQUALS"
+                            ]
+                        },
+                        "Priority": {
+                            "type": "string",
+                            "description": "Priority determines whether notifications will be sent for violations or not.",
+                            "enum": [
+                                "CRITICAL",
+                                "WARNING"
+                            ]
+                        },
+                        "Threshold": {
+                            "type": "integer",
+                            "description": "Value that triggers a violation."
+                        },
+                        "ThresholdDuration": {
+                            "type": "integer",
+                            "description": "The duration, in seconds, that the threshold must violate for in order to create a violation"
+                        },
+                        "ThresholdOccurrences": {
+                            "type": "string",
+                            "description": "How many data points must be in violation for the specified thresholdDuration",
+                            "enum": [
+                                "ALL",
+                                "AT_LEAST_ONCE"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "Operator",
+                        "Priority",
+                        "Threshold",
+                        "ThresholdDuration",
+                        "ThresholdOccurrences"
+                    ]
+                },
+                "ViolationTimeLimitSeconds": {
+                    "type": "integer",
+                    "description": "Duration after which a violation automatically closes in seconds",
+                    "default": 259200
+                }
+            },
+            "required": [
+                "Enabled",
+                "Name",
+                "Nrql",
+                "Terms"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "properties": {
+        "AccountId": {
+            "type": "integer",
+            "description": "Account ID the alerts condition should belong to."
+        },
+        "ConditionId": {
+            "type": "integer",
+            "description": "Alerts Condition ID."
+        },
+        "Condition": {
+            "$ref": "#/definitions/ConditionInput"
+        },
+        "PolicyId": {
+            "type": "integer",
+            "description": "Policy ID for the condition."
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "AccountId",
+        "ConditionId"
+    ],
+    "createOnlyProperties": [
+        "/properties/AccountId"
+    ],
+    "readOnlyProperties": [
+        "/properties/AccountId",
+        "/properties/ConditionId",
+        "/properties/ConditionCreateResult"
+    ],
+    "primaryIdentifier": [
+        "/properties/AccountId",
+        "/properties/ConditionId"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": []
+        },
+        "read": {
+            "permissions": []
+        },
+        "update": {
+            "permissions": []
+        },
+        "delete": {
+            "permissions": []
+        },
+        "list": {
+            "permissions": []
+        }
+    }
+}

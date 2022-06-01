@@ -1,0 +1,7 @@
+mutation {
+  alertsNrqlConditionStaticUpdate(accountId: %d, policyId: %d, condition: %s) {
+    id
+    description
+    enabled
+  }
+}
