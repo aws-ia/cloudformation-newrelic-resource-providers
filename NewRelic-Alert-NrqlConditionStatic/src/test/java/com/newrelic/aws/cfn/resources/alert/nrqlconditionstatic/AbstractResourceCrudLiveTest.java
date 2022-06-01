@@ -179,7 +179,6 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
         Assertions.assertThat(response.getResourceModel()).isEqualTo(this.model);
     }
 
-
     @Test
     @Order(60)
     public void testListAfterUpdate() throws Exception {

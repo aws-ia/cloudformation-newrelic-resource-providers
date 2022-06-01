@@ -43,7 +43,7 @@ public class NerdGraphClient {
 
     public String genGraphQLArg(Object instance, Collection<String> packagePrefixesForRecursion) {
         // We need to maintain a list of enums fields, because GraphQL SDL expects enum values without quotes!
-        List<String> enumFieldNames = ImmutableList.of("incidentPreference", "operator", "priority", "thresholdOccurrences");
+        List<String> enumFieldNames = ImmutableList.of("incidentPreference", "operator", "priority", "thresholdOccurrences", "aggregationMethod", "fillOption");
         Class<?> currentInstanceClass = instance.getClass();
         List<Field> fields = new ArrayList<>(Arrays.asList(currentInstanceClass.getDeclaredFields()));
         while (currentInstanceClass.getSuperclass() != null) {

@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -15,6 +17,26 @@ import lombok.experimental.SuperBuilder;
 public class NrqlConditionStaticResult {
     @JsonProperty("id")
     private Integer nrqlConditionStaticId;
-    @JsonProperty("accountId")
-    private Integer accountId;
+    @JsonProperty("policyId")
+    private Integer policyId;
+    @JsonProperty("entity")
+    private Entity entity;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("enabled")
+    private Boolean enabled;
+    @JsonProperty("description")
+    private String description;
+    @JsonProperty("nrql")
+    private Nrql nrql;
+    @JsonProperty("expiration")
+    private Expiration expiration;
+    @JsonProperty("runbookUrl")
+    private String runbookUrl;
+    @JsonProperty("signal")
+    private Signal signal;
+    @JsonProperty("terms")
+    private List<Terms> terms;
+    @JsonProperty("violationTimeLimitSeconds")
+    private Integer violationTimeLimitSeconds;
 }

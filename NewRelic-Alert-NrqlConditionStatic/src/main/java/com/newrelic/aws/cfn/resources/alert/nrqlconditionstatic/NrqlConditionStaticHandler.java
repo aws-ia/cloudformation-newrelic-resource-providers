@@ -2,6 +2,7 @@ package com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic;
 
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.schema.NrqlConditionStaticResult;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.schema.ErrorCode;
@@ -33,15 +34,15 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
     }
 
     @Override
-    public AlertsPolicyHelper newHelper() {
-        return new AlertsPolicyHelper();
+    public NrqlConditionStaticHelper newHelper() {
+        return new NrqlConditionStaticHelper();
     }
 
-    class AlertsPolicyHelper extends Helper {
+    class NrqlConditionStaticHelper extends Helper {
 
         private final NerdGraphClient nerdGraphClient;
 
-        public AlertsPolicyHelper() {
+        public NrqlConditionStaticHelper() {
             nerdGraphClient = new NerdGraphClient();
         }
 
@@ -57,34 +58,65 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticRead.query.template");
             String query = String.format(template, id.getLeft(), id.getRight());
             ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
-            throw new NotImplementedException();
-//            return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResult());
+            return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getNrqlCondition());
         }
 
         @Override
         public List<NrqlConditionStaticResult> readExistingItems() throws Exception {
+            List<NrqlConditionStaticResult> results = Lists.newArrayList();
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearch.query.template");
+            String cursorTemplate = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearchCursor.query.template");
             String query = String.format(template, model.getAccountId());
             ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-
-            throw new NotImplementedException();
-//            return ImmutableList.<AlertsNrqlConditionStaticResult>builder()
-//                    .addAll(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResults().getPolicies()).build();
+            results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
+            String nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
+            while (nextCursor != null) {
+                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
+                responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+                nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
+                results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
+            }
+            return results;
         }
 
         @Override
         public ResourceModel modelFromItem(NrqlConditionStaticResult alertEntityResult) {
-            throw new NotImplementedException();
-//            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
-//            builder.accountId(alertEntityResult != null ? alertEntityResult.getAccountId() : model.getAccountId());
-//            builder.alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId());
-//            if (alertEntityResult != null && alertEntityResult.getName() != null) {
-//                builder.alertsPolicy(AlertsConditionInput.builder()
-//                        .incidentPreference(alertEntityResult.getIncidentPreference().name())
-//                        .name(alertEntityResult.getName())
-//                        .build());
-//            }
-//            return builder.build();
+            return ResourceModel.builder()
+                    .accountId(alertEntityResult.getEntity().getAccountId())
+                    .policyId(alertEntityResult.getPolicyId())
+                    .conditionId(alertEntityResult.getNrqlConditionStaticId())
+                    .condition(ConditionInput.builder()
+                            .name(alertEntityResult.getName())
+                            .enabled(alertEntityResult.getEnabled())
+                            .description(alertEntityResult.getDescription())
+                            .nrql(Nrql.builder()
+                                    .query(alertEntityResult.getNrql().getQuery())
+                                    .build())
+                            .expiration(Expiration.builder()
+                                    .expirationDuration(alertEntityResult.getExpiration().getExpirationDuration())
+                                    .closeViolationsOnExpiration(alertEntityResult.getExpiration().getCloseViolationsOnExpiration())
+                                    .openViolationOnExpiration(alertEntityResult.getExpiration().getOpenViolationOnExpiration())
+                                    .build())
+                            .runbookUrl(alertEntityResult.getRunbookUrl())
+                            .signal(Signal.builder()
+                                    .aggregationDelay(alertEntityResult.getSignal().getAggregationDelay())
+                                    .aggregationMethod(alertEntityResult.getSignal().getAggregationMethod())
+                                    .aggregationTimer(alertEntityResult.getSignal().getAggregationTimer())
+                                    .aggregationWindow(alertEntityResult.getSignal().getAggregationWindow())
+                                    .fillOption(alertEntityResult.getSignal().getFillOption())
+                                    .fillValue(alertEntityResult.getSignal().getFillValue())
+                                    .slideBy(alertEntityResult.getSignal().getSlideBy())
+                                    .build())
+                            .terms(Terms.builder()
+                                    .operator(alertEntityResult.getTerms().get(0).getOperator())
+                                    .priority(alertEntityResult.getTerms().get(0).getPriority())
+                                    .threshold(alertEntityResult.getTerms().get(0).getThreshold())
+                                    .thresholdDuration(alertEntityResult.getTerms().get(0).getThresholdDuration())
+                                    .thresholdOccurrences(alertEntityResult.getTerms().get(0).getThresholdOccurrences())
+                                    .build())
+                            .violationTimeLimitSeconds(alertEntityResult.getViolationTimeLimitSeconds())
+                            .build())
+                    .build();
         }
 
         @Override
@@ -97,13 +129,12 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
 
         @Override
         public void updateItem(NrqlConditionStaticResult alertEntityResult, List<String> updates) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticUpdate.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
-//            ResponseData<AlertsNrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(AlertsNrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-//            if (responseData.getAlertUpdateResult() != null) {
-//                updates.add("Updated");
-//            }
+            String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticUpdate.mutation.template");
+            String mutation = String.format(template, model.getAccountId(), model.getConditionId(), nerdGraphClient.genGraphQLArg(model.getCondition(), ImmutableList.of(model.getCondition().getClass().getPackage().getName())));
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            if (responseData.getAlertUpdateResult() != null) {
+                updates.add("Updated");
+            }
         }
 
         @Override

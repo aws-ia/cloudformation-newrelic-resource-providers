@@ -12,7 +12,19 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class Actor<T extends NrqlConditionStaticResult> {
-    @JsonProperty("account")
-    private Account account;
+public class Signal {
+    @JsonProperty("aggregationDelay")
+    private Integer aggregationDelay;
+    @JsonProperty("aggregationMethod")
+    private String aggregationMethod;
+    @JsonProperty("aggregationTimer")
+    private Integer aggregationTimer;
+    @JsonProperty("aggregationWindow")
+    private Integer aggregationWindow;
+    @JsonProperty("fillOption")
+    private String fillOption;
+    @JsonProperty("fillValue")
+    private Integer fillValue;
+    @JsonProperty("slideBy")
+    private Integer slideBy;
 }

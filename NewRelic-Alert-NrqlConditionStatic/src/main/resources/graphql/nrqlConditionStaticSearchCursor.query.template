@@ -2,7 +2,7 @@
   actor {
     account(id: %d) {
       alerts {
-        nrqlConditionsSearch {
+        nrqlConditionsSearch(cursor: "%s") {
           nextCursor
           totalCount
           nrqlConditions {
