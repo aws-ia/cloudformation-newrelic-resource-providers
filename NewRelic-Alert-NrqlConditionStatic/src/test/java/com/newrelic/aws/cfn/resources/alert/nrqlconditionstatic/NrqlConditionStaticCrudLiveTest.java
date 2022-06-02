@@ -2,18 +2,55 @@ package com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic;
 
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.schema.NrqlConditionStaticResult;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Lists;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import software.amazon.cloudformation.Action;
+import software.amazon.cloudformation.proxy.ProgressEvent;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag("Live")
 public class NrqlConditionStaticCrudLiveTest extends AbstractResourceCrudLiveTest<NrqlConditionStaticHandler, NrqlConditionStaticResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
+    @Test
+    @Order(1000)
+    @Tag("Manual")
+    @SuppressWarnings("unchecked")
+    public void testListCursor() throws Exception {
+        final int createCount = 150;
+        this.model = this.newModelForCreate();
+        ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.LIST);
+        List<ResourceModel> existingModels = listResponse.getResourceModels();
+        List<ResourceModel> conditionsCreated = Lists.newArrayList();
+        for (int i = 0; i < createCount; i++) {
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.CREATE);
+            conditionsCreated.add(response.getResourceModel());
+        }
+        listResponse = this.invoke(Action.LIST);
+        List<ResourceModel> newModels = listResponse.getResourceModels();
+        Assertions.assertThat(newModels.size()).isEqualTo(existingModels.size() + createCount);
+        for (ResourceModel model : conditionsCreated) {
+            this.model = model;
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.DELETE);
+        }
+
+        Awaitility.await().atMost(1, TimeUnit.MINUTES).until(() -> {
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
+            List<ResourceModel> modelsAfterDelete = response.getResourceModels();
+            return modelsAfterDelete.size() == existingModels.size();
+        });
+
+        ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
+        List<ResourceModel> modelsAfterDelete = response.getResourceModels();
+        Assertions.assertThat(modelsAfterDelete.size()).isEqualTo(existingModels.size());
+    }
 
     @Override
     protected TypeConfigurationModel newTypeConfiguration() throws Exception {
