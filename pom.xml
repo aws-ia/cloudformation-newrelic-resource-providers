@@ -16,6 +16,7 @@
         <module>NewRelic-Dashboard-Dashboard</module>
         <module>NewRelic-Alert-AlertsPolicy</module>
         <module>NewRelic-Alert-NrqlConditionStatic</module>
+        <module>NewRelic-Alert-NotificationChannel</module>
     </modules>
 
     <properties>

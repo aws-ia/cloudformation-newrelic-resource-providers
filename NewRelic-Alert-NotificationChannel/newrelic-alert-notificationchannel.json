@@ -1,0 +1,213 @@
+{
+    "typeName": "NewRelic::Alert::NotificationChannel",
+    "description": "Manage New Relic Notification Channel",
+    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+    "typeConfiguration": {
+        "properties": {
+            "Endpoint": {
+                "$ref": "#/definitions/NewRelicEndpoint"
+            },
+            "ApiKey": {
+                "$ref": "#/definitions/NewRelicApiKey"
+            }
+        },
+        "required": [
+            "Endpoint",
+            "ApiKey"
+        ],
+        "additionalProperties": false
+    },
+    "definitions": {
+        "NewRelicEndpoint": {
+            "type": "string",
+            "description": "Endpoint to the NerdGraph API.",
+            "default": "https://api.eu.newrelic.com/graphql"
+        },
+        "NewRelicApiKey": {
+            "type": "string",
+            "description": "API key for the New Relic NerdGraph."
+        },
+        "ChannelInput": {
+            "type": "object",
+            "properties": {
+                "Email": {
+                    "type": "object",
+                    "description": "The input configuration for creating an Email notification channel.",
+                    "properties": {
+                        "Emails": {
+                            "type": "string",
+                            "description": "List of email recipients."
+                        },
+                        "IncludeJson": {
+                            "type": "boolean",
+                            "description": "Include details about the violation as a JSON attachment."
+                        },
+                        "Name": {
+                            "type": "string",
+                            "description": "Notification channel name."
+                        }
+                    },
+                    "required": [
+                        "Emails",
+                        "IncludeJson",
+                        "Name"
+                    ],
+                    "additionalProperties": false
+                },
+                "PagerDuty": {
+                    "type": "object",
+                    "description": "The input configuration for creating a PagerDuty notification channel.",
+                    "properties": {
+                        "ApiKey": {
+                            "type": "string",
+                            "description": "API Key"
+                        },
+                        "Name": {
+                            "type": "string",
+                            "description": "Notification channel name.\n\n"
+                        }
+                    },
+                    "required": [
+                        "ApiKey",
+                        "Name"
+                    ],
+                    "additionalProperties": false
+                },
+                "Slack": {
+                    "type": "object",
+                    "description": "The input configuration for creating a Slack notification channel.",
+                    "properties": {
+                        "Name": {
+                            "type": "string",
+                            "description": "Notification channel name."
+                        },
+                        "TeamChannel": {
+                            "type": "string",
+                            "description": "Slack channel name."
+                        },
+                        "Url": {
+                            "type": "string",
+                            "description": "Slack channel name."
+                        }
+                    },
+                    "required": [
+                        "Name",
+                        "TeamChannel",
+                        "Url"
+                    ],
+                    "additionalProperties": false
+                },
+                "Webhook": {
+                    "type": "object",
+                    "description": "The input configuration for creating a Webhook notification channel.",
+                    "properties": {
+                        "Name": {
+                            "type": "string",
+                            "description": "Notification channel name."
+                        },
+                        "BaseUrl": {
+                            "type": "string",
+                            "description": "Base URL"
+                        },
+                        "BasicAuth": {
+                            "type": "object",
+                            "description": "Basic Auth.",
+                            "properties": {
+                                "Username": {
+                                    "type": "string",
+                                    "description": "Username"
+                                },
+                                "Password": {
+                                    "type": "string",
+                                    "description": "Password"
+                                }
+                            },
+                            "required": [
+                                "Username",
+                                "Password"
+                            ],
+                            "additionalProperties": false
+                        },
+                        "CustomHttpHeaders": {
+                            "type": "object",
+                            "description": "Custom HTTP headers.",
+                            "properties": {
+                                "Name": {
+                                    "type": "string",
+                                    "description": "Header name."
+                                },
+                                "Value": {
+                                    "type": "string",
+                                    "description": "Header value."
+                                }
+                            },
+                            "required": [
+                                "Name",
+                                "Value"
+                            ],
+                            "additionalProperties": false
+                        },
+                        "CustomPayloadBody": {
+                            "type": "string",
+                            "description": "Custom payload body."
+                        },
+                        "CustomPayloadType": {
+                            "type": "string",
+                            "description": "Custom payload type.",
+                            "enum": [
+                                "FORM",
+                                "JSON"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "properties": {
+        "AccountId": {
+            "type": "integer",
+            "description": "Account ID the alerts condition should belong to."
+        },
+        "ChannelId": {
+            "type": "integer"
+        },
+        "Channel": {
+            "$ref": "#/definitions/ChannelInput"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "AccountId",
+        "Channel"
+    ],
+    "createOnlyProperties": [
+        "/properties/AccountId"
+    ],
+    "readOnlyProperties": [
+        "/properties/ChannelId"
+    ],
+    "primaryIdentifier": [
+        "/properties/AccountId",
+        "/properties/ChannelId"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": []
+        },
+        "read": {
+            "permissions": []
+        },
+        "update": {
+            "permissions": []
+        },
+        "delete": {
+            "permissions": []
+        },
+        "list": {
+            "permissions": []
+        }
+    }
+}

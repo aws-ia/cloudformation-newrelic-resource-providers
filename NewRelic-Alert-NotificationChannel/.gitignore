@@ -15,14 +15,9 @@ out/
 
 # auto-generated files
 target/
-.hypothesis
 
 # our logs
 rpdk.log*
-java-tests.log*
 
 # contains credentials
 sam-tests/
-
-# misc
-ignored
