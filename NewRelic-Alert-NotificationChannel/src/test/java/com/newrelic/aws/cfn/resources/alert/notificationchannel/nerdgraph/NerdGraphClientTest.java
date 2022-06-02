@@ -17,6 +17,11 @@ public class NerdGraphClientTest {
     }
 
     @Test
+    void testSimpleString() {
+        String foo = nerdGraphClient.genGraphQLArg("Hello");
+    }
+
+    @Test
     void testGetGraphQLTemplateThrowsIfFileDoesNotExist() {
         Assertions.assertThrows(CfnHandlerInternalFailureException.class, () -> {
             nerdGraphClient.getGraphQLTemplate("does.not.exist.template");

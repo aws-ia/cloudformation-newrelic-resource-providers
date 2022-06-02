@@ -35,8 +35,12 @@
                     "description": "The input configuration for creating an Email notification channel.",
                     "properties": {
                         "Emails": {
-                            "type": "string",
-                            "description": "List of email recipients."
+                            "type": "array",
+                            "description": "List of email recipients.",
+                            "insertionOrder": false,
+                            "items": {
+                                "type": "string"
+                            }
                         },
                         "IncludeJson": {
                             "type": "boolean",

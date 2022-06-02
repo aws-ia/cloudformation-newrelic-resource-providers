@@ -3,6 +3,8 @@ package com.newrelic.aws.cfn.resources.alert.notificationchannel;
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.NerdGraphClient;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ErrorCode;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ResponseData;
 import org.apache.commons.lang3.NotImplementedException;
@@ -16,9 +18,10 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import java.util.List;
 import java.util.Optional;
 
-public class NotificationChannelResourceHandler extends AbstractCombinedResourceHandler<NotificationChannelResourceHandler, NotificationChannelResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
+public class NotificationChannelResourceHandler extends AbstractCombinedResourceHandler<NotificationChannelResourceHandler, NotificationChannel, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NotificationChannelResourceHandler.class);
+    private static final String CHANNEL_TYPE_EMAIL = "EMAIL";
 
     public static class BaseHandlerAdapter extends BaseHandler<CallbackContext, TypeConfigurationModel> implements BaseHandlerAdapterDefault<NotificationChannelResourceHandler, ResourceModel, CallbackContext, TypeConfigurationModel> {
         @Override
@@ -33,15 +36,15 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
     }
 
     @Override
-    public AlertsPolicyHelper newHelper() {
-        return new AlertsPolicyHelper();
+    public NotificationChannelHelper newHelper() {
+        return new NotificationChannelHelper();
     }
 
-    class AlertsPolicyHelper extends Helper {
+    class NotificationChannelHelper extends Helper {
 
         private final NerdGraphClient nerdGraphClient;
 
-        public AlertsPolicyHelper() {
+        public NotificationChannelHelper() {
             nerdGraphClient = new NerdGraphClient();
         }
 
@@ -53,66 +56,84 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
         }
 
         @Override
-        protected Optional<NotificationChannelResult> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyRead.query.template");
-//            String query = String.format(template, id.getLeft(), id.getRight());
-//            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
-//            return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResult());
+        protected Optional<NotificationChannel> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("notificationChannelSearch.query.template");
+            String query = String.format(template, id.getLeft(), id.getRight());
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
+            return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getNotificationChannel());
         }
 
         @Override
-        public List<NotificationChannelResult> readExistingItems() throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicySearch.query.template");
+        public List<NotificationChannel> readExistingItems() throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("notificationChannelRead.query.template");
+            String query = String.format(template, model.getAccountId());
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+
+            return ImmutableList.<NotificationChannel>builder()
+                    .addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels()).build();
+
+
+            // TODO: cursors
+//            List<NrqlConditionStaticResult> results = Lists.newArrayList();
+//            String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearch.query.template");
+//            String cursorTemplate = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearchCursor.query.template");
 //            String query = String.format(template, model.getAccountId());
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-//
-//            return ImmutableList.<AlertsPolicyResult>builder()
-//                    .addAll(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResults().getPolicies()).build();
-        }
-
-        @Override
-        public ResourceModel modelFromItem(NotificationChannelResult channelResult) {
-            throw new NotImplementedException();
-//            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
-//            builder.accountId(channelResult != null ? channelResult.getCh() : model.getAccountId());
-//            builder.alertsPolicyId(channelResult != null ? channelResult.getAlertsPolicyId() : model.getAlertsPolicyId());
-//            if (channelResult != null && channelResult.getName() != null) {
-//                builder.alertsPolicy(AlertsPolicyInput.builder()
-//                                .incidentPreference(channelResult.getIncidentPreference().name())
-//                                .name(channelResult.getName())
-//                        .build());
+//            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+//            results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
+//            String nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
+//            while (nextCursor != null) {
+//                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
+//                responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+//                nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
+//                results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
 //            }
-//            return builder.build();
+//            return results;
         }
 
         @Override
-        public NotificationChannelResult createItem() throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyCreate.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-//            return responseData.getAlertCreateResult();
+        public ResourceModel modelFromItem(NotificationChannel channelResult) {
+            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
+            builder.accountId(model.getAccountId());
+            builder.channelId(model.getChannelId());
+            if (channelResult != null) {
+                builder.channelId(channelResult.getChannelId());
+                ChannelInput.ChannelInputBuilder channelBuilder = ChannelInput.builder();
+                if (CHANNEL_TYPE_EMAIL.equals(channelResult.getType())) {
+                    channelBuilder.email(Email.builder()
+                                    .includeJson(channelResult.getConfig().getIncludeJson())
+                                    .name(channelResult.getName())
+                                    .emails(channelResult.getConfig().getEmails())
+                            .build());
+                }
+                builder.channel(channelBuilder.build());
+            }
+
+            return builder.build();
         }
 
         @Override
-        public void updateItem(NotificationChannelResult alertEntityResult, List<String> updates) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyUpdate.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-//            if (responseData.getAlertUpdateResult() != null) {
-//                updates.add("Updated");
-//            }
+        public NotificationChannel createItem() throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("notificationChannelCreate.mutation.template");
+            String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getChannel(), ImmutableList.of(ChannelInput.class.getPackage().getName())));
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            return responseData.getAlertCreateResult().getNotificationChannel();
         }
 
         @Override
-        public void deleteItem(NotificationChannelResult alertEntityResult) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyDelete.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId());
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+        public void updateItem(NotificationChannel alertEntityResult, List<String> updates) throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("notificationChannelUpdate.mutation.template");
+            String mutation = String.format(template, model.getAccountId(), model.getChannelId(), nerdGraphClient.genGraphQLArg(model.getChannel(), ImmutableList.of(ChannelInput.class.getPackage().getName())));
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            if (responseData.getAlertUpdateResult() != null) {
+                updates.add("Updated");
+            }
+        }
+
+        @Override
+        public void deleteItem(NotificationChannel alertEntityResult) throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("notificationChannelDelete.mutation.template");
+            String mutation = String.format(template, model.getAccountId(), model.getChannelId());
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
         }
     }
 }
