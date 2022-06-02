@@ -42,7 +42,8 @@
                         "PER_POLICY"
                     ]
                 }
-            }
+            },
+            "additionalProperties": false
         }
     },
     "properties": {

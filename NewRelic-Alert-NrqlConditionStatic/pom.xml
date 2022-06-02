@@ -12,7 +12,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>newrelic-alert-nrqlconditionstatic-handler</name>
+    <name>NewRelic::Alert::NrqlConditionStatic</name>
     <artifactId>newrelic-alert-nrqlconditionstatic-handler</artifactId>
     <packaging>jar</packaging>
 
