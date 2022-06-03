@@ -48,6 +48,7 @@ public class NerdGraphClient {
         }
 
         StringJoiner schema = new StringJoiner(", ", "{", "}");
+        schema.setEmptyValue(instance instanceof String ? "\"" + instance + "\"" : String.valueOf(instance));
         fields.stream()
                 .filter(field -> field.isAnnotationPresent(JsonProperty.class))
                 .collect(Collectors.toList())

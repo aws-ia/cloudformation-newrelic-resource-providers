@@ -20,4 +20,5 @@ public class Response<T extends PolicyChannelAssociationResult> {
 
     @JsonProperty("errors")
     private List<ResponseError> responseError;
+
 }

@@ -12,13 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class ResponseData<T extends PolicyChannelAssociationResult> {
-    @JsonProperty("actor")
-    private Actor<T> actor;
-
-    @JsonProperty("alertsNotificationChannelsAddToPolicy")
-    private AlertsNotificationChannelsAddToPolicy alertsNotificationChannelsAddToPolicy;
-
-    @JsonProperty("alertsNotificationChannelsRemoveFromPolicy")
-    private AlertsNotificationChannelsRemoveFromPolicy alertsNotificationChannelsRemoveFromPolicy;
+public class Policy {
+    @JsonProperty("id")
+    private Integer id;
+    @JsonProperty("name")
+    private String name;
 }

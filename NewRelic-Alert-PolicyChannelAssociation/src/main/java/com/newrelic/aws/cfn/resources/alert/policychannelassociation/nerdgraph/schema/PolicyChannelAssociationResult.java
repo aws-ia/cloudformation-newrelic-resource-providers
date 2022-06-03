@@ -7,14 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class PolicyChannelAssociationResult {
-    @JsonProperty("id")
-    private Integer alertsPolicyId;
     @JsonProperty("accountId")
     private Integer accountId;
+    @JsonProperty("policyId")
+    private Integer policyId;
+    @JsonProperty("channelIds")
+    private List<Integer> channelIds;
 }

@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Account {
-    private String dummy;
+    @JsonProperty("alerts")
+    private Alert alerts;
 }

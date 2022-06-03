@@ -1,0 +1,8 @@
+mutation {
+  alertsNotificationChannelsRemoveFromPolicy(accountId: %d, policyId: %d, notificationChannelIds: %s) {
+     notificationChannels {
+       id
+     }
+     policyId
+  }
+}
