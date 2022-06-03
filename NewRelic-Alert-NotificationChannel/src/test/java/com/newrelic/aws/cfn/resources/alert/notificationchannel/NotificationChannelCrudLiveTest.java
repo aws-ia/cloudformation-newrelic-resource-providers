@@ -1,51 +1,86 @@
 package com.newrelic.aws.cfn.resources.alert.notificationchannel;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
-import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
+import org.assertj.core.api.Assertions;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import software.amazon.cloudformation.Action;
+import software.amazon.cloudformation.proxy.ProgressEvent;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag("Live")
 public class NotificationChannelCrudLiveTest extends AbstractResourceCrudLiveTest<NotificationChannelResourceHandler, NotificationChannel, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
-//    @Test
-//    @Order(1000)
-//    @Tag("Manual")
-//    @SuppressWarnings("unchecked")
-//    public void testListCursor() throws Exception {
-//        final int createCount = 150;
-//        this.model = this.newModelForCreate();
-//        ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.LIST);
-//        List<ResourceModel> existingModels = listResponse.getResourceModels();
-//        List<ResourceModel> conditionsCreated = Lists.newArrayList();
-//        for (int i = 0; i < createCount; i++) {
-//            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.CREATE);
-//            conditionsCreated.add(response.getResourceModel());
-//        }
-//        listResponse = this.invoke(Action.LIST);
-//        List<ResourceModel> newModels = listResponse.getResourceModels();
-//        Assertions.assertThat(newModels.size()).isEqualTo(existingModels.size() + createCount);
-//        for (ResourceModel model : conditionsCreated) {
-//            this.model = model;
-//            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.DELETE);
-//        }
-//
-//        Awaitility.await().atMost(1, TimeUnit.MINUTES).until(() -> {
-//            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
-//            List<ResourceModel> modelsAfterDelete = response.getResourceModels();
-//            return modelsAfterDelete.size() == existingModels.size();
-//        });
-//
-//        ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
-//        List<ResourceModel> modelsAfterDelete = response.getResourceModels();
-//        Assertions.assertThat(modelsAfterDelete.size()).isEqualTo(existingModels.size());
-//    }
+    @Test
+    @Order(1000)
+    @Tag("Manual")
+    @SuppressWarnings("unchecked")
+    public void testListCursor() throws Exception {
+        // This test creates sufficient channels that cursors (i.e. pagination) is
+        // required when reading them. Marked as 'Manual' as it takes a long time to run
+        final int createCount = 150;
+        this.model = this.newModelForCreate();
+        ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.LIST);
+        List<ResourceModel> existingModels = listResponse.getResourceModels();
+        List<ResourceModel> conditionsCreated = Lists.newArrayList();
+        for (int i = 0; i < createCount; i++) {
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.CREATE);
+            conditionsCreated.add(response.getResourceModel());
+        }
+        listResponse = this.invoke(Action.LIST);
+        List<ResourceModel> newModels = listResponse.getResourceModels();
+
+        Assertions.assertThat(newModels.size()).isEqualTo(existingModels.size() + createCount);
+        for (ResourceModel model : conditionsCreated) {
+            this.model = model;
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.DELETE);
+        }
+
+        Awaitility.await().atMost(1, TimeUnit.MINUTES).until(() -> {
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
+            List<ResourceModel> modelsAfterDelete = response.getResourceModels();
+            return modelsAfterDelete.size() == existingModels.size();
+        });
+
+        ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
+        List<ResourceModel> modelsAfterDelete = response.getResourceModels();
+        Assertions.assertThat(modelsAfterDelete.size()).isEqualTo(existingModels.size());
+    }
+
+    @Test
+    @Order(1)
+    @Tag("Manual")
+    @SuppressWarnings("unchecked")
+    public void testDeleteAllChannels() throws Exception {
+        this.model = newModelForCreate();
+        ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.LIST);
+        List<ResourceModel> existingModels = listResponse.getResourceModels();
+        for (ResourceModel model : existingModels) {
+            this.model = model;
+            ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.DELETE);
+        }
+    }
+
+    @Test
+    @Order(1)
+    @Tag("Manual")
+    @SuppressWarnings("unchecked")
+    public void testCreateChannelForTesting() throws Exception {
+        this.model = newModelForCreate();
+        this.model.getChannel().getEmail().setEmails(ImmutableList.of("test3@somedomain.com"));
+        ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.CREATE);
+        List<ResourceModel> existingModels = listResponse.getResourceModels();
+        System.out.println(existingModels);
+    }
 
     @Override
     protected TypeConfigurationModel newTypeConfiguration() throws Exception {
