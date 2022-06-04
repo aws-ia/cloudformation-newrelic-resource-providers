@@ -1,0 +1,244 @@
+{
+    "typeName": "NewRelic::Agent::Configuration",
+    "description": "Manage New Relic Server-Side Agent Configuration",
+    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+    "typeConfiguration": {
+        "properties": {
+            "Endpoint": {
+                "$ref": "#/definitions/NewRelicEndpoint"
+            },
+            "ApiKey": {
+                "$ref": "#/definitions/NewRelicApiKey"
+            }
+        },
+        "required": [
+            "Endpoint",
+            "ApiKey"
+        ],
+        "additionalProperties": false
+    },
+    "definitions": {
+        "NewRelicEndpoint": {
+            "type": "string",
+            "description": "Endpoint to the NerdGraph API.",
+            "default": "https://api.eu.newrelic.com/graphql"
+        },
+        "NewRelicApiKey": {
+            "type": "string",
+            "description": "API key for the New Relic NerdGraph."
+        },
+        "AgentConfigurationInput": {
+            "type": "object",
+            "properties": {
+                "Guid": {
+                    "type": "string",
+                    "description": "The GUID for the affected Entity."
+                },
+                "Settings": {
+                    "type": "object",
+                    "description": "Input data about the entities you want to update and the settings to use.",
+                    "properties": {
+                        "Alias": {
+                            "type": "string",
+                            "description": "The new name for the application."
+                        },
+                        "ApmConfig": {
+                            "type": "object",
+                            "description": "Provides fields to set general APM application settings.",
+                            "properties": {
+                                "ApdexTarget": {
+                                    "type": "integer",
+                                    "description": "The desired target for the APDEX measurement of this application."
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "BrowserConfig": {
+                            "type": "object",
+                            "properties": {
+                                "ApdexTarget": {
+                                    "type": "integer",
+                                    "description": "The desired target for the APDEX measurement of this application."
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "ErrorCollector": {
+                            "type": "object",
+                            "description": "The error collector captures information about uncaught exceptions and sends them to New Relic for viewing.",
+                            "properties": {
+                                "Enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable error collector"
+                                },
+                                "ExpectedErrorClasses": {
+                                    "type": "string",
+                                    "description": "Prevents specified exception classes from affecting error rate or Apdex score while still reporting the errors to APM."
+                                },
+                                "ExpectedErrorCodes": {
+                                    "type": "string",
+                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes to be marked as expected and thus prevented from affecting error rate or Apdex score."
+                                },
+                                "IgnoredErrorClasses": {
+                                    "type": "string",
+                                    "description": "Specified exception class names will be ignored and will not affect error rate or Apdex score, or be reported to APM."
+                                },
+                                "IgnoredErrorCodes": {
+                                    "type": "string",
+                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes that should not be treated as errors."
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "SlowSql": {
+                            "type": "object",
+                            "description": "In APM, when transaction traces are collected, there may be additional Slow query data available.",
+                            "properties": {
+                                "Enabled": {
+                                    "type": "boolean",
+                                    "description": "Whether or not slow_sql is enabled."
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "ThreadProfiler": {
+                            "type": "object",
+                            "description": "Settings for the thread profiler.",
+                            "properties": {
+                                "Enabled": {
+                                    "type": "boolean",
+                                    "description": "Is thread profiling enabled for this application?"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "TracerType": {
+                            "type": "object",
+                            "description": "Input object for setting the type of tracing performed.",
+                            "properties": {
+                                "Value": {
+                                    "type": "string",
+                                    "description": "The type of tracing being done.",
+                                    "enum": [
+                                        "CROSS_APPLICATION_TRACER",
+                                        "DISTRIBUTED_TRACING",
+                                        "NONE"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "TransactionTracer": {
+                            "type": "object",
+                            "description": "Transaction Tracer settings related to APM applications.",
+                            "properties": {
+                                "CaptureMemcacheKeys": {
+                                    "type": "boolean",
+                                    "description": "Enable or disable the capture of memcache keys from transaction traces."
+                                },
+                                "Enabled": {
+                                    "type": "boolean",
+                                    "description": "If true, this enables the Transaction Tracer feature, enabling collection of transaction traces."
+                                },
+                                "ExplainEnabled": {
+                                    "type": "boolean",
+                                    "description": "If true, enables the collection of explain plans in transaction traces"
+                                },
+                                "ExplainThresholdType": {
+                                    "type": "string",
+                                    "description": "Relevant only when explain_enabled is true. Can be set to automatic configuration (APDEX_F) or manual (see explainThresholdValue)",
+                                    "enum": [
+                                        "APDEX_F",
+                                        "VALUE"
+                                    ]
+                                },
+                                "ExplainThresholdValue": {
+                                    "type": "integer",
+                                    "description": "Threshold (in seconds) above which the agent will collect explain plans."
+                                },
+                                "LogSql": {
+                                    "type": "boolean",
+                                    "description": "Set to true to enable logging of queries to the agent log file instead of uploading to New Relic."
+                                },
+                                "RecordSql": {
+                                    "type":"string",
+                                    "description": "Obfuscation level for SQL queries reported in transaction trace nodes.",
+                                    "enum": [
+                                        "OBFUSCATED",
+                                        "RAW",
+                                        "OFF"
+                                    ]
+                                },
+                                "StackTraceThreshold": {
+                                    "type": "integer",
+                                    "description": "Specify a threshold in seconds. The agent includes stack traces in transaction trace nodes when the stack trace duration exceeds this threshold."
+                                },
+                                "TransactionThresholdType": {
+                                    "type": "string",
+                                    "description": "Relevant only when TransactionTracer is enabled. Can be set to automatic configuration (APDEX_F) or manual (see TransactionThresholdValue).",
+                                    "enum": [
+                                        "APDEX_F",
+                                        "VALUE"
+                                    ]
+                                },
+                                "TransactionThresholdValue": {
+                                    "type": "integer",
+                                    "description": "Threshold (in seconds) that transactions with a duration longer than this threshold are eligible for transaction traces."
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "properties": {
+        "AccountId": {
+            "type": "integer",
+            "description": "Account ID the alerts policy should belong to."
+        },
+        "AgentConfigurationId": {
+            "type": "integer",
+            "description": "Agent Configuration ID."
+        },
+        "AgentConfiguration": {
+            "$ref": "#/definitions/AgentConfigurationInput"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "AccountId",
+        "AgentConfiguration"
+    ],
+    "createOnlyProperties": [
+        "/properties/AccountId"
+    ],
+    "readOnlyProperties": [
+        "/properties/AgentConfigurationId",
+        "/properties/AgentConfigurationResult"
+    ],
+    "primaryIdentifier": [
+        "/properties/AccountId",
+        "/properties/AgentConfigurationId"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": []
+        },
+        "read": {
+            "permissions": []
+        },
+        "update": {
+            "permissions": []
+        },
+        "delete": {
+            "permissions": []
+        },
+        "list": {
+            "permissions": []
+        }
+    }
+}

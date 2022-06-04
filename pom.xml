@@ -18,6 +18,7 @@
         <module>NewRelic-Alert-NrqlConditionStatic</module>
         <module>NewRelic-Alert-NotificationChannel</module>
         <module>NewRelic-Alert-PolicyChannelAssociation</module>
+        <module>NewRelic-Agent-Configuration</module>
     </modules>
 
     <properties>
