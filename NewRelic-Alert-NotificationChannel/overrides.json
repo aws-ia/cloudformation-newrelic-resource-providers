@@ -1,0 +1,28 @@
+{
+  "CREATE": {
+    "/AccountId": 3504143,
+    "/Channel": {
+      "Email": {
+        "Emails": [
+          "test1@somedomain.com",
+          "test2@somedomain.com"
+        ],
+        "IncludeJson": true,
+        "Name": "SAM Email Channel"
+      }
+    }
+  },
+  "UPDATE": {
+    "/AccountId": 3504143,
+    "/Channel": {
+      "Email": {
+        "Emails": [
+          "test3@somedomain.com",
+          "test4@somedomain.com"
+        ],
+        "IncludeJson": false,
+        "Name": "SAM Updated Email Channel"
+      }
+    }
+  }
+}

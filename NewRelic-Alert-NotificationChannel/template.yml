@@ -13,12 +13,12 @@ Resources:
     Properties:
       Handler: com.newrelic.aws.cfn.resources.alert.notificationchannel.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/newrelic-alert-notificationchannel-handler-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alert-notificationchannel-handler-1.0.0-SNAPSHOT.jar
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.newrelic.aws.cfn.resources.alert.notificationchannel.HandlerWrapper::testEntrypoint
+      Handler: com.newrelic.aws.cfn.resources.alert.notificationchannel.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/newrelic-alert-notificationchannel-handler-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alert-notificationchannel-handler-1.0.0-SNAPSHOT.jar
 
