@@ -30,10 +30,6 @@
         "AgentConfigurationInput": {
             "type": "object",
             "properties": {
-                "Guid": {
-                    "type": "string",
-                    "description": "The GUID for the affected Entity."
-                },
                 "Settings": {
                     "type": "object",
                     "description": "Input data about the entities you want to update and the settings to use.",
@@ -46,8 +42,13 @@
                             "type": "object",
                             "description": "Provides fields to set general APM application settings.",
                             "properties": {
+                                "UseServerSideConfig": {
+                                    "type": "boolean",
+                                    "description": "Sets if installed agents should override local settings with ones set here.",
+                                    "default": true
+                                },
                                 "ApdexTarget": {
-                                    "type": "integer",
+                                    "type": "number",
                                     "description": "The desired target for the APDEX measurement of this application."
                                 }
                             },
@@ -72,20 +73,36 @@
                                     "description": "Enable error collector"
                                 },
                                 "ExpectedErrorClasses": {
-                                    "type": "string",
-                                    "description": "Prevents specified exception classes from affecting error rate or Apdex score while still reporting the errors to APM."
+                                    "type": "array",
+                                    "description": "Prevents specified exception classes from affecting error rate or Apdex score while still reporting the errors to APM.",
+                                    "insertionOrder": false,
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "ExpectedErrorCodes": {
-                                    "type": "string",
-                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes to be marked as expected and thus prevented from affecting error rate or Apdex score."
+                                    "type": "array",
+                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes to be marked as expected and thus prevented from affecting error rate or Apdex score.",
+                                    "insertionOrder": false,
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "IgnoredErrorClasses": {
-                                    "type": "string",
-                                    "description": "Specified exception class names will be ignored and will not affect error rate or Apdex score, or be reported to APM."
+                                    "type": "array",
+                                    "description": "Specified exception class names will be ignored and will not affect error rate or Apdex score, or be reported to APM.",
+                                    "insertionOrder": false,
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "IgnoredErrorCodes": {
-                                    "type": "string",
-                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes that should not be treated as errors."
+                                    "type": "array",
+                                    "description": "A comma-separated list comprised of individual and dashed ranges of HTTP status codes that should not be treated as errors.",
+                                    "insertionOrder": false,
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "additionalProperties": false
@@ -118,7 +135,6 @@
                             "properties": {
                                 "Value": {
                                     "type": "string",
-                                    "description": "The type of tracing being done.",
                                     "enum": [
                                         "CROSS_APPLICATION_TRACER",
                                         "DISTRIBUTED_TRACING",
@@ -196,13 +212,9 @@
         }
     },
     "properties": {
-        "AccountId": {
-            "type": "integer",
-            "description": "Account ID the alerts policy should belong to."
-        },
-        "AgentConfigurationId": {
-            "type": "integer",
-            "description": "Agent Configuration ID."
+        "Guid": {
+            "type": "string",
+            "description": "The GUID for the affected Entity."
         },
         "AgentConfiguration": {
             "$ref": "#/definitions/AgentConfigurationInput"
@@ -210,19 +222,17 @@
     },
     "additionalProperties": false,
     "required": [
-        "AccountId",
+        "Guid",
         "AgentConfiguration"
     ],
     "createOnlyProperties": [
-        "/properties/AccountId"
+        "/properties/Guid"
     ],
     "readOnlyProperties": [
-        "/properties/AgentConfigurationId",
         "/properties/AgentConfigurationResult"
     ],
     "primaryIdentifier": [
-        "/properties/AccountId",
-        "/properties/AgentConfigurationId"
+        "/properties/Guid"
     ],
     "handlers": {
         "create": {

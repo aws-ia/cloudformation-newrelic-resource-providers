@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
-import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.AgentConfigurationResult;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettings;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.Response;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ResponseData;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ResponseError;
@@ -38,8 +38,12 @@ public class NerdGraphClient {
     }
 
     public String genGraphQLArg(Object instance) {
+        return genGraphQLArg(instance, ImmutableList.of());
+    }
+
+    public String genGraphQLArg(Object instance, Collection<String> packagePrefixesForRecursion) {
         // We need to maintain a list of enums fields, because GraphQL SDL expects enum values without quotes!
-        List<String> enumFieldNames = ImmutableList.of("incidentPreference");
+        List<String> enumFieldNames = ImmutableList.of("value", "explainThresholdType");
         Class<?> currentInstanceClass = instance.getClass();
         List<Field> fields = new ArrayList<>(Arrays.asList(currentInstanceClass.getDeclaredFields()));
         while (currentInstanceClass.getSuperclass() != null) {
@@ -48,6 +52,8 @@ public class NerdGraphClient {
         }
 
         StringJoiner schema = new StringJoiner(", ", "{", "}");
+        // Allows for lists of simple types
+        schema.setEmptyValue(instance instanceof String ? "\"" + instance + "\"" : String.valueOf(instance));
         fields.stream()
                 .filter(field -> field.isAnnotationPresent(JsonProperty.class))
                 .collect(Collectors.toList())
@@ -65,6 +71,8 @@ public class NerdGraphClient {
                             schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value)));
                         } else if (value instanceof String && !enumFieldNames.contains(field.getName())) {
                             schema.add(String.format("%1$s: \"%2$s\"", field.getName(), value));
+                        } else if (packagePrefixesForRecursion.stream().anyMatch(s -> value.getClass().getName().startsWith(s))) {
+                            schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value, packagePrefixesForRecursion)));
                         } else {
                             schema.add(String.format("%1$s: %2$s", field.getName(), value));
                         }
@@ -76,17 +84,17 @@ public class NerdGraphClient {
         return schema.toString();
     }
 
-    public <T extends AgentConfigurationResult> ResponseData<T> doRequest(Class<T> resultType,
-                                                                          String endpoint,
-                                                                          String variables,
-                                                                          String apiKey,
-                                                                          String query)
+    public <T extends ApmSettings> ResponseData<T> doRequest(Class<T> resultType,
+                                                             String endpoint,
+                                                             String variables,
+                                                             String apiKey,
+                                                             String query)
             throws CfnNetworkFailureException, CfnServiceInternalErrorException {
         return doRequest(resultType, endpoint, variables, apiKey, query, ImmutableList.of());
 
     }
 
-    public <T extends AgentConfigurationResult> ResponseData<T> doRequest(Class<T> resultType,
+    public <T extends ApmSettings> ResponseData<T> doRequest(Class<T> resultType,
                                                                     String endpoint,
                                                                     String variables,
                                                                     String apiKey,

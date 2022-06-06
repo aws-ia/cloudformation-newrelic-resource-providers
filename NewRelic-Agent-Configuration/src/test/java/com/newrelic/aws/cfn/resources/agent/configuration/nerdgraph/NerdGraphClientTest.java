@@ -25,7 +25,7 @@ public class NerdGraphClientTest {
 
     @Test
     void testGetGraphQLTemplateReturnsTemplateContentIfExists() {
-        String template = nerdGraphClient.getGraphQLTemplate("unitTest.query.template");
+        String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationDelete.mutation.template");
 
         Assertions.assertEquals("query {\n    foo\n    bar\n}", template);
     }

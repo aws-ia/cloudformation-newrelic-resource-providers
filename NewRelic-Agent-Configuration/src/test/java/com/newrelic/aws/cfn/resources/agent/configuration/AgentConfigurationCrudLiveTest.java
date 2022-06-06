@@ -1,8 +1,8 @@
 package com.newrelic.aws.cfn.resources.agent.configuration;
 
-import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.AgentConfigurationResult;
+import com.google.common.collect.ImmutableList;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettingsResponse;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestInstance;
@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag("Live")
-public class AgentConfigurationCrudLiveTest extends AbstractResourceCrudLiveTest<AgentConfigurationResourceHandler, AgentConfigurationResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
+public class AgentConfigurationCrudLiveTest extends AbstractResourceCrudLiveTest<AgentConfigurationResourceHandler, ApmSettingsResponse, String, ResourceModel, CallbackContext, TypeConfigurationModel> {
 
     @Override
     protected TypeConfigurationModel newTypeConfiguration() throws Exception {
@@ -26,29 +26,88 @@ public class AgentConfigurationCrudLiveTest extends AbstractResourceCrudLiveTest
 
     @Override
     protected ResourceModel newModelForCreate() throws Exception {
-        throw new NotImplementedException();
-//        int accountId = Integer.parseInt(System.getenv("NR_ACCOUNT_ID"));
-//
-//        return ResourceModel.builder()
-//                .accountId(accountId)
-//                .alertsPolicy(AlertsPolicyInput.builder()
-//                        .name("My Alert")
-//                        .incidentPreference("PER_CONDITION")
-//                        .build())
-//                .build();
+        String guid = String.valueOf(System.getenv("NR_AGENT_GUID"));
+
+        return ResourceModel.builder()
+                .guid(guid)
+                .agentConfiguration(AgentConfigurationInput.builder()
+                        .settings(Settings.builder()
+                                .alias("My Alias")
+                                .apmConfig(ApmConfig.builder()
+                                        .apdexTarget(5d)
+                                        .build())
+                                .browserConfig(BrowserConfig.builder()
+                                        .apdexTarget(2)
+                                        .build())
+                                .errorCollector(ErrorCollector.builder()
+                                        .expectedErrorClasses(ImmutableList.of("MyExpectedErrorClass"))
+                                        .expectedErrorCodes(ImmutableList.of("404","429"))
+                                        .ignoredErrorClasses(ImmutableList.of("MyIgnoredErrorClass", "MyIgnoredErrorClass2"))
+                                        .ignoredErrorCodes(ImmutableList.of("418"))
+                                        .build())
+                                .slowSql(SlowSql.builder()
+                                        .enabled(true)
+                                        .build())
+                                .threadProfiler(ThreadProfiler.builder()
+                                        .enabled(true)
+                                        .build())
+                                .tracerType(TracerType.builder()
+                                        .value("CROSS_APPLICATION_TRACER")
+                                        .build())
+                                .transactionTracer(TransactionTracer.builder()
+                                        .captureMemcacheKeys(false)
+                                        .enabled(true)
+                                        .explainEnabled(true)
+                                        .explainThresholdType("VALUE")
+                                        .explainThresholdValue(4)
+                                        .build())
+                                .build())
+
+                        .build())
+                .build();
     }
 
     @Override
     protected ResourceModel newModelForUpdate() throws Exception {
-        throw new NotImplementedException();
-//        return ResourceModel.builder()
-//                .accountId(this.model.getAccountId())
-//                .alertsPolicyId(this.model.getAlertsPolicyId())
-//                .alertsPolicy(AlertsPolicyInput.builder()
-//                        .name("My Alert (updated)")
-//                        .incidentPreference("PER_CONDITION_AND_TARGET")
-//                        .build())
-//                .build();
+        String guid = String.valueOf(System.getenv("NR_AGENT_GUID"));
+
+        return ResourceModel.builder()
+                .guid(guid)
+                .agentConfiguration(AgentConfigurationInput.builder()
+                        .settings(Settings.builder()
+                                .alias("My Updated Alias")
+                                .apmConfig(ApmConfig.builder()
+                                        .apdexTarget(4d)
+                                        .build())
+                                .browserConfig(BrowserConfig.builder()
+                                        .apdexTarget(1)
+                                        .build())
+                                .errorCollector(ErrorCollector.builder()
+                                        .expectedErrorClasses(ImmutableList.of("MyUpdatedExpectedErrorClass"))
+                                        .expectedErrorCodes(ImmutableList.of("504","529"))
+                                        .ignoredErrorClasses(ImmutableList.of("MyUpdatedIgnoredErrorClass", "MyUpdatedIgnoredErrorClass2"))
+                                        .ignoredErrorCodes(ImmutableList.of("518"))
+                                        .build())
+                                .slowSql(SlowSql.builder()
+                                        .enabled(false)
+                                        .build())
+                                .threadProfiler(ThreadProfiler.builder()
+                                        .enabled(false)
+                                        .build())
+                                .tracerType(TracerType.builder()
+                                        .value("CROSS_APPLICATION_TRACER")
+                                        .build())
+                                .transactionTracer(TransactionTracer.builder()
+                                        .captureMemcacheKeys(true)
+                                        .enabled(false)
+                                        .explainEnabled(false)
+                                        .explainThresholdType("VALUE")
+                                        .explainThresholdValue(3)
+                                        .build())
+                                .build())
+
+                        .build())
+                .build();
     }
 
     @Override

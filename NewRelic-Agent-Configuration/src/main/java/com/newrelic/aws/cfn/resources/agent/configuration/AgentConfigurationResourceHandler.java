@@ -1,10 +1,11 @@
 package com.newrelic.aws.cfn.resources.agent.configuration;
 
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.NerdGraphClient;
-import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.AgentConfigurationResult;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.tuple.Pair;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettings;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettingsResponse;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ResponseData;
 import org.slf4j.LoggerFactory;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
@@ -14,7 +15,7 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import java.util.List;
 import java.util.Optional;
 
-public class AgentConfigurationResourceHandler extends AbstractCombinedResourceHandler<AgentConfigurationResourceHandler, AgentConfigurationResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
+public class AgentConfigurationResourceHandler extends AbstractCombinedResourceHandler<AgentConfigurationResourceHandler, ApmSettingsResponse, String, ResourceModel, CallbackContext, TypeConfigurationModel> {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(AgentConfigurationResourceHandler.class);
 
@@ -44,73 +45,72 @@ public class AgentConfigurationResourceHandler extends AbstractCombinedResourceH
         }
 
         @Override
-        public Pair<Integer, Integer> getId(ResourceModel model) {
-            return model.getAccountId() == null || model.getAgentConfigurationId() == null
+        public String getId(ResourceModel model) {
+            return model.getGuid() == null
                     ? null
-                    : Pair.of(model.getAccountId(), model.getAgentConfigurationId());
+                    : model.getGuid();
         }
 
         @Override
-        protected Optional<AgentConfigurationResult> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyRead.query.template");
-//            String query = String.format(template, id.getLeft(), id.getRight());
-//            ResponseData<AgentConfigurationResult> responseData = nerdGraphClient.doRequest(AgentConfigurationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
-//            return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResult());
+        protected Optional<ApmSettingsResponse> findExistingItemWithNonNullId(String id) throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationSearch.query.template");
+            String query = String.format(template, id);
+            ResponseData<ApmSettings> responseData = nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+
+            if (responseData.getActor().getEntity().getApmSettings().getApmConfig().getUseServerSideConfig()) {
+                return Optional.of(responseData.getActor().getEntity());
+            } else {
+                return Optional.empty();
+            }
+
         }
 
         @Override
-        public List<AgentConfigurationResult> readExistingItems() throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicySearch.query.template");
-//            String query = String.format(template, model.getAccountId());
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-//
-//            return ImmutableList.<AlertsPolicyResult>builder()
-//                    .addAll(responseData.getActor().getAccount().getAlerts().getAlertsPolicyResults().getPolicies()).build();
+        public List<ApmSettingsResponse> readExistingItems() throws Exception {
+            // The API does not support listing of all items, so we return the item for the model (if exists)
+            Optional<ApmSettingsResponse> found = findExistingItemWithId(model != null ? model.getGuid() : null);
+            if (found.isPresent()) {
+                return ImmutableList.of(found.get());
+            } else {
+                return ImmutableList.of();
+            }
         }
 
         @Override
-        public ResourceModel modelFromItem(AgentConfigurationResult alertEntityResult) {
-            throw new NotImplementedException();
-//            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
-//            builder.accountId(alertEntityResult != null ? alertEntityResult.getAccountId() : model.getAccountId());
-//            builder.alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId());
-//            if (alertEntityResult != null && alertEntityResult.getName() != null) {
-//                builder.alertsPolicy(AlertsPolicyInput.builder()
-//                                .incidentPreference(alertEntityResult.getIncidentPreference().name())
-//                                .name(alertEntityResult.getName())
-//                        .build());
-//            }
-//            return builder.build();
+        public ResourceModel modelFromItem(ApmSettingsResponse apmSettings) {
+            ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
+            if (model != null) {
+                model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(apmSettings.getApmSettings().getApmConfig().getUseServerSideConfig());
+            }
+            builder.guid(apmSettings.getGuid())
+                    .agentConfiguration(model != null ? model.getAgentConfiguration() : null);
+
+            return builder.build();
         }
 
         @Override
-        public AgentConfigurationResult createItem() throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyCreate.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-//            return responseData.getAlertCreateResult();
+        public ApmSettingsResponse createItem() throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationCreate.mutation.template");
+            model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(true);
+            String mutation = String.format(template, model.getGuid(), nerdGraphClient.genGraphQLArg(model.getAgentConfiguration().getSettings(), ImmutableList.of(SlowSql.class.getPackage().getName())));
+            ResponseData<ApmSettings> responseData = nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            return responseData.getAgentApplicationSettingsUpdate();
         }
 
         @Override
-        public void updateItem(AgentConfigurationResult agentEntityResult, List<String> updates) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyUpdate.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
-//            if (responseData.getAlertUpdateResult() != null) {
-//                updates.add("Updated");
-//            }
+        public void updateItem(ApmSettingsResponse agentEntityResult, List<String> updates) throws Exception {
+            String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationUpdate.mutation.template");
+            String mutation = String.format(template, model.getGuid(), nerdGraphClient.genGraphQLArg(model.getAgentConfiguration().getSettings(), ImmutableList.of(SlowSql.class.getPackage().getName())));
+            nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            updates.add("Updated");
         }
 
         @Override
-        public void deleteItem(AgentConfigurationResult alertEntityResult) throws Exception {
-            throw new NotImplementedException();
-//            String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyDelete.mutation.template");
-//            String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId());
-//            ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+        public void deleteItem(ApmSettingsResponse alertEntityResult) throws Exception {
+            model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(false);
+            String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationDelete.mutation.template");
+            String mutation = String.format(template, model.getGuid(), nerdGraphClient.genGraphQLArg(model.getAgentConfiguration().getSettings(), ImmutableList.of(SlowSql.class.getPackage().getName())));
+            nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
         }
     }
 }

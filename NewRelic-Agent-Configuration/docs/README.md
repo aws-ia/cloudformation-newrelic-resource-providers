@@ -12,7 +12,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 {
     "Type" : "NewRelic::Agent::Configuration",
     "Properties" : {
-        "<a href="#accountid" title="AccountId">AccountId</a>" : <i>Integer</i>,
+        "<a href="#guid" title="Guid">Guid</a>" : <i>String</i>,
         "<a href="#agentconfiguration" title="AgentConfiguration">AgentConfiguration</a>" : <i><a href="agentconfigurationinput.md">AgentConfigurationInput</a></i>
     }
 }
@@ -23,19 +23,19 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 <pre>
 Type: NewRelic::Agent::Configuration
 Properties:
-    <a href="#accountid" title="AccountId">AccountId</a>: <i>Integer</i>
+    <a href="#guid" title="Guid">Guid</a>: <i>String</i>
     <a href="#agentconfiguration" title="AgentConfiguration">AgentConfiguration</a>: <i><a href="agentconfigurationinput.md">AgentConfigurationInput</a></i>
 </pre>
 
 ## Properties
 
-#### AccountId
+#### Guid
 
-Account ID the alerts policy should belong to.
+The GUID for the affected Entity.
 
 _Required_: Yes
 
-_Type_: Integer
+_Type_: String
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
@@ -49,15 +49,15 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 ## Return Values
 
+### Ref
+
+When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the Guid.
+
 ### Fn::GetAtt
 
 The `Fn::GetAtt` intrinsic function returns a value for a specified attribute of this type. The following are the available attributes and sample return values.
 
 For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html).
-
-#### AgentConfigurationId
-
-Agent Configuration ID.
 
 #### AgentConfigurationResult
 

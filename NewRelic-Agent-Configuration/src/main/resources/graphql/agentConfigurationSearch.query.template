@@ -1,0 +1,42 @@
+query ReadQuery {
+  actor {
+    entity(guid: "%s") {
+      ... on ApmApplicationEntity {
+        guid
+        apmSettings {
+          apmConfig {
+            useServerSideConfig
+            apdexTarget
+          }
+          errorCollector {
+            enabled
+            expectedErrorCodes
+            expectedErrorClasses
+            ignoredErrorClasses
+            ignoredErrorCodes
+          }
+          alias
+          slowSql {
+            enabled
+          }
+          threadProfiler {
+            enabled
+          }
+          tracerType
+          transactionTracer {
+            transactionThresholdValue
+            transactionThresholdType
+            recordSql
+            stackTraceThreshold
+            logSql
+            explainThresholdValue
+            explainThresholdType
+            explainEnabled
+            enabled
+            captureMemcacheKeys
+          }
+        }
+      }
+    }
+  }
+}
