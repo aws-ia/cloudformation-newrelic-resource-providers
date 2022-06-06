@@ -62,13 +62,13 @@
     "additionalProperties": false,
     "required": [
         "AccountId",
-        "AlertsPolicyId"
+        "AlertsPolicy"
     ],
     "createOnlyProperties": [
         "/properties/AccountId"
     ],
     "readOnlyProperties": [
-        "/properties/AccountId",
+        "/properties/AlertsPolicyId",
         "/properties/AlertsPolicyCreateResult"
     ],
     "primaryIdentifier": [

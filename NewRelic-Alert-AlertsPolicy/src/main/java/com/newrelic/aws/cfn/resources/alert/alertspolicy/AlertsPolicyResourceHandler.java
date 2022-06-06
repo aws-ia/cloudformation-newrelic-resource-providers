@@ -1,6 +1,7 @@
 package com.newrelic.aws.cfn.resources.alert.alertspolicy;
 
 import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.*;
@@ -52,6 +53,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         protected Optional<AlertsPolicyResult> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyRead.query.template");
             String query = String.format(template, id.getLeft(), id.getRight());
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
@@ -60,6 +62,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public List<AlertsPolicyResult> readExistingItems() throws Exception {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicySearch.query.template");
             String query = String.format(template, model.getAccountId());
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
@@ -70,6 +73,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public ResourceModel modelFromItem(AlertsPolicyResult alertEntityResult) {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
             builder.accountId(alertEntityResult != null ? alertEntityResult.getAccountId() : model.getAccountId());
             builder.alertsPolicyId(alertEntityResult != null ? alertEntityResult.getAlertsPolicyId() : model.getAlertsPolicyId());
@@ -84,6 +88,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public AlertsPolicyResult createItem() throws Exception {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
@@ -92,6 +97,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public void updateItem(AlertsPolicyResult alertEntityResult, List<String> updates) throws Exception {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyUpdate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId(), nerdGraphClient.genGraphQLArg(model.getAlertsPolicy()));
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
@@ -102,6 +108,7 @@ public class AlertsPolicyResourceHandler extends AbstractCombinedResourceHandler
 
         @Override
         public void deleteItem(AlertsPolicyResult alertEntityResult) throws Exception {
+            Preconditions.checkNotNull(typeConfiguration, "Type Configuration (Endpoint & API Key) must be set");
             String template = nerdGraphClient.getGraphQLTemplate("alertsPolicyDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getAlertsPolicyId());
             ResponseData<AlertsPolicyResult> responseData = nerdGraphClient.doRequest(AlertsPolicyResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);

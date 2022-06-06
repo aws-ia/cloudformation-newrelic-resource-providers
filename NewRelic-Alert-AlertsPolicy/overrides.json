@@ -1,0 +1,13 @@
+{
+  "CREATE": {
+    "/AccountId": 3504143,
+    "/AlertsPolicy": {
+        "IncidentPreference": "PER_POLICY",
+        "Name": "Sam Alert Policy"
+    }
+    
+  },
+  "UPDATE": {
+    "/AccountId": 3504143
+  }
+}
