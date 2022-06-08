@@ -1,6 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.policychannelassociation;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.policychannelassociation.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.policychannelassociation.nerdgraph.schema.*;
@@ -105,7 +105,7 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
         @Override
         public ResourceModel modelFromItem(PolicyChannelAssociationResult associationResult) {
             return ResourceModel.builder()
-                    .accountId(associationResult.getAccountId())
+                    .accountId(model.getAccountId())
                     .policyId(associationResult.getPolicyId())
                     .channelIds(associationResult.getChannelIds())
                     .build();
@@ -129,8 +129,10 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
         public void updateItem(PolicyChannelAssociationResult alertEntityResult, List<String> updates) throws Exception {
             // The API does not provide the ability to update associations, so we delete the channel associations for the given policy
             // and recreate them
+            List<Integer> newChannelIds = ImmutableList.copyOf(model.getChannelIds());
             Optional<PolicyChannelAssociationResult> existingResult = findExistingItemWithNonNullId(Pair.of(model.getAccountId(), model.getPolicyId()));
             List<Integer> oldChannelIds = existingResult.isPresent() ? existingResult.get().getChannelIds() : ImmutableList.of();
+            model.setChannelIds(oldChannelIds);
             if (oldChannelIds.size() > 0) {
                 deleteItem(PolicyChannelAssociationResult.builder()
                         .accountId(model.getAccountId())
@@ -138,13 +140,16 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
                         .channelIds(oldChannelIds)
                         .build());
             }
-            model.setChannelIds(alertEntityResult.getChannelIds());
+            model.setChannelIds(newChannelIds);
             createItem();
+            alertEntityResult.setChannelIds(model.getChannelIds());
             updates.add("Updated");
         }
 
         @Override
         public void deleteItem(PolicyChannelAssociationResult alertEntityResult) throws Exception {
+            Optional<PolicyChannelAssociationResult> existingItemMatchingModel = findExistingItemMatchingModel();
+            model.setChannelIds(existingItemMatchingModel.get().getChannelIds());
             String template = nerdGraphClient.getGraphQLTemplate("policyChannelAssociationDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getPolicyId(), nerdGraphClient.genGraphQLArg(model.getChannelIds()));
             ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);

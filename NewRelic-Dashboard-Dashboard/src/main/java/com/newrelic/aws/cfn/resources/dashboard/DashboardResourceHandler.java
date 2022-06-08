@@ -1,6 +1,6 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardEntityResult;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardError;

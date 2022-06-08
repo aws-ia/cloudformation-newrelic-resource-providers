@@ -1,6 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.alertspolicy;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.NerdGraphClient;

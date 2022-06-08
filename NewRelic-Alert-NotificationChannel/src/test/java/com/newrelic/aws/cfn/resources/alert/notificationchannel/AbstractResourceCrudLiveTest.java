@@ -1,7 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.notificationchannel;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler.BaseHandlerAdapterDefault;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import org.assertj.core.api.AbstractComparableAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ObjectAssert;
@@ -80,7 +79,7 @@ public abstract class AbstractResourceCrudLiveTest<CombinedHandlerT extends Abst
             Object hw = this.newHandlerWrapper();
             Field f = hw.getClass().getDeclaredField("handlers");
             f.setAccessible(true);
-            AbstractCombinedResourceHandler<CombinedHandlerT, ItemT, IdT, ResourceModelT, CallbackContextT, TypeConfigurationModelT> combined = ((BaseHandlerAdapterDefault)(((Map)f.get(hw)).values().iterator().next())).newCombinedHandler();
+            AbstractCombinedResourceHandler<CombinedHandlerT, ItemT, IdT, ResourceModelT, CallbackContextT, TypeConfigurationModelT> combined = ((AbstractCombinedResourceHandler.BaseHandlerAdapterDefault)(((Map)f.get(hw)).values().iterator().next())).newCombinedHandler();
             combined.init(this.proxy, this.newRequestObject(), null, this.logger, this.newTypeConfiguration());
             return combined.newHelper();
         } catch (Exception var4) {

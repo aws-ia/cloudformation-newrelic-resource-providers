@@ -1,0 +1,26 @@
+{
+  "CREATE": {
+    "/Guid": "MzUwNDE0M3xBUE18QVBQTElDQVRJT058NDE5OTY3OTEw",
+    "/AgentConfiguration": {
+      "Settings": {
+        "Alias": "Test Alias",
+        "ApmConfig": {
+          "ApdexTarget": 4,
+          "UseServerSideConfig": true
+        }
+      }
+    }
+  },
+  "UPDATE": {
+    "/Guid": "MzUwNDE0M3xBUE18QVBQTElDQVRJT058NDE5OTY3OTEw",
+    "/AgentConfiguration": {
+      "Settings": {
+        "Alias": "Updated Alias",
+        "ApmConfig": {
+          "ApdexTarget": 4,
+          "UseServerSideConfig": true
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic;
 
+import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.schema.NrqlConditionStaticResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.api.Assertions;
@@ -24,7 +25,7 @@ public class NrqlConditionStaticCrudLiveTest extends AbstractResourceCrudLiveTes
     @Tag("Manual")
     @SuppressWarnings("unchecked")
     public void testListCursor() throws Exception {
-        final int createCount = 150;
+        final int createCount = 0;
         this.model = this.newModelForCreate();
         ProgressEvent<ResourceModel, CallbackContext> listResponse = this.invoke(Action.LIST);
         List<ResourceModel> existingModels = listResponse.getResourceModels();
@@ -50,6 +51,17 @@ public class NrqlConditionStaticCrudLiveTest extends AbstractResourceCrudLiveTes
         ProgressEvent<ResourceModel, CallbackContext> response = this.invoke(Action.LIST);
         List<ResourceModel> modelsAfterDelete = response.getResourceModels();
         Assertions.assertThat(modelsAfterDelete.size()).isEqualTo(existingModels.size());
+    }
+
+    @Test
+    @Order(1000)
+    @Tag("Manual")
+    @SuppressWarnings("unchecked")
+    public void testDeleteSpuriousItem() throws Exception {
+        this.model = newModelForCreate();
+        this.model.setConditionId(999999);
+        this.invoke(Action.DELETE);
+        this.model = null;
     }
 
     @Override

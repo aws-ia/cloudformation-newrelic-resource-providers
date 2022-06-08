@@ -1,8 +1,10 @@
 package com.newrelic.aws.cfn.resources.agent.configuration;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.NerdGraphClient;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.Actor;
+import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmConfig;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettings;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettingsResponse;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ResponseData;
@@ -57,7 +59,15 @@ public class AgentConfigurationResourceHandler extends AbstractCombinedResourceH
             String query = String.format(template, id);
             ResponseData<ApmSettings> responseData = nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
 
-            if (responseData.getActor().getEntity().getApmSettings().getApmConfig().getUseServerSideConfig()) {
+            boolean useServerSideConfig = Optional.ofNullable(responseData)
+                    .map(ResponseData::getActor)
+                    .map(Actor::getEntity)
+                    .map(ApmSettingsResponse::getApmSettings)
+                    .map(ApmSettings::getApmConfig)
+                    .map(ApmConfig::getUseServerSideConfig)
+                    .orElse(false);
+
+            if (useServerSideConfig) {
                 return Optional.of(responseData.getActor().getEntity());
             } else {
                 return Optional.empty();

@@ -1,0 +1,12 @@
+{
+  "CREATE": {
+    "/AccountId": 3504143,
+    "/ChannelIds": [342613, 342614],
+    "/PolicyId": 646591
+  },
+  "UPDATE": {
+    "/AccountId": 3504143,
+    "/ChannelIds": [342704],
+    "/PolicyId": 646591
+  }
+}

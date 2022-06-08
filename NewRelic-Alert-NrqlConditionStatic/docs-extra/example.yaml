@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create a tag against a code ref (branch or commit) in GitLab
+Resources:
+  SampleNrqlCondition:
+    Type: NewRelic::Alert::NrqlConditionStatic
+    Properties:
+      AccountId: 3504143
+      PolicyId: 646591
+      Condition:
+        Name: "Sample Condition"
+        Description: "Sample NRQL Condition"
+        Enabled: true
+        Expiration:
+          CloseViolationsOnExpiration: true
+          ExpirationDuration: 60
+          OpenViolationOnExpiration: true
+        Nrql:
+          Query: "SELECT count(*) FROM NrAuditEvent"
+        Terms:
+          Operator: "ABOVE"
+          Threshold: 6
+          ThresholdDuration: 60
+          ThresholdOccurrences: "ALL"
+          Priority: "CRITICAL"

@@ -1,6 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.NerdGraphClient;
@@ -17,6 +17,7 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<NrqlConditionStaticHandler, NrqlConditionStaticResult, Pair<Integer, Integer>, ResourceModel, CallbackContext, TypeConfigurationModel> {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(NrqlConditionStaticHandler.class);
@@ -66,15 +67,19 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
             List<NrqlConditionStaticResult> results = Lists.newArrayList();
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearch.query.template");
             String cursorTemplate = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearchCursor.query.template");
-            String query = String.format(template, model.getAccountId());
+            String query = String.format(template, model.getAccountId(), model.getPolicyId());
             ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-            results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
+            results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions()
+                    .stream().filter(nc -> nc.getNrqlConditionStaticId() != null)
+                    .collect(Collectors.toList()));
             String nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
             while (nextCursor != null) {
-                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
+                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), model.getPolicyId(), nextCursor);
                 responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
                 nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
-                results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
+                results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions()
+                        .stream().filter(nc -> nc.getNrqlConditionStaticId() != null)
+                        .collect(Collectors.toList()));
             }
             return results;
         }
@@ -82,40 +87,10 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
         @Override
         public ResourceModel modelFromItem(NrqlConditionStaticResult alertEntityResult) {
             return ResourceModel.builder()
-                    .accountId(alertEntityResult.getEntity().getAccountId())
+                    .accountId(model.getAccountId())
                     .policyId(alertEntityResult.getPolicyId())
                     .conditionId(alertEntityResult.getNrqlConditionStaticId())
-                    .condition(ConditionInput.builder()
-                            .name(alertEntityResult.getName())
-                            .enabled(alertEntityResult.getEnabled())
-                            .description(alertEntityResult.getDescription())
-                            .nrql(Nrql.builder()
-                                    .query(alertEntityResult.getNrql().getQuery())
-                                    .build())
-                            .expiration(Expiration.builder()
-                                    .expirationDuration(alertEntityResult.getExpiration().getExpirationDuration())
-                                    .closeViolationsOnExpiration(alertEntityResult.getExpiration().getCloseViolationsOnExpiration())
-                                    .openViolationOnExpiration(alertEntityResult.getExpiration().getOpenViolationOnExpiration())
-                                    .build())
-                            .runbookUrl(alertEntityResult.getRunbookUrl())
-                            .signal(Signal.builder()
-                                    .aggregationDelay(alertEntityResult.getSignal().getAggregationDelay())
-                                    .aggregationMethod(alertEntityResult.getSignal().getAggregationMethod())
-                                    .aggregationTimer(alertEntityResult.getSignal().getAggregationTimer())
-                                    .aggregationWindow(alertEntityResult.getSignal().getAggregationWindow())
-                                    .fillOption(alertEntityResult.getSignal().getFillOption())
-                                    .fillValue(alertEntityResult.getSignal().getFillValue())
-                                    .slideBy(alertEntityResult.getSignal().getSlideBy())
-                                    .build())
-                            .terms(Terms.builder()
-                                    .operator(alertEntityResult.getTerms().get(0).getOperator())
-                                    .priority(alertEntityResult.getTerms().get(0).getPriority())
-                                    .threshold(alertEntityResult.getTerms().get(0).getThreshold())
-                                    .thresholdDuration(alertEntityResult.getTerms().get(0).getThresholdDuration())
-                                    .thresholdOccurrences(alertEntityResult.getTerms().get(0).getThresholdOccurrences())
-                                    .build())
-                            .violationTimeLimitSeconds(alertEntityResult.getViolationTimeLimitSeconds())
-                            .build())
+                    .condition(model != null ? model.getCondition(): null)
                     .build();
         }
 

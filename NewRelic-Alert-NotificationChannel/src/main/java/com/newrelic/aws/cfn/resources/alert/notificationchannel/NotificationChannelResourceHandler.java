@@ -1,13 +1,12 @@
 package com.newrelic.aws.cfn.resources.alert.notificationchannel;
 
-import com.gitlab.aws.cfn.resources.shared.AbstractCombinedResourceHandler;
+import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ErrorCode;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ResponseData;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;

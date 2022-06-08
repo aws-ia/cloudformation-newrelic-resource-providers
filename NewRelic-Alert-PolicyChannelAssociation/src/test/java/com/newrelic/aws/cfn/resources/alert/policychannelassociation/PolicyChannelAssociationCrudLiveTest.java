@@ -29,6 +29,10 @@ public class PolicyChannelAssociationCrudLiveTest extends AbstractResourceCrudLi
         // suite. However, if the test suite is interrupted, the orphaned association can prevent the tests from
         // passing (as it already exists). This test deletes that association, allowing the test suite to be run again
         this.model = newModelForCreate();
+        this.model.setChannelIds(ImmutableList.<Integer>builder()
+                .addAll(model.getChannelIds())
+                .addAll(newModelForUpdate().getChannelIds())
+                .build());
         this.invoke(Action.DELETE);
         this.model = null;
     }

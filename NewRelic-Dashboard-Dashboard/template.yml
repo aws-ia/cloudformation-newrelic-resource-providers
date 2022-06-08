@@ -18,7 +18,7 @@ Resources:
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.newrelic.aws.cfn.resources.dashboard.HandlerWrapper::testEntrypoint
+      Handler: com.newrelic.aws.cfn.resources.dashboard.HandlerWrapper::handleRequest
       Runtime: java8
       CodeUri: ./target/newrelic-dashboard-dashboard-1.0.0-SNAPSHOT.jar
 

@@ -50,7 +50,7 @@
         "ChannelIds",
         "PolicyId"
     ],
-    "readOnlyProperties": [
+    "createOnlyProperties": [
         "/properties/AccountId",
         "/properties/PolicyId"
     ],

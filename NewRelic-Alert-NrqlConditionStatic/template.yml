@@ -13,12 +13,12 @@ Resources:
     Properties:
       Handler: com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/newrelic-alert-nrqlconditionstatic-handler-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alert-nrqlconditionstatic-handler-1.0.0-SNAPSHOT.jar
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.HandlerWrapper::testEntrypoint
+      Handler: com.newrelic.aws.cfn.resources.alert.alertspolicy.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/newrelic-alert-nrqlconditionstatic-handler-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alert-nrqlconditionstatic-handler-1.0.0-SNAPSHOT.jar
 

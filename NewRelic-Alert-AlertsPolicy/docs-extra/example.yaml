@@ -10,3 +10,7 @@ Resources:
       AlertsPolicy:
         Name: My CF Created Policy
         IncidentPreference:  PER_POLICY
+    Outputs:
+      AlertsPolicyId:
+        Description: "Description of the id"
+        Value:

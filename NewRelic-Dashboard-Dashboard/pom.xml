@@ -23,6 +23,11 @@
             <artifactId>aws-cloudformation-rpdk-java-plugin</artifactId>
             <version>[2.0.0,3.0.0)</version>
         </dependency>
+        <dependency>
+            <groupId>com.newrelic.aws.cfn.resources</groupId>
+            <artifactId>common-newrelic-cloudformation-utils</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

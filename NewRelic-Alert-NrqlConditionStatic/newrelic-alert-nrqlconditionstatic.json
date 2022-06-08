@@ -57,7 +57,8 @@
                             "description": "Whether to create a new \"lost signal\" violation to capture that the signal expired. Defaults to false.",
                             "default": false
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "Name": {
                     "type": "string",
@@ -74,7 +75,8 @@
                     },
                     "required": [
                         "Query"
-                    ]
+                    ],
+                    "additionalProperties": false
                 },
                 "RunbookUrl": {
                     "type": "string",
@@ -128,7 +130,8 @@
                             "description": "This setting gathers data in overlapping time windows to smooth the chart line, making it easier to spot trends",
                             "type": "integer"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "Terms": {
                     "type": "object",
@@ -177,7 +180,8 @@
                         "Threshold",
                         "ThresholdDuration",
                         "ThresholdOccurrences"
-                    ]
+                    ],
+                    "additionalProperties": false
                 },
                 "ViolationTimeLimitSeconds": {
                     "type": "integer",
@@ -214,18 +218,20 @@
     "additionalProperties": false,
     "required": [
         "AccountId",
-        "ConditionId"
+        "PolicyId",
+        "Condition"
     ],
     "createOnlyProperties": [
-        "/properties/AccountId"
+        "/properties/AccountId",
+        "/properties/PolicyId"
     ],
     "readOnlyProperties": [
-        "/properties/AccountId",
         "/properties/ConditionId",
         "/properties/ConditionCreateResult"
     ],
     "primaryIdentifier": [
         "/properties/AccountId",
+        "/properties/PolicyId",
         "/properties/ConditionId"
     ],
     "handlers": {
