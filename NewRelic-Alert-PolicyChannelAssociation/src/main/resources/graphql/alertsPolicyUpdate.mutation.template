@@ -1,8 +1,0 @@
-mutation {
-  alertsPolicyUpdate(accountId: %d, id: %d, policy: %s) {
-    accountId
-    id
-    incidentPreference
-    name
-  }
-}
