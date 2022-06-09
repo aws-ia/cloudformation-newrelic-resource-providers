@@ -1,6 +1,9 @@
 package com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph;
 
 import com.google.common.collect.ImmutableList;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.Config;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +46,16 @@ public class NerdGraphClientTest {
                 .hello(2F)
                 .world(3.0)
                 .list(ImmutableList.of("a", "b"))
-//                .alertsPolicyInput(AlertsConditionInput.builder()
-////                        .incidentPreference("PER_POLICY")
-//                        .name("name")
-//                        .build())
+                .notificationChannelResult(NotificationChannelResult.builder()
+                        .notificationChannel(NotificationChannel.builder()
+                                .channelId(1234)
+                                .name("My channel")
+                                .config(Config.builder()
+                                        .includeJson(true)
+                                        .emails(ImmutableList.of("foo@somedomain.com"))
+                                        .build())
+                                .build())
+                        .build())
                 .pair(Pair.of("left", 1))
                 .build());
 
@@ -54,8 +63,8 @@ public class NerdGraphClientTest {
         Assertions.assertFalse(arg.contains("bar"));
         Assertions.assertFalse(arg.contains("hello"));
         Assertions.assertTrue(arg.contains("world"));
-        Assertions.assertTrue(arg.contains("alertInput"));
-        Assertions.assertTrue(arg.contains("pair"));
+        Assertions.assertTrue(arg.contains("notificationChannel"));
+        Assertions.assertTrue(arg.contains("includeJson"));
     }
 
     @Test
@@ -80,26 +89,34 @@ public class NerdGraphClientTest {
     @Test
     void testGenGraphQLArgHandleLists() {
         String arg = nerdGraphClient.genGraphQLArg(TestArgInstance.builder()
-//                .list(ImmutableList.of(AlertsConditionInput.builder()
-//                                .name("My app")
-////                                .incidentPreference("PER_POLICY")
-//                                .build()))
-                .build());
+                .list(ImmutableList.of(NotificationChannel.builder()
+                                .channelId(1234)
+                                .name("My channel")
+                                .config(Config.builder()
+                                        .includeJson(true)
+                                        .emails(ImmutableList.of("foo@bar.com"))
+                                        .build())
+                                .build()))
+                .build(), ImmutableList.of(NotificationChannel.class.getPackage().getName(), Config.class.getPackage().getName()));
 
-        Assertions.assertEquals("{list: [{name: \"My app\", description: \"This is a test app\", permissions: WITHOUT_QUOTE}, {row: 12, column: 1}]}", arg);
+        Assertions.assertEquals("{list: [{channelId: 1234, name: \"My channel\", config: {includeJson: true, emails: [\"foo@bar.com\"]}}]}", arg);
     }
 
     @Test
     void testGenGraphQLArgHandleCloudformationModels() {
         String arg = nerdGraphClient.genGraphQLArg(TestArgInstance.builder()
-//                .alertsPolicyInput(AlertsConditionInput.builder()
-//                        .name("My app")
-////                        .incidentPreference("PER_POLICY")
-//                        .build())
-                .build());
+                        .notificationChannelResult(NotificationChannelResult.builder()
+                                .notificationChannel(NotificationChannel.builder()
+                                        .channelId(1234)
+                                        .name("My channel")
+                                        .config(Config.builder()
+                                                .includeJson(true)
+                                                .emails(ImmutableList.of("foo@bar.com"))
+                                                .build())
+                                        .build())
+                                .build())
+                .build(), ImmutableList.of(NotificationChannel.class.getPackage().getName()));
 
-        Assertions.assertEquals("{alertInput: {name: \"My app\", description: \"This is a test app\"}}", arg);
+        Assertions.assertEquals("{notificationChannelResult: {notificationChannel: {channelId: 1234, name: \"My channel\", config: {includeJson: true, emails: [\"foo@bar.com\"]}}}}", arg);
     }
-
-    // TODO: Add unit test for "doRequest" method
 }

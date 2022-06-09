@@ -97,5 +97,4 @@ public class NerdGraphClientTest {
         Assertions.assertEquals("{alertInput: {name: \"My app\", description: \"This is a test app\"}}", arg);
     }
 
-    // TODO: Add unit test for "doRequest" method
 }

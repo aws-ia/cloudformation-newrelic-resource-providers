@@ -66,13 +66,13 @@ public class NerdGraphClient {
                         if (List.class.isAssignableFrom(value.getClass())) {
                             @SuppressWarnings("unchecked")
                             List<Object> list = (List<Object>) value;
-                            schema.add(String.format("%1$s: %2$s", field.getName(), list.stream().map(this::genGraphQLArg).collect(Collectors.joining(", ", "[", "]"))));
+                            schema.add(String.format("%1$s: %2$s", field.getName(), list.stream().map(li -> genGraphQLArg(li, packagePrefixesForRecursion)).collect(Collectors.joining(", ", "[", "]"))));
                         } else if (Objects.equals(field.getType().getPackage().getName(), "com.newrelic.aws.cfn.resources.alert")) {
-                            schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value)));
+                            schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value, packagePrefixesForRecursion)));
                         } else if (value instanceof String && !enumFieldNames.contains(field.getName())) {
                             schema.add(String.format("%1$s: \"%2$s\"", field.getName(), value));
                         } else if (packagePrefixesForRecursion.stream().anyMatch(s -> value.getClass().getName().startsWith(s))) {
-                            schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value)));
+                            schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value, packagePrefixesForRecursion)));
                         } else {
                             schema.add(String.format("%1$s: %2$s", field.getName(), value));
                         }

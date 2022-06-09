@@ -38,10 +38,6 @@ public class NerdGraphClientTest {
                 .hello(2F)
                 .world(3.0)
                 .list(ImmutableList.of("a", "b"))
-//                .alertsPolicyInput(AlertsConditionInput.builder()
-////                        .incidentPreference("PER_POLICY")
-//                        .name("name")
-//                        .build())
                 .pair(Pair.of("left", 1))
                 .build());
 
@@ -71,30 +67,5 @@ public class NerdGraphClientTest {
         Assertions.assertFalse(arg.contains("alertInput"));
         Assertions.assertFalse(arg.contains("pair"));
     }
-
-    @Test
-    void testGenGraphQLArgHandleLists() {
-        String arg = nerdGraphClient.genGraphQLArg(TestArgInstance.builder()
-//                .list(ImmutableList.of(AlertsConditionInput.builder()
-//                                .name("My app")
-////                                .incidentPreference("PER_POLICY")
-//                                .build()))
-                .build());
-
-        Assertions.assertEquals("{list: [{name: \"My app\", description: \"This is a test app\", permissions: WITHOUT_QUOTE}, {row: 12, column: 1}]}", arg);
-    }
-
-    @Test
-    void testGenGraphQLArgHandleCloudformationModels() {
-        String arg = nerdGraphClient.genGraphQLArg(TestArgInstance.builder()
-//                .alertsPolicyInput(AlertsConditionInput.builder()
-//                        .name("My app")
-////                        .incidentPreference("PER_POLICY")
-//                        .build())
-                .build());
-
-        Assertions.assertEquals("{alertInput: {name: \"My app\", description: \"This is a test app\"}}", arg);
-    }
-
     // TODO: Add unit test for "doRequest" method
 }
