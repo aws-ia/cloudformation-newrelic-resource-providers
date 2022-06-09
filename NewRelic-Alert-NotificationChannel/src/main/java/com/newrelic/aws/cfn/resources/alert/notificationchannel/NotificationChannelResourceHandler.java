@@ -2,6 +2,7 @@ package com.newrelic.aws.cfn.resources.alert.notificationchannel;
 
 import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.NerdGraphClient;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ErrorCode;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
@@ -64,29 +65,21 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
 
         @Override
         public List<NotificationChannel> readExistingItems() throws Exception {
+            List<NotificationChannel> results = Lists.newArrayList();
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelRead.query.template");
+            String cursorTemplate = nerdGraphClient.getGraphQLTemplate("notificationChannelReadCursor.query.template");
             String query = String.format(template, model.getAccountId());
+
             ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-
-            return ImmutableList.<NotificationChannel>builder()
-                    .addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels()).build();
-
-
-            // TODO: cursors
-//            List<NrqlConditionStaticResult> results = Lists.newArrayList();
-//            String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearch.query.template");
-//            String cursorTemplate = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearchCursor.query.template");
-//            String query = String.format(template, model.getAccountId());
-//            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
-//            results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
-//            String nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
-//            while (nextCursor != null) {
-//                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
-//                responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
-//                nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
-//                results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions());
-//            }
-//            return results;
+            results.addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels());
+            String nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannels().getNextCursor();
+            while (nextCursor != null) {
+                String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
+                responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+                nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannels().getNextCursor();
+                results.addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels());
+            }
+            return results;
         }
 
         @Override
