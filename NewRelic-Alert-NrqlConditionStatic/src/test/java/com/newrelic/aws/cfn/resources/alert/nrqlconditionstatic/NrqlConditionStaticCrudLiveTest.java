@@ -1,6 +1,5 @@
 package com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic;
 
-import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.nrqlconditionstatic.nerdgraph.schema.NrqlConditionStaticResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.api.Assertions;

@@ -2,7 +2,6 @@ package com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.newrelic.aws.cfn.resources.alert.notificationchannel.ChannelInput;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

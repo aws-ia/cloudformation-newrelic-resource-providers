@@ -1,7 +1,6 @@
 package com.newrelic.aws.cfn.resources.alert.alertspolicy;
 
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicyResult;
-import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.IncidentPreference;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;

@@ -2,7 +2,6 @@ package com.newrelic.aws.cfn.resources.agent.configuration;
 
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.agent.configuration.nerdgraph.schema.ApmSettingsResponse;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestInstance;

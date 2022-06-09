@@ -1,20 +1,10 @@
 package com.newrelic.aws.cfn.resources.dashboard;
 
 import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.api.AbstractComparableAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ObjectAssert;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,11 +18,12 @@ import software.amazon.cloudformation.Action;
 import software.amazon.cloudformation.LambdaWrapper;
 import software.amazon.cloudformation.loggers.JavaLogPublisher;
 import software.amazon.cloudformation.loggers.LogFilter;
-import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
-import software.amazon.cloudformation.proxy.LoggerProxy;
-import software.amazon.cloudformation.proxy.OperationStatus;
-import software.amazon.cloudformation.proxy.ProgressEvent;
-import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.*;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith({MockitoExtension.class})

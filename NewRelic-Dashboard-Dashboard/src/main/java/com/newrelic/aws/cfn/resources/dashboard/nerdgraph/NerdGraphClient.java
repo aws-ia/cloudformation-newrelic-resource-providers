@@ -8,7 +8,6 @@ import com.google.common.io.Resources;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.EntityResult;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.Response;
 import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.ResponseData;
-import org.apache.commons.lang3.ClassUtils;
 import software.amazon.cloudformation.exceptions.CfnHandlerInternalFailureException;
 import software.amazon.cloudformation.exceptions.CfnNetworkFailureException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
@@ -23,11 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NerdGraphClient {
