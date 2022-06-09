@@ -1,0 +1,13 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create an Email Notification Channel
+Resources:
+  MySampleChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId: 3504143
+      Channel:
+        Email:
+          Emails: ["test1@mydomain.com", "test2@mydomain.com"]
+          IncludeJson: true
+          Name: "My Email NotificationChannel"

@@ -20,6 +20,7 @@
         <module>NewRelic-Alert-NotificationChannel</module>
         <module>NewRelic-Alert-PolicyChannelAssociation</module>
         <module>NewRelic-Agent-Configuration</module>
+        <module>docs/user</module>
     </modules>
 
     <properties>

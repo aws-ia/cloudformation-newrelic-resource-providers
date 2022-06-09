@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Shows how to set agent configuration in NewRelic.
+Description: Shows how to set server-side-configuration for a NewRelic Agent
 Resources:
   AgentConfigurationSample:
     Type: NewRelic::Agent::Configuration

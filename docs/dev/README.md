@@ -1,4 +1,14 @@
-# New Relic CloudFormation Resources - Developer Documentation
+# NewRelic CloudFormation Resources - Developer Documentation
+
+## Read Me First: Potential Surprises
+
+* Some surprising folders are blown away during the build.
+  * `NewRelic-*/docs/`: so any custom docs should be placed in **docs-extra**
+  * `generated/` including **/docs/generated/user/**:
+    so any user-facing docs should be placed e.g. in `docs-extra/` so they are copied
+
+* The projects mainly use Live Tests. These require access to NewRelic and parameters as described below.
+
 
 ## Building and Pre-Requisites
 
@@ -9,29 +19,38 @@ You should first set up the `aws` and `cfn` command-line tools following the ins
 
 You should then be able to build the project without tests with: `mvn clean install -DskipTests`
 
+
 ## Tests
-
-### Unit Tests
-
-The project contains unit tests, mainly for the abstractions that have been created. However, most of the tests are
-live ones, see section below. To run only the unit tests, use:
-
-```bash
-mvn clean verify -Dgroups="\!Live"
-```
 
 ### Live Java Tests
 
-The live tests require few environment variables to be setup:
+This project uses live tests. There isn't much else to test! The live tests require an access token for
+connecting to NewRelic and a few other arguments, set in the follow environment variables
+or in a properties file which can be sourced prior to running the tests:
 
+```
+# A valid API key for newrelic.com
+NR_API_KEY=XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYY
 
-| Envvar        | Description                                                                                  |
-|---------------|----------------------------------------------------------------------------------------------|
-| NR_ENDPOINT   | The Endpoint to target. E.g https://api.eu.newrelic.com/graphql if your account is in Europe |
-| NR_API_KEY    | The API Key for your account                                                                 |
-| NR_ACCOUNT_ID | Your account ID (this is a number)                                                           |
+# A valid NewRelic Account ID
+NR_ACCOUNT_ID=3504143
 
-With the above set, `mvn clean install` or `mvn clean verify -Dgroups="Live"` should work.
+# The endpoint used to access the NewRelic API in your region, e.g. the European endpoing 
+NR_ENDPOINT=https://api.eu.newrelic.com/graphql
+
+# The GUID of a NewRelic APM agent
+NR_AGENT_GUID=MzUwNDE0M3xBUE18QVBQTElDQVRJT058NDE5OTY3OTEw
+
+# The ID of a NewRelic Alert Policy
+NR_POLICY_ID=646591
+
+# The IDs of three NewRelic Notification channels (Email, Slack, PagerDuty and WebHook are currently supported)
+NR_CHANNEL1_ID=342614
+NR_CHANNEL2_ID=342615
+NR_CHANNEL3_ID=342616
+```
+
+With the above set, `mvn clean install` should work.
 
 ### Serverless and Contract Tests
 
@@ -40,16 +59,17 @@ using [AWS Serverless Application Model (SAM)](https://docs.aws.amazon.com/serve
 These allow:
 
 * Local testing of resource code as lambdas, to ensure payload encapsulation and results for individual requests
-* CloudFormation contract tests, to ensure compliance with CloudFormation expectations (some of which are a little surprising)
-  and to test sequences of requests possibly including callbacks (although New Relic resources are quick enough they do not use callbacks)
+* CFN contract tests, to ensure compliance with CFN expectations (some of which are a little surprising)
+  and to test sequences of requests possibly including callbacks (although NewRelic resources are quick enough they do not use callbacks)
 
 This project does not perform this testing automatically, nor does it maintain test artifacts in all cases,
-due to the time to run and overhead of creating dependencies. The Java Live tests give good coverage,
+due to the time to run and overhead of creating dependencies.  The Java Live tests give good coverage,
 and the resources are tested as installed to CloudFormation.
-However, from time to time it may be useful to run serverless tests, to confirm obscure contract compliance
+However from time to time it may be useful to run serverless tests, to confirm obscure contract compliance
 and to test serverless locally.
 
-To run serverless tests, first ensure `sam` is set up and available (per the links above).
+To run sererless tests, first ensure `sam` is set up and available (per the links above).
+
 
 #### Local Serverless Single Request Testing
 
@@ -76,10 +96,8 @@ e.g. the following `sam-tests/create-1.json`:
     },
     "callbackContext": null,
     "typeConfiguration": {
-      # Set your actual New Relic endpoint here
-      "Endpoint": "https://api.eu.newrelic.com/graphql",
-      # Set your actual Api Key here
-      "ApiKey": "NRAK-XXXXXXXXXXXXXXX"
+      "endPoint": "",
+      "apiKey": ""
     }
 }
 ```
@@ -93,7 +111,7 @@ sam local invoke TestEntrypoint --event sam-tests/create-1.json
 ```
 
 
-#### CloudFormation Contract Testing
+#### CFN Contract Testing
 
 To use the standard `cfn test` contract testing automation, which runs a series of commands,
 including callbacks, and some create-update-delete cycles, you must first set the type configuration
@@ -101,14 +119,30 @@ to use. This is done in `~/.cfn-cli/typeConfiguration.json`:
 ```
 {
   "Endpoint": "https://api.eu.newrelic.com/graphql",
-  "ApiKey": "NRAK-XXXXXXXXXXXXXXX"
+  "ApiKey": "XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYY"
 }
 ```
 
 For most resources it is also necessary to set specific parameters to pass for CREATE and UPDATE,
-e.g. in `NewRelic-Dashboard`, you can see an example with the [overrides.json](../../NewRelic-Dashboard/overrides.json)
+which can be set in the `overrides.json` file in the project root, e.g. in `NewRelic-Alert-PolicyChannelAssociation`:
 
-If there are resources in New Relic which must exist prior to execution, add them manually
+```
+{
+  "CREATE": {
+    "/AccountId": 3504143,
+    "/ChannelIds": [342613, 342614],
+    "/PolicyId": 646591
+  },
+  "UPDATE": {
+    "/AccountId": 3504143,
+    "/ChannelIds": [342704],
+    "/PolicyId": 646591
+  }
+}
+
+```
+
+If there are resources in NewRelic which must exist prior to execution, add them manually
 (or in `template.yml` and you can then refer to them per the instructions above).
 
 Next start the lambda:
@@ -125,8 +159,7 @@ cfn test
 
 If tests do not pass, it can be useful to inspect `rpdk.log` as well as the output in each of the terminal windows,
 and the [Python test suite source code](https://github.com/aws-cloudformation/cloudformation-cli/blob/master/src/rpdk/core/contract/suite/).
-In particular, the `read` and `list` tests can take a bit more time than the default timeout. If this happens, specifying
-a higher timeout like this should work: `cfn test --enforce-timeout 60`
+
 
 ## Registering Types and Running Examples
 
@@ -144,7 +177,7 @@ cfn submit --set-default
 ```
 
 Or looping through all of them (optionally include the `set-type-configuration` command from above in the loop,
-to set the type configuration for each resource):
+to set the type configuraition for each resource):
 
 ```
 for x in NewRelic-* ; do
@@ -159,32 +192,34 @@ done
 ### Setting Type Configuration
 
 If this is the first time registering, you will need to set up the type configuration used for
-each of these types, containing the endpoint and the API KEY for connecting to New Relic.
-We recommend entering the api key into Systems Manager, say under path `/cfn/newrelic/api-key`,
-and then referring to it, e.g. as `{{resolve:ssm-secure:/cfn/newrelic/api-key}}`.
+each of these types, containing the api key for connecting to NewRelic.
+We recommend entering the access token into Systems Manager, say under path `/cfn/newrelic/apiKey`,
+and then referring to it, e.g. as `{{resolve:ssm-secure:/cfn/newrelic/apiKey}}`.
 
 Once stored in SSM, it can be set for each resource type as follows:
 
 ```
 TYPE=NewRelic::${XXX}::${YYY}
-SSM_PATH_TO_API_KEY=/cfn/newrelic/api-key
-aws --output yaml --no-cli-pager cloudformation set-type-configuration \
-  --type RESOURCE --type-name $TYPE \
+ENDPOINT=https://api.eu.newrelic.com/graphql
+SSM_PATH_TO_API_KEY=/cfn/newRelic/apiKey
+aws --output yaml --no-cli-pager cloudformation set-type-configuration \            
+  --type RESOURCE --type-name NewRelic::Agent::Configuration \                              
   --configuration-alias default \
-  --configuration '{"Endpoint": "https://.........", "ApiKey": "{{resolve:ssm-secure:'${SSM_PATH_TO_API_KEY}'}}"}'
+  --configuration '{"Endpoint": "'$ENDPOINT'", "ApiKey": "{{resolve:ssm-secure:'${SSM_PATH_TO_API_KEY}'}}"}'
 ```
 
 Or looping through all of them:
 
 ```
-SSM_PATH_TO_API_KEY=/cfn/newrelic/api-key
+ENDPOINT=https://api.eu.newrelic.com/graphql
+SSM_PATH_TO_API_KEY=/cfn/newRelic/apiKey
 for x in NewRelic-* ; do
   TYPE=$(echo $x | sed s/-/::/g)
   echo Setting type configuration for $TYPE...
   aws --output yaml --no-cli-pager cloudformation set-type-configuration \
     --type RESOURCE --type-name $TYPE \
     --configuration-alias default \
-    --configuration '{"Endpoint": "https://.........", "ApiKey": "{{resolve:ssm-secure:'${SSM_PATH_TO_API_KEY}'}}"}'
+    --configuration '{"Endpoint": "'$ENDPOINT'", "ApiKey": "{{resolve:ssm-secure:'${SSM_PATH_TO_API_KEY}'}}"}'
 done
 ```
 
@@ -207,9 +242,9 @@ Edit the values in the relevant example YAML (e.g. picking a valid parent group 
 aws cloudformation create-stack --stack-name newrelic-test --template-body file://docs/path/to/resource/example.yaml
 ```
 
-You should see the stack update in the CloudFormation console, and see the result in New Relic.
+You should see the stack update in the CloudFormation console, and see the result in GitLab.
 
-Thereafter, you can `update-stack` and `delete-stack` in the usual way, combining these resources with others,
+Thereafter you can `update-stack` and `delete-stack` in the usual way, combining these resources with others,
 passing references, as per normal CloudFormation..
 
 
@@ -217,20 +252,20 @@ passing references, as per normal CloudFormation..
 
 ### Design Notes
 
-Due to the highly regular nature of the New Relic API, much of the work is done by abstract superclasses (if using NerdGraph)
-However, in order to be able to leverage `cfn generate` to autogenerate model classes on schema changes,
+Due to the highly regular nature of the NewRelic API, much of the work is done by abstract superclasses.
+However in order to be able to leverage `cfn generate` to autogenerate model classes on schema changes,
 there is a bit of a subtle pattern to route from the generated `HandlerWrapper` to the generated-once-and-required
 `CreateHandler` (and others) then back to a single concrete combined handler extending the abstract superclass.
 
 The scaffolding is thus a bit clumsy, but it means the actual code needed to be written and maintained for
-any resource is quite small, and the majority of the CloudFormation contract behaviour including error checks and
-required responses is handled automatically, but the input should be maintained manually.
+any resource is quite small, and the majority of the CFN contract behaviour including error checks and
+required responses is handled automatically.
 
 There is also scaffolding for tests allowing a default pattern of CRUD to be easily and automatically written,
 extended with other tests where desired.
 
 
-### How to Add Code for a new "New Relic" Resource
+### How to Add Code for a New NewRelic Resource
 
 The recommended way to add a new resource is to use `cfn init` in the directory for the new resource,
 e.g. `NewRelic-Xxxx-Yyyyy`,
