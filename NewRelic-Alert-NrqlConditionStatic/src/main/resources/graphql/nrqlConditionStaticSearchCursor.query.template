@@ -1,0 +1,50 @@
+{
+  actor {
+    account(id: %d) {
+      alerts {
+        nrqlConditionsSearch(searchCriteria: {policyId: %d}, cursor: "%s") {
+          nextCursor
+          totalCount
+          nrqlConditions {
+              ... on AlertsNrqlStaticCondition {
+                id
+                policyId
+                entity {
+                  accountId
+                }
+                name
+                enabled
+                description
+                nrql {
+                  query
+                }
+                expiration {
+                  closeViolationsOnExpiration
+                  expirationDuration
+                  openViolationOnExpiration
+                }
+                runbookUrl
+                signal {
+                  aggregationDelay
+                  aggregationMethod
+                  aggregationTimer
+                  aggregationWindow
+                  fillOption
+                  fillValue
+                  slideBy
+                }
+                terms {
+                  operator
+                  priority
+                  threshold
+                  thresholdDuration
+                  thresholdOccurrences
+                }
+                violationTimeLimitSeconds
+              }
+          }
+        }
+      }
+    }
+  }
+}

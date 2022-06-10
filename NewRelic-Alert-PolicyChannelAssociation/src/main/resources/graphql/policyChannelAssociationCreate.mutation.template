@@ -1,0 +1,8 @@
+mutation {
+  alertsNotificationChannelsAddToPolicy(accountId: %d, policyId: %d, notificationChannelIds: %s) {
+    notificationChannels {
+      id
+    }
+    policyId
+  }
+}

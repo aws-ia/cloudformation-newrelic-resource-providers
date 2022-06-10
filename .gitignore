@@ -23,3 +23,6 @@ java-tests.log*
 
 # contains credentials
 sam-tests/
+
+# misc
+ignored

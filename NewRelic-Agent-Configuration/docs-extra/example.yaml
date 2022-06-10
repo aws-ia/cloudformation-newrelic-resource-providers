@@ -1,0 +1,18 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to set agent configuration in NewRelic.
+Resources:
+  AgentConfigurationSample:
+    Type: NewRelic::Agent::Configuration
+    Properties:
+      Guid: MzUwNDE0M3xBUE18QVBQTElDQVRJT058NDE5OTY3OTEw
+      AgentConfiguration:
+        Settings:
+          Alias: "My Test Alias"
+          ApmConfig:
+            ApdexTarget: 4
+            UseServerSideConfig: true
+          BrowserConfig:
+            ApdexTarget: 6
+          SlowSql:
+            Enabled: true

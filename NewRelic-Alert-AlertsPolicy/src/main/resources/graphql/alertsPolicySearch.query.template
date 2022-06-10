@@ -1,0 +1,16 @@
+{
+  actor {
+    account(id: %d) {
+      alerts {
+        policiesSearch {
+          policies {
+            id
+            name
+            incidentPreference
+            accountId
+          }
+        }
+      }
+    }
+  }
+}

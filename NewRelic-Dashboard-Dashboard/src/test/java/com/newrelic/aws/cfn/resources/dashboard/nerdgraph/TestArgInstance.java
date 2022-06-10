@@ -3,8 +3,6 @@ package com.newrelic.aws.cfn.resources.dashboard.nerdgraph;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newrelic.aws.cfn.resources.dashboard.DashboardInput;
-import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardCreateErrorType;
-import com.newrelic.aws.cfn.resources.dashboard.nerdgraph.schema.DashboardCreateResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

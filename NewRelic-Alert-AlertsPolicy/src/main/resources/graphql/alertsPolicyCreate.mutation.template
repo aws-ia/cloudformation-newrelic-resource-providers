@@ -1,0 +1,8 @@
+mutation {
+  alertsPolicyCreate(accountId: %d, policy: %s) {
+    accountId
+    id
+    incidentPreference
+    name
+  }
+}
