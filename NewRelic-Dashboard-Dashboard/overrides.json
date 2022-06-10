@@ -1,6 +1,6 @@
 {
   "CREATE": {
-    "/AccountId": 3504143,
+    "/AccountId": <NR_ACCOUNT_ID>,
     "/Dashboard": {
       "Name": "Contract testing (NewRelic::Dashboard::Dashboard)",
       "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
@@ -15,7 +15,7 @@
                 "Line": {
                   "NrqlQueries": [
                     {
-                      "AccountId": 3504143,
+                      "AccountId": <NR_ACCOUNT_ID>,
                       "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
                     }
                   ]
@@ -46,7 +46,7 @@
                 "Area": {
                   "NrqlQueries": [
                     {
-                      "AccountId": 3504143,
+                      "AccountId": <NR_ACCOUNT_ID>,
                       "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
                     }
                   ]
@@ -62,7 +62,7 @@
                 "Bar": {
                   "NrqlQueries": [
                     {
-                      "AccountId": 3504143,
+                      "AccountId": <NR_ACCOUNT_ID>,
                       "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
                     }
                   ]

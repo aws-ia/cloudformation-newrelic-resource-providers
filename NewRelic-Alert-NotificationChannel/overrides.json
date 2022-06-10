@@ -1,6 +1,6 @@
 {
   "CREATE": {
-    "/AccountId": 3504143,
+    "/AccountId": <NR_ACCOUNT_ID>,
     "/Channel": {
       "Email": {
         "Emails": [
@@ -13,7 +13,7 @@
     }
   },
   "UPDATE": {
-    "/AccountId": 3504143,
+    "/AccountId": <NR_ACCOUNT_ID>,
     "/Channel": {
       "Email": {
         "Emails": [

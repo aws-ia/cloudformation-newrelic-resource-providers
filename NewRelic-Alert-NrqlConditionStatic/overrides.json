@@ -1,7 +1,7 @@
 {
   "CREATE": {
-    "/AccountId": 3504143,
-    "/PolicyId": 646591,
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/PolicyId": <NR_POLICY_ID>,
     "/Condition": {
       "Description": "SAM NRQL Condition",
       "Enabled": true,
@@ -24,8 +24,8 @@
     }
   },
   "UPDATE": {
-    "/AccountId": 3504143,
-    "/PolicyId": 646591,
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/PolicyId": <NR_POLICY_ID>,
     "/Condition": {
       "Description": "Updated SAM NRQL Condition",
       "Enabled": true,
