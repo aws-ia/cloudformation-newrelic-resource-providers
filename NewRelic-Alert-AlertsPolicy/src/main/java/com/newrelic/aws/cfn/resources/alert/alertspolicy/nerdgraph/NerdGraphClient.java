@@ -61,7 +61,7 @@ public class NerdGraphClient {
                             @SuppressWarnings("unchecked")
                             List<Object> list = (List<Object>) value;
                             schema.add(String.format("%1$s: %2$s", field.getName(), list.stream().map(this::genGraphQLArg).collect(Collectors.joining(", ", "[", "]"))));
-                        } else if (Objects.equals(field.getType().getPackage().getName(), "com.newrelic.aws.cfn.resources.alert")) {
+                        } else if (Objects.equals(field.getType().getPackage().getName(), "com.newrelic.aws.cfn.resources.alert.alertspolicy")) {
                             schema.add(String.format("%1$s: %2$s", field.getName(), genGraphQLArg(value)));
                         } else if (value instanceof String && !enumFieldNames.contains(field.getName())) {
                             schema.add(String.format("%1$s: \"%2$s\"", field.getName(), value));

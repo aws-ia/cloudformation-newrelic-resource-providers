@@ -3,6 +3,7 @@ package com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.AlertsPolicyInput;
+import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicyResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class TestArgInstance {
     @JsonProperty("list_json")
     public List<Object> list;
 
-    @JsonProperty("alert_input")
+    @JsonProperty("alertsPolicyInput")
     protected AlertsPolicyInput alertsPolicyInput;
 
     @JsonProperty("normal_type")

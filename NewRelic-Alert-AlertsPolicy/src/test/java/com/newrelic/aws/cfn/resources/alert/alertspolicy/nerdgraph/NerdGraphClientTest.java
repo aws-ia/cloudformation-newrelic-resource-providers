@@ -2,6 +2,7 @@ package com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph;
 
 import com.google.common.collect.ImmutableList;
 import com.newrelic.aws.cfn.resources.alert.alertspolicy.AlertsPolicyInput;
+import com.newrelic.aws.cfn.resources.alert.alertspolicy.nerdgraph.schema.AlertsPolicyResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +40,10 @@ public class NerdGraphClientTest {
                 .hello(2F)
                 .world(3.0)
                 .list(ImmutableList.of("a", "b"))
-                .alertsPolicyInput(AlertsPolicyInput.builder()
-                        .incidentPreference("PER_POLICY")
-                        .name("name")
-                        .build())
+                                .alertsPolicyInput(AlertsPolicyInput.builder()
+                                        .name("My Name")
+                                        .incidentPreference("PER_POLICY")
+                                        .build())
                 .pair(Pair.of("left", 1))
                 .build());
 
@@ -50,7 +51,7 @@ public class NerdGraphClientTest {
         Assertions.assertFalse(arg.contains("bar"));
         Assertions.assertFalse(arg.contains("hello"));
         Assertions.assertTrue(arg.contains("world"));
-        Assertions.assertTrue(arg.contains("alertInput"));
+        Assertions.assertTrue(arg.contains("alertsPolicyInput"));
         Assertions.assertTrue(arg.contains("pair"));
     }
 
@@ -79,22 +80,27 @@ public class NerdGraphClientTest {
                 .list(ImmutableList.of(AlertsPolicyInput.builder()
                                 .name("My app")
                                 .incidentPreference("PER_POLICY")
-                                .build()))
+                                .build(),
+                        AlertsPolicyInput.builder()
+                                .name("App2")
+                                .incidentPreference("PER_POLICY")
+                                .build()
+                        ))
                 .build());
 
-        Assertions.assertEquals("{list: [{name: \"My app\", description: \"This is a test app\", permissions: WITHOUT_QUOTE}, {row: 12, column: 1}]}", arg);
+        Assertions.assertEquals("{list: [{name: \"My app\", incidentPreference: PER_POLICY}, {name: \"App2\", incidentPreference: PER_POLICY}]}", arg);
     }
 
     @Test
     void testGenGraphQLArgHandleCloudformationModels() {
         String arg = nerdGraphClient.genGraphQLArg(TestArgInstance.builder()
                 .alertsPolicyInput(AlertsPolicyInput.builder()
-                        .name("My app")
+                        .name("Test")
                         .incidentPreference("PER_POLICY")
-                        .build())
-                .build());
+                        .build()
+                ).build());
 
-        Assertions.assertEquals("{alertInput: {name: \"My app\", description: \"This is a test app\"}}", arg);
+        Assertions.assertEquals("{alertsPolicyInput: {name: \"Test\", incidentPreference: PER_POLICY}}", arg);
     }
 
 }

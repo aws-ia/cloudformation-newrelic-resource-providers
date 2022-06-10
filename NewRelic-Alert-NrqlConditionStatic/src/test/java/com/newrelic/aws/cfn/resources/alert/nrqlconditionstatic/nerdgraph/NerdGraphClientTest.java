@@ -45,7 +45,6 @@ public class NerdGraphClientTest {
         Assertions.assertFalse(arg.contains("bar"));
         Assertions.assertFalse(arg.contains("hello"));
         Assertions.assertTrue(arg.contains("world"));
-        Assertions.assertTrue(arg.contains("alertInput"));
         Assertions.assertTrue(arg.contains("pair"));
     }
 
