@@ -1,0 +1,88 @@
+{
+  actor {
+    account(id: %d) {
+      alerts {
+        notificationChannels {
+          channels {
+            id
+            name
+            type
+            ... on AlertsXMattersNotificationChannel {
+              config {
+                integrationUrl
+              }
+            }
+            ... on AlertsWebhookNotificationChannel {
+              config {
+                baseUrl
+                basicAuth {
+                  password
+                  username
+                }
+                customHttpHeaders {
+                  name
+                  value
+                }
+                customPayloadBody
+                customPayloadType
+              }
+            }
+            ... on AlertsVictorOpsNotificationChannel {
+              config {
+                key
+                routeKey
+              }
+            }
+            ... on AlertsUserNotificationChannel {
+              config {
+                userId
+              }
+            }
+            ... on AlertsSlackNotificationChannel {
+              config {
+                teamChannel
+                url
+              }
+            }
+            ... on AlertsPagerDutyNotificationChannel {
+              config {
+                apiKey
+              }
+            }
+            ... on AlertsOpsGenieNotificationChannel {
+              config {
+                apiKey
+                dataCenterRegion
+                recipients
+                tags
+                teams
+              }
+            }
+            ... on AlertsHipChatNotificationChannel {
+              config {
+                authToken
+                baseUrl
+                roomId
+              }
+            }
+            ... on AlertsEmailNotificationChannel {
+              config {
+                emails
+                includeJson
+              }
+            }
+            ... on AlertsCampfireNotificationChannel {
+              config {
+                room
+                subdomain
+                token
+              }
+            }
+          }
+          totalCount
+          nextCursor
+        }
+      }
+    }
+  }
+}

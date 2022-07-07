@@ -1,0 +1,38 @@
+mutation {
+  alertsNrqlConditionStaticUpdate(accountId: %d, id: %d, condition: %s) {
+    policyId
+    id
+    name
+    nrql {
+      query
+    }
+    entity {
+      accountId
+    }
+    enabled
+    description
+    expiration {
+      closeViolationsOnExpiration
+      expirationDuration
+      openViolationOnExpiration
+    }
+    runbookUrl
+    signal {
+      aggregationDelay
+      aggregationMethod
+      aggregationTimer
+      aggregationWindow
+      fillOption
+      fillValue
+      slideBy
+    }
+    terms {
+      operator
+      priority
+      threshold
+      thresholdDuration
+      thresholdOccurrences
+    }
+    violationTimeLimitSeconds
+  }
+}

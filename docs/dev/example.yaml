@@ -1,0 +1,84 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Creates a NewRelic Alerts Policy with two notification channels, and an NRQL Static Condition, and also configures Server-Side configuration for an agent
+
+Parameters:
+  AccountId:
+    Type: Number
+    Default: 3504143
+    Description: Enter the ID of your account
+
+Resources:
+  MyNewPolicy:
+    Type: NewRelic::Alert::AlertsPolicy
+    Properties:
+      AccountId: { Ref: AccountId }
+      AlertsPolicy:
+        Name: My NewRelic Alerts Policy
+        IncidentPreference: PER_POLICY
+
+  EmailChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId:  { Ref: AccountId }
+      Channel:
+        Email:
+          Emails: [ "test1@mytestdomain.com", "test2@mytestdomain.com" ]
+          IncludeJson: true
+          Name: "My User Story Email NotificationChannel"
+
+  SlackChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId: { Ref: AccountId }
+      Channel:
+        Slack:
+          Name: "My Slack Notification Channel"
+          TeamChannel: "#some-test-channel"
+          Url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ
+
+  PolicyChannelAssociation:
+    Type: NewRelic::Alert::PolicyChannelAssociation
+    Properties:
+      AccountId: { Ref: AccountId }
+      PolicyId: !GetAtt MyNewPolicy.AlertsPolicyId
+      ChannelIds: [!GetAtt EmailChannel.ChannelId, !GetAtt SlackChannel.ChannelId]
+
+  NrqlCondition:
+    Type: NewRelic::Alert::NrqlConditionStatic
+    Properties:
+      AccountId: { Ref: AccountId }
+      PolicyId: !GetAtt MyNewPolicy.AlertsPolicyId
+      Condition:
+        Name: "UserStory Condition"
+        Description: "Sample User Story NRQL Condition"
+        Enabled: true
+        Expiration:
+          CloseViolationsOnExpiration: true
+          ExpirationDuration: 60
+          OpenViolationOnExpiration: true
+        Nrql:
+          Query: "SELECT count(*) FROM NrAuditEvent"
+        Terms:
+          Operator: "ABOVE"
+          Threshold: 6
+          ThresholdDuration: 60
+          ThresholdOccurrences: "ALL"
+          Priority: "CRITICAL"
+
+
+  AgentConfiguration:
+    Type: NewRelic::Agent::Configuration
+    Properties:
+      Guid: MzUwNDE0M3xBUE18QVBQTElDQVRJT058NDE5OTY3OTEw
+      AgentConfiguration:
+        Settings:
+          Alias: "My Demo Alias"
+          ApmConfig:
+            ApdexTarget: 4
+            UseServerSideConfig: true
+          BrowserConfig:
+            ApdexTarget: 6
+          SlowSql:
+            Enabled: true

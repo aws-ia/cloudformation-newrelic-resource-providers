@@ -1,0 +1,15 @@
+mutation {
+  dashboardCreate(accountId: %d, dashboard: %s) {
+    entityResult {
+      guid
+      name
+      accountId
+      createdAt
+      updatedAt
+    },
+    errors {
+      description
+      type
+    }
+  }
+}

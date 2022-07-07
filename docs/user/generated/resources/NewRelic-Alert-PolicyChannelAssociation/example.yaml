@@ -1,0 +1,10 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to associate a Notification Channel with an Alert Policy in NewRelic
+Resources:
+  SamplePolicyChannelAssociation:
+    Type: NewRelic::Alert::PolicyChannelAssociation
+    Properties:
+      AccountId: 3504143
+      ChannelIds: [342613, 342614]
+      PolicyId: 646591

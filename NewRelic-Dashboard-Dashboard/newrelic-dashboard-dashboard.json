@@ -1,0 +1,567 @@
+{
+  "typeName": "NewRelic::Dashboard::Dashboard",
+  "description": "Manage New Relic Dashboard, including WidgetInputs",
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "typeConfiguration": {
+    "properties": {
+      "Endpoint": {
+        "$ref": "#/definitions/NewRelicEndpoint"
+      },
+      "ApiKey": {
+        "$ref": "#/definitions/NewRelicApiKey"
+      }
+    },
+    "required": [
+      "Endpoint",
+      "ApiKey"
+    ],
+    "additionalProperties": false
+  },
+  "definitions": {
+    "NewRelicEndpoint": {
+      "type": "string",
+      "description": "Endpoint to the NerdGraph API.",
+      "default": "https://api.eu.newrelic.com/graphql"
+    },
+    "NewRelicApiKey": {
+      "type": "string",
+      "description": "API key for the New Relic NerdGraph."
+    },
+    "DashboardInput": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "Name of the dashboard."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the dashboard."
+        },
+        "Pages": {
+          "type": "array",
+          "description": "An array of dashboard pages to attach to this resource.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/PageInput"
+          }
+        },
+        "Permissions": {
+          "type": "string",
+          "enum": [
+            "PRIVATE",
+            "PUBLIC_READ_ONLY",
+            "PUBLIC_READ_WRITE"
+          ]
+        }
+      },
+      "required": [
+        "Name",
+        "Pages",
+        "Permissions"
+      ],
+      "additionalProperties": false
+    },
+    "AccountIdInput": {
+      "type": "integer",
+      "description": "Source account to fetch data from."
+    },
+    "NrqlQueryInput": {
+      "type": "object",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountIdInput"
+        },
+        "Query": {
+          "$ref": "#/definitions/QueryInput"
+        }
+      },
+      "required": [
+        "AccountId",
+        "Query"
+      ],
+      "additionalProperties": false
+    },
+    "QueryInput": {
+      "type": "string",
+      "description": "The NRQL query that provides the data for the WidgetInput."
+    },
+    "DurationInput": {
+      "type": "number",
+      "description": "Duration of the requested time window, in milliseconds. When provided with endTime, the time window is set to the last x milliseconds ending at the specified time. If endTime is null, the time window is set to the last x milliseconds ending now."
+    },
+    "EndTimeInput": {
+      "type": "number",
+      "description": "Optional. End of the time window, in milliseconds."
+    },
+    "EntityInputIds": {
+      "type": "array",
+      "description": "Array of source agent Ids to fetch data from.",
+      "insertionOrder": true,
+      "items": {
+        "type": "integer"
+      }
+    },
+    "ThresholdInput": {
+      "type": "object",
+      "description": "Threshold to categorize the results of the query in different groups.",
+      "properties": {
+        "AlertSeverity": {
+          "type": "string",
+          "enum": [
+            "NOT_ALERTING",
+            "WARNING",
+            "CRITICAL"
+          ]
+        },
+        "Value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "AlertSeverity",
+        "Value"
+      ],
+      "additionalProperties": false
+    },
+    "EntityInput": {
+      "type": "object"
+    },
+    "MetricInput": {
+      "type": "object"
+    },
+    "PageInput": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "Name of the dashboard page."
+        },
+        "Description": {
+          "type": "string",
+          "description": "Description of the dashboard page."
+        },
+        "PageId": {
+          "type": "string",
+          "description": "Unique entity identifier of the page to be updated. When null, it means a new PageInput will be created."
+        },
+        "Widgets": {
+          "type": "array",
+          "description": "An array of widget objects to attach to this resource.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/WidgetInput"
+          }
+        }
+      },
+      "required": [
+        "Name",
+        "Widgets"
+      ],
+      "additionalProperties": false
+    },
+    "LayoutInput": {
+      "type": "object",
+      "description": "The widget's position and size in the dashboard. The maximum amount of columns is 12.",
+      "properties": {
+        "Row": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "Column": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "Width": {
+          "type": "integer"
+        },
+        "Height": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WidgetInput": {
+      "description": "A widget object definition.",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "Id of the widget. If null, a new widget will be created and added to a dashboard.",
+          "minLength": 1
+        },
+        "Visualization": {
+          "$ref": "#/definitions/WidgetVisualizationInput"
+        },
+        "Layout": {
+          "$ref": "#/definitions/LayoutInput"
+        },
+        "Title": {
+          "type": "string",
+          "description": "The title of the widget."
+        },
+        "Configuration": {
+          "$ref": "#/definitions/WidgetConfigurationInput"
+        },
+        "RawConfiguration": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/TypeWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/AreaMetricWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/BulletWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/InventoryWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/LineMetricWidgetConfigurationInput"
+            },
+            {
+              "$ref": "#/definitions/ServiceMapWidgetConfigurationInput"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "WidgetVisualizationInput": {
+      "type": "object",
+      "description": "Specifies how this widget will be visualized. If null, the WidgetConfigurationInput will be used to determine the visualization.",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "Nerdpack artifact ID",
+          "enum": [
+            "viz.area",
+            "viz.bar",
+            "viz.billboard",
+            "viz.line",
+            "viz.markdown",
+            "viz.pie",
+            "viz.table",
+            "viz.bullet",
+            "viz.eventfeed",
+            "viz.funnel",
+            "viz.heatmap",
+            "viz.histogram",
+            "viz.inventory",
+            "viz.json",
+            "viz.servicemap"
+          ]
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "additionalProperties": false
+    },
+    "WidgetConfigurationInput": {
+      "type": "object",
+      "properties": {
+        "Area": {
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
+        },
+        "Bar": {
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
+        },
+        "Billboard": {
+          "$ref": "#/definitions/BillboardWidgetConfigurationInput"
+        },
+        "Line": {
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
+        },
+        "Markdown": {
+          "$ref": "#/definitions/MarkdownWidgetConfigurationInput"
+        },
+        "Pie": {
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
+        },
+        "Table": {
+          "$ref": "#/definitions/TypeWidgetConfigurationInput"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TypeWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for standard typed widget. This includes: Area, Bar, Line, Pie, Table, Event Feed, Funnel, Heatmap, Histogram, JSON",
+      "properties": {
+        "NrqlQueries": {
+          "type": "array",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/NrqlQueryInput"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "BillboardWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Billboard.",
+      "properties": {
+        "NrqlQueries": {
+          "type": "array",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/NrqlQueryInput"
+          }
+        },
+        "Thresholds": {
+          "type": "array",
+          "description": "Optional. Array of thresholds to categorize the results of the query in different groups.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/ThresholdInput"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "MarkdownWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Markdown.",
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Content to be added in the markdown WidgetInput."
+        }
+      },
+      "required": [
+        "Text"
+      ],
+      "additionalProperties": false
+    },
+    "AreaMetricWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Area (Metric)",
+      "properties": {
+        "Duration": {
+          "$ref": "#/definitions/DurationInput"
+        },
+        "EndTime": {
+          "$ref": "#/definitions/EndTimeInput"
+        },
+        "EntityIds": {
+          "$ref": "#/definitions/EntityInputIds"
+        },
+        "Metrics": {
+          "type": "array",
+          "description": "For type SCOPE_BREAKDOWN only. List of metrics to be fetched.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/MetricInput"
+          }
+        },
+        "Type": {
+          "type": "string",
+          "description": "Type of the predefined chart.",
+          "enum": [
+            "APPLICATION_BREAKDOWN",
+            "BACKGROUND_BREAKDOWN",
+            "BROWSER_BREAKDOWN",
+            "GC_RUNS_BREAKDOWN",
+            "SCOPE_BREAKDOWN",
+            "SOLR_BREAKDOWN"
+          ]
+        }
+      },
+      "required": [
+        "Duration",
+        "EntityIds",
+        "Type"
+      ],
+      "additionalProperties": false
+    },
+    "BulletWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Line (Metric).",
+      "properties": {
+        "NrqlQueries": {
+          "type": "array",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/NrqlQueryInput"
+          }
+        },
+        "Limit": {
+          "type": "number",
+          "description": "Goal against which all query results are compared to."
+        }
+      },
+      "additionalProperties": false
+    },
+    "InventoryWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Inventory.",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountIdInput"
+        },
+        "Filters": {
+          "type": "object",
+          "description": "Map of the filters to be applied to the infrastructure sources."
+        },
+        "Sources": {
+          "type": "array",
+          "description": "List of the infrastructure sources to get data from.",
+          "insertionOrder": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "LineMetricWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Area (Metric)",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountIdInput"
+        },
+        "CompareWith": {
+          "type": "object",
+          "description": "Optional. Additional time window to query. For example: {\noffsetDurationInput: 86400000\npresentation: {\"#c001\", \"Yesterday\"}\n}"
+        },
+        "Duration": {
+          "$ref": "#/definitions/DurationInput"
+        },
+        "EndTime": {
+          "$ref": "#/definitions/EndTimeInput"
+        },
+        "EntityIds": {
+          "$ref": "#/definitions/EntityInputIds"
+        },
+        "Facets": {
+          "type": "string",
+          "description": "Optional. Facet the data by the given attribute. It can be host, agent, application, or mobile_version.",
+          "enum": [
+            "host", "agent", "application", "mobile_version"
+          ]
+        },
+        "Limit": {
+          "type": "integer",
+          "description": "Optional. Maximum amount of series to be returned."
+        },
+        "Metrics": {
+          "type": "array",
+          "description": "List of metrics to be fetched.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/MetricInput"
+          }
+        },
+        "OrderBy": {
+          "type": "string",
+          "description": "Optional. Used to sort the results in descending order."
+        }
+      },
+      "required": [
+        "AccountId",
+        "Duration",
+        "EndTime",
+        "EntityIds",
+        "Metrics"
+      ],
+      "additionalProperties": false
+    },
+    "ServiceMapWidgetConfigurationInput": {
+      "type": "object",
+      "description": "Configuration object for the widget Service Map.",
+      "properties": {
+        "AccountId": {
+          "$ref": "#/definitions/AccountIdInput"
+        },
+        "AdditionalEntities": {
+          "type": "array",
+          "description": "Optional. An array of additional entities to include. The target is the entity downstream, while the source is upstream. Type, vendor, target, and source are optional.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EntityInput"
+          }
+        },
+        "DeemphasizedConditions": {
+          "type": "array",
+          "description": "Optional. Entities with these conditions have a faded appearance in the map.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EntityInput"
+          }
+        },
+        "HiddenEntities": {
+          "type": "array",
+          "description": "Optional. Entities to be excluded from the map.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EntityInput"
+          }
+        },
+        "PrimaryEntities": {
+          "type": "array",
+          "description": "The primary entities which start the map (most upstream).",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EntityInput"
+          }
+        }
+      },
+      "required": [
+        "AccountId",
+        "PrimaryEntities"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "AccountId": {
+      "type": "integer",
+      "description": "Account ID the dashboard should belong to."
+    },
+    "DashboardId": {
+      "type": "string",
+      "description": "Dashboard ID."
+    },
+    "Dashboard": {
+      "$ref": "#/definitions/DashboardInput"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "AccountId",
+    "Dashboard"
+  ],
+  "createOnlyProperties": [
+    "/properties/AccountId"
+  ],
+  "readOnlyProperties": [
+    "/properties/DashboardId",
+    "/properties/DashboardCreateResult"
+  ],
+  "primaryIdentifier": [
+    "/properties/AccountId",
+    "/properties/DashboardId"
+  ],
+  "handlers": {
+    "create": {
+      "permissions": []
+    },
+    "read": {
+      "permissions": []
+    },
+    "update": {
+      "permissions": []
+    },
+    "delete": {
+      "permissions": []
+    },
+    "list": {
+      "permissions": []
+    }
+  }
+}

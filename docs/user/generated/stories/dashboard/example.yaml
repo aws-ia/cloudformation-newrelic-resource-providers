@@ -1,0 +1,24 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create a Dashboard in NewRelic
+Resources:
+  MySampleProject:
+    Type: NewRelic::Dashboard::Dashboard
+    Properties:
+      AccountId: 3504143
+      Dashboard:
+        Name: Dashboard Created using NewRelic::Dashboard::Dashboard
+        Description: Dashboard example using the Cloudformation NewRelic resources
+        Pages:
+        - Name: First Page
+          Description: First and only page for this dashboard
+          Widgets:
+          - Title: My first widget
+            Configuration:
+              Line:
+                NrqlQueries:
+                - AccountId: 3504143
+                  Query: "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+            Visualization:
+              Id: viz.line
+        Permissions: PRIVATE

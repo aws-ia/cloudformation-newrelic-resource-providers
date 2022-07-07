@@ -1,0 +1,9 @@
+mutation {
+  dashboardDelete(guid: "%s") {
+    errors {
+      description
+      type
+    }
+    status
+  }
+}

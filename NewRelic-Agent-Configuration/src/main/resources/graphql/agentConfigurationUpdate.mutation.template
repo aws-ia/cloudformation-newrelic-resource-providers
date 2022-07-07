@@ -1,0 +1,38 @@
+mutation {
+  agentApplicationSettingsUpdate(guid: "%s", settings: %s) {
+    guid
+    apmSettings {
+      apmConfig {
+        useServerSideConfig
+        apdexTarget
+      }
+      alias
+      transactionTracer {
+        transactionThresholdValue
+        transactionThresholdType
+        stackTraceThreshold
+        recordSql
+        logSql
+        explainThresholdValue
+        explainThresholdType
+        explainEnabled
+        enabled
+        captureMemcacheKeys
+      }
+      tracerType
+      threadProfiler {
+        enabled
+      }
+      slowSql {
+        enabled
+      }
+      errorCollector {
+        enabled
+        expectedErrorClasses
+        expectedErrorCodes
+        ignoredErrorClasses
+        ignoredErrorCodes
+      }
+    }
+  }
+}

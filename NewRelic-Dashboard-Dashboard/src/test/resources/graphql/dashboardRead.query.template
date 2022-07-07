@@ -1,0 +1,13 @@
+{
+  actor {
+    entity(guid: "%s") {
+      ... on DashboardEntity {
+        guid
+        name
+        accountId
+        updatedAt
+        createdAt
+      }
+    }
+  }
+}
