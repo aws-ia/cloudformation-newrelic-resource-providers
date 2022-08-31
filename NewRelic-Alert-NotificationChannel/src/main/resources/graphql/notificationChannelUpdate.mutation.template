@@ -1,0 +1,45 @@
+mutation {
+  alertsNotificationChannelUpdate(accountId: %d, id: "%d", notificationChannel: %s) {
+    notificationChannel {
+      ... on AlertsEmailNotificationChannel {
+        config {
+          emails
+          includeJson
+        }
+      }
+      ... on AlertsPagerDutyNotificationChannel {
+        config {
+          apiKey
+        }
+      }
+      ... on AlertsWebhookNotificationChannel {
+        id
+        name
+        config {
+          baseUrl
+          customPayloadType
+          customPayloadBody
+          customHttpHeaders {
+            name
+            value
+          }
+          basicAuth {
+            username
+            password
+          }
+        }
+      }
+      ... on AlertsNotificationChannel {
+        id
+        name
+        type
+      }
+      ... on AlertsSlackNotificationChannel {
+        config {
+          url
+          teamChannel
+        }
+      }
+    }
+  }
+}

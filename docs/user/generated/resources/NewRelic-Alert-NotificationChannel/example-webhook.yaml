@@ -1,0 +1,15 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create a Webhook Notification Channel
+Resources:
+  MySampleChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId: 3504143
+      Channel:
+        Webhook:
+          Name: "My Webhook Channel"
+          BaseUrl: "https://somedomain.com/mywebhook"
+          BasicAuth:
+            Username: someuser
+            Password: letmein

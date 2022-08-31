@@ -1,0 +1,12 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create a PagerDuty Notification Channel
+Resources:
+  MySampleChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId: 3504143
+      Channel:
+        Email:
+          ApiKey: XXXX-YYYY
+          Name: "My PagerDuty NotificationChannel"

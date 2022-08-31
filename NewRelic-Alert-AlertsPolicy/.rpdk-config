@@ -1,0 +1,31 @@
+{
+    "artifact_type": "RESOURCE",
+    "typeName": "NewRelic::Alert::AlertsPolicy",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.newrelic.aws.cfn.resources.alert.alertspolicy.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.newrelic.aws.cfn.resources.alert.alertspolicy.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "version": false,
+        "subparser_name": null,
+        "verbose": 0,
+        "force": false,
+        "type_name": null,
+        "artifact_type": null,
+        "endpoint_url": null,
+        "region": null,
+        "target_schemas": [],
+        "namespace": [
+            "com",
+            "newrelic",
+            "aws",
+            "cfn",
+            "resources",
+            "alert",
+            "alertspolicy"
+        ],
+        "codegen_template_path": "default",
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "com.newrelic.aws.cfn.resources.alert.alertspolicy.HandlerWrapperExecutable"
+}

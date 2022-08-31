@@ -1,0 +1,22 @@
+{
+  actor {
+    account(id: %d) {
+      alerts {
+        notificationChannels {
+          channels {
+            associatedPolicies {
+              policies {
+                id
+                name
+              }
+              totalCount
+            }
+            id
+          }
+          nextCursor
+          totalCount
+        }
+      }
+    }
+  }
+}

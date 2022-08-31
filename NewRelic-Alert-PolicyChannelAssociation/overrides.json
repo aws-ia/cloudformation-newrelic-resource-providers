@@ -1,0 +1,12 @@
+{
+  "CREATE": {
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/ChannelIds": [<NR_CHANNEL1_ID>, <NR_CHANNEL2_ID>],
+    "/PolicyId": <NR_POLICY_ID>
+  },
+  "UPDATE": {
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/ChannelIds": [<NR_CHANNEL3_ID>],
+    "/PolicyId": <NR_POLICY_ID>
+  }
+}

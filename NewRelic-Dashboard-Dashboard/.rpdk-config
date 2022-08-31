@@ -1,0 +1,30 @@
+{
+    "artifact_type": "RESOURCE",
+    "typeName": "NewRelic::Dashboard::Dashboard",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.newrelic.aws.cfn.resources.dashboard.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.newrelic.aws.cfn.resources.dashboard.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "version": false,
+        "subparser_name": null,
+        "verbose": 0,
+        "force": false,
+        "type_name": null,
+        "artifact_type": null,
+        "endpoint_url": null,
+        "region": null,
+        "target_schemas": [],
+        "namespace": [
+            "com",
+            "newrelic",
+            "aws",
+            "cfn",
+            "resources",
+            "dashboard"
+        ],
+        "codegen_template_path": "default",
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "com.newrelic.aws.cfn.resources.dashboard.HandlerWrapperExecutable"
+}

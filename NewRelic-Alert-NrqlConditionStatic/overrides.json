@@ -1,0 +1,50 @@
+{
+  "CREATE": {
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/PolicyId": <NR_POLICY_ID>,
+    "/Condition": {
+      "Description": "SAM NRQL Condition",
+      "Enabled": true,
+      "Expiration": {
+        "CloseViolationsOnExpiration": true,
+        "ExpirationDuration": 60,
+        "OpenViolationOnExpiration": true
+      },
+      "Name": "SAM Condition",
+      "Nrql": {
+        "Query": "SELECT count(*) FROM NrAuditEvent"
+      },
+      "Terms": {
+        "Operator": "ABOVE",
+        "Threshold": 6,
+        "ThresholdDuration": 60,
+        "ThresholdOccurrences": "ALL",
+        "Priority": "CRITICAL"
+      }
+    }
+  },
+  "UPDATE": {
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/PolicyId": <NR_POLICY_ID>,
+    "/Condition": {
+      "Description": "Updated SAM NRQL Condition",
+      "Enabled": true,
+      "Expiration": {
+        "CloseViolationsOnExpiration": false,
+        "ExpirationDuration": 120,
+        "OpenViolationOnExpiration": false
+      },
+      "Name": "Updated SAM Condition",
+      "Nrql": {
+        "Query": "SELECT count(*) FROM NrAuditEvent"
+      },
+      "Terms": {
+        "Operator": "ABOVE",
+        "Threshold": 6,
+        "ThresholdDuration": 120,
+        "ThresholdOccurrences": "ALL",
+        "Priority": "CRITICAL"
+      }
+    }
+  }
+}

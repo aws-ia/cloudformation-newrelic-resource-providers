@@ -1,0 +1,12 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create an Alert Policy in NewRelic
+Resources:
+  MySampleProject:
+    Type: NewRelic::Alert::AlertsPolicy
+    Properties:
+      AccountId: 3504143
+      AlertsPolicyId: 123
+      AlertsPolicy:
+        Name: My CF Created Policy
+        IncidentPreference:  PER_POLICY

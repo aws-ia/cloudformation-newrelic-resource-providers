@@ -1,0 +1,14 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Shows how to create a Slack Notification Channel
+Resources:
+  MySampleChannel:
+    Type: NewRelic::Alert::NotificationChannel
+    Properties:
+      AccountId: 3504143
+      Channel:
+        Slack:
+          Name: "My Slack Notification Channel"
+          TeamChannel: "#some-test-channel"
+          # The URL of the Slack. See https://api.slack.com/messaging/webhooks#create_a_webhook
+          Url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ

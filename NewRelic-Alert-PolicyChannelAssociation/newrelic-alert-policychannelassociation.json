@@ -1,0 +1,78 @@
+{
+    "typeName": "NewRelic::Alert::PolicyChannelAssociation",
+    "description": "Manage New Relic Notification Channel",
+    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+    "typeConfiguration": {
+        "properties": {
+            "Endpoint": {
+                "$ref": "#/definitions/NewRelicEndpoint"
+            },
+            "ApiKey": {
+                "$ref": "#/definitions/NewRelicApiKey"
+            }
+        },
+        "required": [
+            "Endpoint",
+            "ApiKey"
+        ],
+        "additionalProperties": false
+    },
+    "definitions": {
+        "NewRelicEndpoint": {
+            "type": "string",
+            "description": "Endpoint to the NerdGraph API.",
+            "default": "https://api.eu.newrelic.com/graphql"
+        },
+        "NewRelicApiKey": {
+            "type": "string",
+            "description": "API key for the New Relic NerdGraph."
+        }
+    },
+    "properties": {
+        "AccountId": {
+            "type": "integer",
+            "description": "Account ID the alerts condition should belong to."
+        },
+        "ChannelIds": {
+            "type": "array",
+            "insertionOrder": false,
+            "items": {
+                "type": "integer"
+            }
+        },
+        "PolicyId": {
+            "type": "integer"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "AccountId",
+        "ChannelIds",
+        "PolicyId"
+    ],
+    "createOnlyProperties": [
+        "/properties/AccountId",
+        "/properties/PolicyId"
+    ],
+    "primaryIdentifier": [
+        "/properties/AccountId",
+        "/properties/PolicyId"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": []
+        },
+        "read": {
+            "permissions": []
+        },
+        "update": {
+            "permissions": []
+        },
+        "delete": {
+            "permissions": []
+        },
+        "list": {
+            "permissions": []
+        }
+    }
+}

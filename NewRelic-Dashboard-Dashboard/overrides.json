@@ -1,0 +1,81 @@
+{
+  "CREATE": {
+    "/AccountId": <NR_ACCOUNT_ID>,
+    "/Dashboard": {
+      "Name": "Contract testing (NewRelic::Dashboard::Dashboard)",
+      "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
+      "Pages": [
+        {
+          "Name": "First page",
+          "Description": "First and only page for this dashboard",
+          "Widgets": [
+            {
+              "Title": "My first widget",
+              "Configuration": {
+                "Line": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": <NR_ACCOUNT_ID>,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.line"
+              }
+            }
+          ]
+        }
+      ],
+      "Permissions": "PRIVATE"
+    }
+  },
+  "UPDATE": {
+    "/Dashboard": {
+      "Name": "Contract testing (NewRelic::Dashboard:Dashboard) - UPDATED!",
+      "Description": "Dashboard created as part of the contract testing for this CloudFormation resource type",
+      "Pages": [
+        {
+          "Name": "First page",
+          "Description": "First and only page for this dashboard",
+          "Widgets": [
+            {
+              "Title": "My first widget",
+              "Configuration": {
+                "Area": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": <NR_ACCOUNT_ID>,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.area"
+              }
+            },
+            {
+              "Title": "My Second widget",
+              "Configuration": {
+                "Bar": {
+                  "NrqlQueries": [
+                    {
+                      "AccountId": <NR_ACCOUNT_ID>,
+                      "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                    }
+                  ]
+                }
+              },
+              "Visualization": {
+                "Id": "viz.bar"
+              }
+            }
+          ]
+        }
+      ],
+      "Permissions": "PRIVATE"
+    }
+  }
+}
