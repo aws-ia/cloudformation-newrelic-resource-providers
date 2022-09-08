@@ -77,7 +77,7 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
         protected Optional<NrqlConditionStaticResult> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticRead.query.template");
             String query = String.format(template, id.getLeft(), id.getRight());
-            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
             return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getNrqlCondition());
         }
 
@@ -87,14 +87,14 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearch.query.template");
             String cursorTemplate = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticSearchCursor.query.template");
             String query = String.format(template, model.getAccountId(), model.getPolicyId());
-            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query);
             results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions()
                     .stream().filter(nc -> nc.getNrqlConditionStaticId() != null)
                     .collect(Collectors.toList()));
             String nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
             while (nextCursor != null) {
                 String cursorQuery = String.format(cursorTemplate, model.getAccountId(), model.getPolicyId(), nextCursor);
-                responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+                responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), cursorQuery);
                 nextCursor = responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNextCursor();
                 results.addAll(responseData.getActor().getAccount().getAlerts().getNrqlConditionsSearch().getNrqlConditions()
                         .stream().filter(nc -> nc.getNrqlConditionStaticId() != null)
@@ -117,7 +117,7 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
         public NrqlConditionStaticResult createItem() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getPolicyId(), nerdGraphClient.genGraphQLArg(model.getCondition(), ImmutableList.of(model.getCondition().getClass().getPackage().getName())));
-            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
             return responseData.getAlertCreateResult();
         }
 
@@ -125,7 +125,7 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
         public void updateItem(NrqlConditionStaticResult alertEntityResult, List<String> updates) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticUpdate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getConditionId(), nerdGraphClient.genGraphQLArg(model.getCondition(), ImmutableList.of(model.getCondition().getClass().getPackage().getName())));
-            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
             if (responseData.getAlertUpdateResult() != null) {
                 updates.add("Updated");
             }
@@ -135,7 +135,7 @@ public class NrqlConditionStaticHandler extends AbstractCombinedResourceHandler<
         public void deleteItem(NrqlConditionStaticResult alertEntityResult) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("nrqlConditionStaticDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getConditionId());
-            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NrqlConditionStaticResult> responseData = nerdGraphClient.doRequest(NrqlConditionStaticResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
         }
     }
 }

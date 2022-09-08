@@ -40,8 +40,10 @@ public class PolicyChannelAssociationCrudLiveTest extends AbstractResourceCrudLi
     @Override
     protected TypeConfigurationModel newTypeConfiguration() throws Exception {
         return TypeConfigurationModel.builder()
-                .endpoint(System.getenv("NR_ENDPOINT"))
-                .apiKey(System.getenv("NR_API_KEY"))
+                .newRelicAccess(NewRelicAccess.builder()
+                        .endpoint(System.getenv("NR_ENDPOINT"))
+                        .apiKey(System.getenv("NR_API_KEY"))
+                        .build())
                 .build();
     }
 

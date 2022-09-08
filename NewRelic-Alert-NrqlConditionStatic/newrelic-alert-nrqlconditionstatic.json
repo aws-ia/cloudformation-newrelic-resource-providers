@@ -4,28 +4,33 @@
     "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
     "typeConfiguration": {
         "properties": {
-            "Endpoint": {
-                "$ref": "#/definitions/NewRelicEndpoint"
-            },
-            "ApiKey": {
-                "$ref": "#/definitions/NewRelicApiKey"
+            "NewRelicAccess": {
+                "$ref": "#/definitions/NewRelicAccess"
             }
         },
+        "additionalProperties": false,
         "required": [
-            "Endpoint",
-            "ApiKey"
-        ],
-        "additionalProperties": false
+            "NewRelicAccess"
+        ]
     },
     "definitions": {
-        "NewRelicEndpoint": {
-            "type": "string",
-            "description": "Endpoint to the NerdGraph API.",
-            "default": "https://api.eu.newrelic.com/graphql"
-        },
-        "NewRelicApiKey": {
-            "type": "string",
-            "description": "API key for the New Relic NerdGraph."
+        "NewRelicAccess": {
+            "type": "object",
+            "properties": {
+                "Endpoint": {
+                    "type": "string",
+                    "description": "Endpoint to the NerdGraph API."
+                },
+                "ApiKey": {
+                    "type": "string",
+                    "description": "API key for the New Relic NerdGraph."
+                }
+            },
+            "required": [
+                "Endpoint",
+                "ApiKey"
+            ],
+            "additionalProperties": false
         },
         "ConditionInput": {
             "type": "object",
@@ -216,6 +221,9 @@
         }
     },
     "additionalProperties": false,
+    "tagging": {
+        "taggable": false
+    },
     "required": [
         "AccountId",
         "PolicyId",

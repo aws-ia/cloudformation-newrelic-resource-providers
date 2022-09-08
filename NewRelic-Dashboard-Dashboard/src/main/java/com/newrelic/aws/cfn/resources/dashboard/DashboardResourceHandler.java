@@ -77,7 +77,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         protected Optional<DashboardEntityResult> findExistingItemWithNonNullId(Pair<Integer, String> id) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardRead.query.template");
             String query = String.format(template, id.getRight());
-            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query);
 
             return Optional.ofNullable(responseData.getActor().getEntity());
         }
@@ -85,7 +85,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         @Override
         public List<DashboardEntityResult> readExistingItems() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardSearch.query.template");
-            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), template);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), template);
 
             return responseData.getActor().getEntitySearch().getResults().getEntities();
         }
@@ -103,7 +103,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         public DashboardEntityResult createItem() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
-            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
 
             checkForDashboardErrors(responseData.getDashboardCreateResult().getErrors(), "NerdGraph dashboardCreate mutation");
 
@@ -114,7 +114,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         public void updateItem(DashboardEntityResult dashboardEntityResult, List<String> list) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardUpdate.mutation.template");
             String mutation = String.format(template, model.getDashboardId(), nerdGraphClient.genGraphQLArg(model.getDashboard()));
-            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
 
             checkForDashboardErrors(responseData.getDashboardUpdateResult().getErrors(), "NerdGraph dashboardUpdate mutation");
         }
@@ -123,7 +123,7 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         public void deleteItem(DashboardEntityResult dashboardEntityResult) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("dashboardDelete.mutation.template");
             String mutation = String.format(template, model.getDashboardId());
-            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<DashboardEntityResult> responseData = nerdGraphClient.doRequest(DashboardEntityResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
 
             checkForDashboardErrors(responseData.getDashboardDeleteResult().getErrors(), "NerdGraph dashboardDelete mutation");
         }

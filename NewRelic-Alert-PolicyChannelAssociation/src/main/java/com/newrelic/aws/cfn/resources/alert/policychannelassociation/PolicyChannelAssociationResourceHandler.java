@@ -84,14 +84,14 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
             String cursorTemplate = nerdGraphClient.getGraphQLTemplate("policyChannelAssociationReadCursor.query.template");
             String query = String.format(template, model.getAccountId());
             ImmutableList.Builder<PolicyChannelAssociationResult> resultsBuilder = ImmutableList.builder();
-            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query);
             String nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannelCursor().getNextCursor();
 
             resultsBuilder.addAll(readResponseDataToResults(responseData, model.getAccountId()));
 
             while (nextCursor != null) {
                 String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
-                responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+                responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), cursorQuery);
                 nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannelCursor().getNextCursor();
                 resultsBuilder.addAll(readResponseDataToResults(responseData, model.getAccountId()));
             }
@@ -136,7 +136,7 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
         public PolicyChannelAssociationResult createItem() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("policyChannelAssociationCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getPolicyId(), nerdGraphClient.genGraphQLArg(model.getChannelIds()));
-            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
 
             return PolicyChannelAssociationResult.builder()
                     .policyId(responseData.getAlertsNotificationChannelsAddToPolicy().getPolicyId())
@@ -173,7 +173,7 @@ public class PolicyChannelAssociationResourceHandler extends AbstractCombinedRes
             model.setChannelIds(existingItemMatchingModel.get().getChannelIds());
             String template = nerdGraphClient.getGraphQLTemplate("policyChannelAssociationDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getPolicyId(), nerdGraphClient.genGraphQLArg(model.getChannelIds()));
-            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<PolicyChannelAssociationResult> responseData = nerdGraphClient.doRequest(PolicyChannelAssociationResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
         }
     }
 }

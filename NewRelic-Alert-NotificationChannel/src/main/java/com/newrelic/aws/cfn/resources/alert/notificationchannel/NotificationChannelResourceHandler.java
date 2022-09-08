@@ -79,7 +79,7 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
         protected Optional<NotificationChannel> findExistingItemWithNonNullId(Pair<Integer, Integer> id) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelSearch.query.template");
             String query = String.format(template, id.getLeft(), id.getRight());
-            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query, ImmutableList.of(ErrorCode.BAD_USER_INPUT.name()));
             return Optional.ofNullable(responseData.getActor().getAccount().getAlerts().getNotificationChannel());
         }
 
@@ -90,12 +90,12 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
             String cursorTemplate = nerdGraphClient.getGraphQLTemplate("notificationChannelReadCursor.query.template");
             String query = String.format(template, model.getAccountId());
 
-            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), query);
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), query);
             results.addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels());
             String nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannels().getNextCursor();
             while (nextCursor != null) {
                 String cursorQuery = String.format(cursorTemplate, model.getAccountId(), nextCursor);
-                responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), cursorQuery);
+                responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), cursorQuery);
                 nextCursor = responseData.getActor().getAccount().getAlerts().getNotificationChannels().getNextCursor();
                 results.addAll(responseData.getActor().getAccount().getAlerts().getNotificationChannels().getChannels());
             }
@@ -127,7 +127,7 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
         public NotificationChannel createItem() throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getChannel(), ImmutableList.of(ChannelInput.class.getPackage().getName())));
-            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
             return responseData.getAlertCreateResult().getNotificationChannel();
         }
 
@@ -135,7 +135,7 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
         public void updateItem(NotificationChannel alertEntityResult, List<String> updates) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelUpdate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getChannelId(), nerdGraphClient.genGraphQLArg(model.getChannel(), ImmutableList.of(ChannelInput.class.getPackage().getName())));
-            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
             if (responseData.getAlertUpdateResult() != null) {
                 updates.add("Updated");
             }
@@ -145,7 +145,7 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
         public void deleteItem(NotificationChannel alertEntityResult) throws Exception {
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getChannelId());
-            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getEndpoint(), "", typeConfiguration.getApiKey(), mutation);
+            ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
         }
     }
 }
