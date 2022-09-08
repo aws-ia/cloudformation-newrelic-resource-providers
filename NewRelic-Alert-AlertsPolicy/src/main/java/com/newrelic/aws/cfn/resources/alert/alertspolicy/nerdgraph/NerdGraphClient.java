@@ -28,6 +28,16 @@ import java.util.stream.Collectors;
 
 public class NerdGraphClient {
 
+    private final String userAgent;
+
+    public NerdGraphClient() {
+        this.userAgent = "AWS CloudFormation (+https://aws.amazon.com/cloudformation/) CloudFormation custom resource";
+    }
+
+    public NerdGraphClient(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
     public String getGraphQLTemplate(String name) throws CfnHandlerInternalFailureException {
         try {
             URL resource = Resources.getResource("graphql/" + name);
@@ -106,6 +116,7 @@ public class NerdGraphClient {
             URL url = new URL(endpoint);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("User-Agent", this.userAgent);
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("API-Key", apiKey);
             connection.setDoOutput(true);

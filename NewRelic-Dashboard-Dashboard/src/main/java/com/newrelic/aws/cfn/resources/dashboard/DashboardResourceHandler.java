@@ -13,8 +13,10 @@ import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class DashboardResourceHandler extends AbstractCombinedResourceHandler<DashboardResourceHandler, DashboardEntityResult, Pair<Integer, String>, ResourceModel, CallbackContext, TypeConfigurationModel> {
@@ -43,7 +45,25 @@ public class DashboardResourceHandler extends AbstractCombinedResourceHandler<Da
         private final NerdGraphClient nerdGraphClient;
 
         public DashboardHelper() {
-            nerdGraphClient = new NerdGraphClient();
+            String userAgent = String.format(
+                    "AWS CloudFormation (+https://aws.amazon.com/cloudformation/) CloudFormation resource %s/%s",
+                    ResourceModel.TYPE_NAME,
+                    getVersion());
+            nerdGraphClient = new NerdGraphClient(userAgent);
+        }
+
+        private String getVersion() {
+            Properties properties = new Properties();
+            Optional.ofNullable(getClass().getClassLoader().getResourceAsStream("resource.properties")).ifPresent(inputStream -> {
+                try {
+                    properties.load(inputStream);
+                } catch (IOException e) {
+                    logger.log("Warning: failed to load resource version.");
+                }
+            });
+            return properties.containsKey("version")
+                    ? properties.getProperty("version")
+                    : "Unknown";
         }
 
         @Override
