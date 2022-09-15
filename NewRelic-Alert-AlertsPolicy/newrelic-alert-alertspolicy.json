@@ -1,95 +1,102 @@
 {
-    "typeName": "NewRelic::Alert::AlertsPolicy",
-    "description": "Manage New Relic AlertsPolicy",
-    "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-    "typeConfiguration": {
-        "properties": {
-            "Endpoint": {
-                "$ref": "#/definitions/NewRelicEndpoint"
-            },
-            "ApiKey": {
-                "$ref": "#/definitions/NewRelicApiKey"
-            }
-        },
-        "required": [
-            "Endpoint",
-            "ApiKey"
-        ],
-        "additionalProperties": false
-    },
-    "definitions": {
-        "NewRelicEndpoint": {
-            "type": "string",
-            "description": "Endpoint to the NerdGraph API.",
-            "default": "https://api.eu.newrelic.com/graphql"
-        },
-        "NewRelicApiKey": {
-            "type": "string",
-            "description": "API key for the New Relic NerdGraph."
-        },
-        "AlertsPolicyInput": {
-            "type": "object",
-            "properties": {
-                "Name": {
-                    "type": "string",
-                    "description": "Name of the alerts policy."
-                },
-                "IncidentPreference": {
-                    "type": "string",
-                    "enum": [
-                        "PER_CONDITION",
-                        "PER_CONDITION_AND_TARGET",
-                        "PER_POLICY"
-                    ]
-                }
-            },
-            "additionalProperties": false
-        }
-    },
+  "typeName": "NewRelic::Alert::AlertsPolicy",
+  "description": "Manage New Relic AlertsPolicy",
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "typeConfiguration": {
     "properties": {
-        "AccountId": {
-            "type": "integer",
-            "description": "Account ID the alerts policy should belong to."
-        },
-        "AlertsPolicyId": {
-            "type": "integer",
-            "description": "Alerts Policy ID."
-        },
-        "AlertsPolicy": {
-            "$ref": "#/definitions/AlertsPolicyInput"
-        }
+      "NewRelicAccess": {
+        "$ref": "#/definitions/NewRelicAccess"
+      }
     },
     "additionalProperties": false,
     "required": [
-        "AccountId",
-        "AlertsPolicy"
-    ],
-    "createOnlyProperties": [
-        "/properties/AccountId"
-    ],
-    "readOnlyProperties": [
-        "/properties/AlertsPolicyId",
-        "/properties/AlertsPolicyCreateResult"
-    ],
-    "primaryIdentifier": [
-        "/properties/AccountId",
-        "/properties/AlertsPolicyId"
-    ],
-    "handlers": {
-        "create": {
-            "permissions": []
+      "NewRelicAccess"
+    ]
+  },
+  "definitions": {
+    "NewRelicAccess": {
+      "type": "object",
+      "properties": {
+        "Endpoint": {
+          "type": "string",
+          "description": "Endpoint to the NerdGraph API."
         },
-        "read": {
-            "permissions": []
-        },
-        "update": {
-            "permissions": []
-        },
-        "delete": {
-            "permissions": []
-        },
-        "list": {
-            "permissions": []
+        "ApiKey": {
+          "type": "string",
+          "description": "API key for the New Relic NerdGraph."
         }
+      },
+      "required": [
+        "Endpoint",
+        "ApiKey"
+      ],
+      "additionalProperties": false
+    },
+    "AlertsPolicyInput": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "Name of the alerts policy."
+        },
+        "IncidentPreference": {
+          "type": "string",
+          "enum": [
+            "PER_CONDITION",
+            "PER_CONDITION_AND_TARGET",
+            "PER_POLICY"
+          ]
+        }
+      },
+      "additionalProperties": false
     }
+  },
+  "properties": {
+    "AccountId": {
+      "type": "integer",
+      "description": "Account ID the alerts policy should belong to."
+    },
+    "AlertsPolicyId": {
+      "type": "integer",
+      "description": "Alerts Policy ID."
+    },
+    "AlertsPolicy": {
+      "$ref": "#/definitions/AlertsPolicyInput"
+    }
+  },
+  "additionalProperties": false,
+  "tagging": {
+    "taggable": false
+  },
+  "required": [
+    "AccountId",
+    "AlertsPolicy"
+  ],
+  "createOnlyProperties": [
+    "/properties/AccountId"
+  ],
+  "readOnlyProperties": [
+    "/properties/AlertsPolicyId"
+  ],
+  "primaryIdentifier": [
+    "/properties/AccountId",
+    "/properties/AlertsPolicyId"
+  ],
+  "handlers": {
+    "create": {
+      "permissions": []
+    },
+    "read": {
+      "permissions": []
+    },
+    "update": {
+      "permissions": []
+    },
+    "delete": {
+      "permissions": []
+    },
+    "list": {
+      "permissions": []
+    }
+  }
 }

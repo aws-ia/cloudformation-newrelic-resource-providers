@@ -41,5 +41,9 @@ mutation {
         }
       }
     }
+    error {
+      errorType
+      description
+    }
   }
 }

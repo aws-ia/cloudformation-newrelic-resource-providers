@@ -59,7 +59,3 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 
 Dashboard ID.
 
-#### DashboardCreateResult
-
-Returns the <code>DashboardCreateResult</code> value.
-

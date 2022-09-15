@@ -59,7 +59,3 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 
 Alerts Policy ID.
 
-#### AlertsPolicyCreateResult
-
-Returns the <code>AlertsPolicyCreateResult</code> value.
-

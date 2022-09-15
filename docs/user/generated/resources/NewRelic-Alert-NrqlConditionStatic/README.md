@@ -73,7 +73,3 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 
 Alerts Condition ID.
 
-#### ConditionCreateResult
-
-Returns the <code>ConditionCreateResult</code> value.
-

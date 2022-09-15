@@ -1,5 +1,9 @@
 mutation {
   alertsNotificationChannelDelete(accountId: %d, id: "%s") {
     id
+    error {
+      errorType
+      description
+    }
   }
 }
