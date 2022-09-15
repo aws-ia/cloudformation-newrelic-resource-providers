@@ -548,8 +548,7 @@
     "/properties/AccountId"
   ],
   "readOnlyProperties": [
-    "/properties/DashboardId",
-    "/properties/DashboardCreateResult"
+    "/properties/DashboardId"
   ],
   "primaryIdentifier": [
     "/properties/AccountId",
