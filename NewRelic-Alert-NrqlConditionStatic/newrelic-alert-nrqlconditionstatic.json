@@ -236,6 +236,9 @@
   "readOnlyProperties": [
     "/properties/ConditionId"
   ],
+  "writeOnlyProperties": [
+    "/properties/Condition"
+  ],
   "primaryIdentifier": [
     "/properties/AccountId",
     "/properties/PolicyId",

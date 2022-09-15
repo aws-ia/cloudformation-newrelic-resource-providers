@@ -550,6 +550,9 @@
   "readOnlyProperties": [
     "/properties/DashboardId"
   ],
+  "writeOnlyProperties": [
+    "/properties/Dashboard"
+  ],
   "primaryIdentifier": [
     "/properties/AccountId",
     "/properties/DashboardId"
