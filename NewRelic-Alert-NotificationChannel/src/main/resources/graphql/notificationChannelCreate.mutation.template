@@ -2,12 +2,18 @@ mutation {
   alertsNotificationChannelCreate(accountId: %d, notificationChannel: %s) {
     notificationChannel {
       ... on AlertsEmailNotificationChannel {
+        id
+        name
+        type
         config {
           emails
           includeJson
         }
       }
       ... on AlertsPagerDutyNotificationChannel {
+        id
+        name
+        type
         config {
           apiKey
         }
@@ -15,6 +21,7 @@ mutation {
       ... on AlertsWebhookNotificationChannel {
         id
         name
+        type
         config {
           baseUrl
           customPayloadType
@@ -29,17 +36,19 @@ mutation {
           }
         }
       }
-      ... on AlertsNotificationChannel {
+      ... on AlertsSlackNotificationChannel {
         id
         name
         type
-      }
-      ... on AlertsSlackNotificationChannel {
         config {
           url
           teamChannel
         }
       }
+    }
+    error {
+      errorType
+      description
     }
   }
 }

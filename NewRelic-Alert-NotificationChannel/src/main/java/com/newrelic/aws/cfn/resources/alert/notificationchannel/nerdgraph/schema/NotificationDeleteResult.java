@@ -15,4 +15,6 @@ import lombok.experimental.SuperBuilder;
 public class NotificationDeleteResult {
     @JsonProperty("id")
     private Integer id;
+    @JsonProperty("error")
+    private ChannelError error;
 }

@@ -4,12 +4,14 @@ import aws.cfn.resources.shared.AbstractCombinedResourceHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.NerdGraphClient;
+import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ChannelError;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ErrorCode;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannel;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.NotificationChannelResult;
 import com.newrelic.aws.cfn.resources.alert.notificationchannel.nerdgraph.schema.ResponseData;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
+import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -128,6 +130,9 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelCreate.mutation.template");
             String mutation = String.format(template, model.getAccountId(), nerdGraphClient.genGraphQLArg(model.getChannel(), ImmutableList.of(ChannelInput.class.getPackage().getName())));
             ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
+
+            checkForChannelErrors(responseData.getAlertCreateResult().getError(), "NerdGraph alertsNotificationChannelCreate mutation");
+
             return responseData.getAlertCreateResult().getNotificationChannel();
         }
 
@@ -139,6 +144,8 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
             if (responseData.getAlertUpdateResult() != null) {
                 updates.add("Updated");
             }
+
+            checkForChannelErrors(responseData.getAlertUpdateResult().getError(), "NerdGraph alertsNotificationChannelUpdate mutation");
         }
 
         @Override
@@ -146,6 +153,20 @@ public class NotificationChannelResourceHandler extends AbstractCombinedResource
             String template = nerdGraphClient.getGraphQLTemplate("notificationChannelDelete.mutation.template");
             String mutation = String.format(template, model.getAccountId(), model.getChannelId());
             ResponseData<NotificationChannelResult> responseData = nerdGraphClient.doRequest(NotificationChannelResult.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
+
+            checkForChannelErrors(responseData.getAlertDeleteResult().getError(), "NerdGraph alertsNotificationChannelDelete mutation");
+
+        }
+
+        private void checkForChannelErrors(ChannelError channelError, String operation) throws CfnServiceInternalErrorException {
+            if (channelError != null) {
+                throw new CfnServiceInternalErrorException(
+                        operation,
+                        new Exception(String.format(
+                                "The following error(s) occurred interacting with the NerdGraph API:\n==> [%s] %s",
+                                channelError.getErrorType(),
+                                channelError.getDescription())));
+            }
         }
     }
 }
