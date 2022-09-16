@@ -102,13 +102,6 @@
             <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.gitlab.aws.cfn.resources</groupId>
-            <artifactId>common-gitlab-cloudformation-utils</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
