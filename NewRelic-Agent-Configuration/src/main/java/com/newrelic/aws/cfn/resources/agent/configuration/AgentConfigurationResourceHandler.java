@@ -109,9 +109,7 @@ public class AgentConfigurationResourceHandler extends AbstractCombinedResourceH
         @Override
         public ResourceModel modelFromItem(ApmSettingsResponse apmSettings) {
             ResourceModel.ResourceModelBuilder builder = ResourceModel.builder();
-            if (model != null) {
-                model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(apmSettings.getApmSettings().getApmConfig().getUseServerSideConfig());
-            }
+            setUseServerSideConfig(model, apmSettings.getApmSettings().getApmConfig().getUseServerSideConfig());
             builder.guid(apmSettings.getGuid())
                     .agentConfiguration(model != null ? model.getAgentConfiguration() : null);
 
@@ -137,10 +135,24 @@ public class AgentConfigurationResourceHandler extends AbstractCombinedResourceH
 
         @Override
         public void deleteItem(ApmSettingsResponse alertEntityResult) throws Exception {
-            model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(false);
+            setUseServerSideConfig(model, false);
             String template = nerdGraphClient.getGraphQLTemplate("agentConfigurationDelete.mutation.template");
             String mutation = String.format(template, model.getGuid(), nerdGraphClient.genGraphQLArg(model.getAgentConfiguration().getSettings(), ImmutableList.of(SlowSql.class.getPackage().getName())));
             nerdGraphClient.doRequest(ApmSettings.class, typeConfiguration.getNewRelicAccess().getEndpoint(), "", typeConfiguration.getNewRelicAccess().getApiKey(), mutation);
+        }
+
+        private void setUseServerSideConfig(ResourceModel model, boolean useServerSideConfig) {
+            if (model == null) return;
+            if (model.getAgentConfiguration() == null) {
+                model.setAgentConfiguration(AgentConfigurationInput.builder().build());
+            }
+            if (model.getAgentConfiguration().getSettings() == null) {
+                model.getAgentConfiguration().setSettings(Settings.builder().build());
+            }
+            if (model.getAgentConfiguration().getSettings().getApmConfig() == null) {
+                model.getAgentConfiguration().getSettings().setApmConfig(com.newrelic.aws.cfn.resources.agent.configuration.ApmConfig.builder().build());
+            }
+            model.getAgentConfiguration().getSettings().getApmConfig().setUseServerSideConfig(useServerSideConfig);
         }
     }
 }
