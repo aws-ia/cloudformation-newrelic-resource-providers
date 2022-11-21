@@ -52,7 +52,7 @@ For more information about available commands and workflows, see the official [A
 
 ## Supported regions
 
-The Datadog-Amazon CloudFormation resources are available on the CloudFormation Public Registry in the following regions:
+The New Relic CloudFormation resources are available on the CloudFormation Public Registry in the following regions:
 
 | Code            | Name                      |
 |-----------------|---------------------------|
