@@ -4,10 +4,10 @@ This collection of [AWS CloudFormation resource types][1] allow NewRelic to be c
 
 | Resource | Description | Documentation |
 | --- | --- | --- |
-| NewRelic::Alert::AlertsPolicy | This resource type manages a [New Relic AlertsPolicy][3] | [Page][4] |
-| NewRelic::Agent::Configuration | This resource type manages a [New Relic Configuration][5] | [page][6] |
-| NewRelic::Alert::NrqlConditionStatic | This resource type manages a [static NRQL Alert Condition in NewRelic ][7] | [page][8] |
-| NewRelic::Dashboard::Dashboard | This resource type manages a [New Relic dashboard ][9] | [page][10] |
+| NewRelic::Alert::AlertsPolicy | This resource type manages a [New Relic AlertsPolicy][3] | [/NewRelic-Alert-AlertsPolicy][4] |
+| NewRelic::Agent::Configuration | This resource type manages a [New Relic Configuration][5] | [/NewRelic-Agent-Configuration][6] |
+| NewRelic::Alert::NrqlConditionStatic | This resource type manages a [static NRQL Alert Condition in NewRelic ][7] | [/NewRelic-Alert-NrqlConditionStatic][8] |
+| NewRelic::Dashboard::Dashboard | This resource type manages a [New Relic dashboard ][9] | [/NewRelic-Dashboard-Dashboar][10] |
 
 ## Prerequisites
 * [AWS Account][14]
@@ -172,13 +172,13 @@ Resources:
 [1]: https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-types.html
 [2]: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html
 [3]: https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-policies/create-edit-or-find-alert-policy/
-[4]: ./NewRelic-Alert-AlertsPolicy/README.md
+[4]: ./NewRelic-Alert-AlertsPolicy/docs/README.md
 [5]: https://docs.newrelic.com/docs/apm/agents/manage-apm-agents/configuration/view-config-values-your-app/
-[6]: ./NewRelic-Agent-Configuration/README.md
+[6]: ./NewRelic-Agent-Configuration//docs/README.md
 [7]: https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/
-[8]: ./NewRelic-Alert-NrqlConditionStatic/README.md
+[8]: ./NewRelic-Alert-NrqlConditionStatic/docs/README.md
 [9]: https://docs.newrelic.com/docs/query-your-data/explore-query-data/dashboards/introduction-dashboards/
-[10]: ./NewRelic-Dashboard-Dashboard/README.md
+[10]: ./NewRelic-Dashboard-Dashboard/docs/README.md
 [11]: https://aws.amazon.com/console/
 [12]: https://console.aws.amazon.com/cloudformation/home
 [13]: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/registry.html
