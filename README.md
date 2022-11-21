@@ -42,7 +42,7 @@ To get started:
   $ aws cloudformation set-type-configuration \
   --region us-west-2 --type RESOURCE \
   --type-name NewRelic::Alert::AlertsPolicy \
-  --configuration-alias default     \
+  --configuration-alias default \
   --configuration "{ \"NewRelicAccess\":{\"Endpoint\":\"https://api.newrelic.com/graphql\",\"ApiKey\":\"YOURAPIKEY\"}}"
   ```
 
