@@ -39,7 +39,7 @@ To get started:
   For example:
 
   ```Bash
-  $ aws cloudformation set-type-configuration     --region us-west-2     --type RESOURCE     --type-name NewRelic::Alert::AlertsPolicy     --configuration-alias default     --configuration "{ \"NewRelicAccess\": {   \"Endpoint\": \"https://api.newrelic.com/graphql\",   \"ApiKey\": \"YOURAPIKEY\" } }"
+  $ aws cloudformation set-type-configuration --region us-west-2 --type RESOURCE --type-name NewRelic::Alert::AlertsPolicy --configuration-alias default     --configuration "{ \"NewRelicAccess\": {   \"Endpoint\": \"https://api.newrelic.com/graphql\",   \"ApiKey\": \"YOURAPIKEY\" } }"
   ```
 
 7. After you have your resource configured, [create your AWS stack][12] that includes any of the activated NewRelic resources.
