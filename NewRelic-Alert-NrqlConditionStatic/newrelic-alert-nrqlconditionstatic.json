@@ -1,7 +1,8 @@
 {
   "typeName": "NewRelic::Alert::NrqlConditionStatic",
   "description": "Manage New Relic NRQL Static Alerts Condition",
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "sourceUrl": "https://github.com/aws-ia/cloudformation-newrelic-resource-providers.git",
+  "documentationUrl": "https://github.com/aws-ia/cloudformation-newrelic-resource-providers",
   "typeConfiguration": {
     "properties": {
       "NewRelicAccess": {

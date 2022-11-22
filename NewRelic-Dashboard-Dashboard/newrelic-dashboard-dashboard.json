@@ -1,7 +1,8 @@
 {
   "typeName": "NewRelic::Dashboard::Dashboard",
   "description": "Manage New Relic Dashboard, including WidgetInputs",
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "sourceUrl": "https://github.com/aws-ia/cloudformation-newrelic-resource-providers.git",
+  "documentationUrl": "https://github.com/aws-ia/cloudformation-newrelic-resource-providers",
   "typeConfiguration": {
     "properties": {
       "NewRelicAccess": {
