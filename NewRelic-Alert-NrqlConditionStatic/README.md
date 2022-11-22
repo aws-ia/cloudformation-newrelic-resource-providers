@@ -105,7 +105,7 @@ Resources:
 [1]: https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-types.html
 [2]: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html
 [3]: https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-policies/create-edit-or-find-alert-policy/
-[4]: ./NewRelic-Alert-AlertsPolicy/docs/README.md
+[4]: ./docs/README.md
 [5]: https://docs.newrelic.com/docs/apm/agents/manage-apm-agents/configuration/view-config-values-your-app/
 [6]: ./NewRelic-Agent-Configuration//docs/README.md
 [7]: https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/
