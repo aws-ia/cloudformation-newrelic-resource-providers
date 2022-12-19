@@ -1,0 +1,7 @@
+{
+    "AccountId": <NEW_RELIC_ACCOUNT_ID>,
+    "AlertsPolicy": {
+      "Name": "My CF Created Policy",
+      "IncidentPreference": "PER_POLICY"
+    }
+  }

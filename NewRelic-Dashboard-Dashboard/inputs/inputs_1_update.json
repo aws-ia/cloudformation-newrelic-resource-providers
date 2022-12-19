@@ -1,0 +1,32 @@
+{
+    "AccountId": <NEW_RELIC_ACCOUNT_ID>,
+    "Dashboard": {
+        "Name": "I updated the field",
+        "Description": "Dashboard example using the Cloudformation NewRelic resources",
+        "Pages": [
+            {
+                "Name": "First Page",
+                "Description": "First and only page for this dashboard",
+                "Widgets": [
+                    {
+                        "Title": "My first widget",
+                        "Configuration": {
+                            "Line": {
+                                "NrqlQueries": [
+                                    {
+                                        "AccountId": <NEW_RELIC_ACCOUNT_ID>,
+                                        "Query": "SELECT count(*) FROM Transaction FACET appName TIMESERIES"
+                                    }
+                                ]
+                            }
+                        },
+                        "Visualization": {
+                            "Id": "viz.line"
+                        }
+                    }
+                ]
+            }
+        ],
+        "Permissions": "PRIVATE"
+    }
+}
