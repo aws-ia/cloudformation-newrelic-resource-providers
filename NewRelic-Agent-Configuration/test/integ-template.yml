@@ -1,0 +1,15 @@
+Resources:
+  AgentConfigurationSample:
+    Type: NewRelic::Agent::Configuration
+    Properties:
+      Guid: NEWRELIC_GUID
+      AgentConfiguration:
+        Settings:
+          Alias: "My Test Alias"
+          ApmConfig:
+            ApdexTarget: 4
+            UseServerSideConfig: true
+          BrowserConfig:
+            ApdexTarget: 6
+          SlowSql:
+            Enabled: true

@@ -1,0 +1,12 @@
+{
+  "Guid": "NEWRELIC_GUID",
+  "AgentConfiguration": {
+    "Settings": {
+      "Alias": "Updated Alias",
+      "ApmConfig": {
+        "ApdexTarget": 4,
+        "UseServerSideConfig": true
+      }
+    }
+  }
+}
