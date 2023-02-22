@@ -1,0 +1,22 @@
+Resources:
+  SampleNrqlCondition:
+    Type: NewRelic::Alert::NrqlConditionStatic
+    Properties:
+      AccountId: NEWRELIC_ACCOUNT_ID
+      PolicyId: NEWRELIC_POLICY_ID
+      Condition:
+        Name: "Sample Condition"
+        Description: "Sample NRQL Condition"
+        Enabled: true
+        Expiration:
+          CloseViolationsOnExpiration: true
+          ExpirationDuration: 60
+          OpenViolationOnExpiration: true
+        Nrql:
+          Query: "SELECT count(*) FROM NrAuditEvent"
+        Terms:
+          Operator: "ABOVE"
+          Threshold: 6
+          ThresholdDuration: 60
+          ThresholdOccurrences: "ALL"
+          Priority: "CRITICAL"

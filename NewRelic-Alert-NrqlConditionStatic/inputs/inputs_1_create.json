@@ -1,0 +1,24 @@
+{
+    "AccountId": NEWRELIC_ACCOUNT_ID,
+    "PolicyId": NEWRELIC_POLICY_ID,
+    "Condition": {
+        "Description": "SAM NRQL Condition",
+        "Enabled": true,
+        "Expiration": {
+            "CloseViolationsOnExpiration": true,
+            "ExpirationDuration": 60,
+            "OpenViolationOnExpiration": true
+        },
+        "Name": "SAM Condition",
+        "Nrql": {
+            "Query": "SELECT count(*) FROM NrAuditEvent"
+        },
+        "Terms": {
+            "Operator": "ABOVE",
+            "Threshold": 6,
+            "ThresholdDuration": 60,
+            "ThresholdOccurrences": "ALL",
+            "Priority": "CRITICAL"
+        }
+    }
+}

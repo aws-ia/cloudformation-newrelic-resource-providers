@@ -1,0 +1,8 @@
+{
+    "AccountId": NEWRELIC_ACCOUNT_ID,
+    "AlertsPolicy": {
+        "IncidentPreference": "PER_POLICY",
+        "Name": "Sam Alert Policy"
+    }
+
+}
