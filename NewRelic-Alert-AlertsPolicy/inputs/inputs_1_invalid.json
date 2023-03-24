@@ -1,0 +1,6 @@
+{
+    "AlertsPolicy": {
+      "Name": "My CF Created Policy",
+      "IncidentPreference": "PER_POLICY"
+    }
+  }

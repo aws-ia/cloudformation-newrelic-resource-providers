@@ -1,0 +1,24 @@
+{
+    "AccountId": <NEW_RELIC_ACCOUNT_ID>,
+    "PolicyId": <NEW_RELIC_POLICY_ID>,
+    "Condition": {
+        "Name": "Sample Condition",
+        "Description": "Sample NRQL Condition",
+        "Enabled": true,
+        "Expiration": {
+            "CloseViolationsOnExpiration": true,
+            "ExpirationDuration": 60,
+            "OpenViolationOnExpiration": true
+        },
+        "Nrql": {
+            "Query": "SELECT count(*) FROM NrAuditEvent"
+        },
+        "Terms": {
+            "Operator": "ABOVE",
+            "Threshold": 6,
+            "ThresholdDuration": 60,
+            "ThresholdOccurrences": "ALL",
+            "Priority": "CRITICAL"
+        }
+    }
+}
